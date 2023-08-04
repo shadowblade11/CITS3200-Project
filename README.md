@@ -78,4 +78,4 @@ Run app with
 ```bash
 python debug_run.py
 ```
-whilst in the virtual environment. (.venv)
+while within the virtual environment. (.venv)
