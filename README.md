@@ -30,7 +30,7 @@ Follow these instructions to set up the workspace for different platforms.
 Ensure Python virtual environment is installed. If not, it can be installed using:
 
 ```bash
-python3 -2 -m pip install virtualenv
+python3 -m pip install virtualenv
 ```
 
 To set up your workspace:
@@ -40,8 +40,6 @@ python3 -m venv .venv
 .\.venv\Scripts\activate
 python -m pip install -r requirements.txt
 ```
-
-Create a file `secret/secret.py` and insert a secret key for SocketIO.
 
 > **Note:** The virtual environment initialization is successful if you see `(.venv)` to the left of the command line. You will need to restart the virtual environment every time you restart the project. This can be done by re-running `.\.venv\Scripts\activate`. (Note: slightly different to MacOS/Linux command)
 
@@ -68,14 +66,12 @@ source ./.venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Create a file `secret/secret.py` and insert a secret key for SocketIO.
-
 > **Note:** The virtual environment initialization is successful if you see `(.venv)` to the left of the command line. You will need to restart the virtual environment every time you restart the project. This can be done by re-running `source ./.venv/bin/activate`. (Note: slightly different to Windows command)
 
 ---
 ## Running the App
-Run app with
+Run app with  
 ```bash
-python debug_run.py
+flask --app app run
 ```
-while within the virtual environment. (.venv)
+while within the virtual environment. (.venv)  
