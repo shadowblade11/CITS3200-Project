@@ -8,4 +8,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 
 app.app_context().push()
 
-from app import views  # noqa
+from app import views # imports templates for the app to use
