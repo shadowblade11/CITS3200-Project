@@ -15,7 +15,7 @@ recording = sd.rec(int(duration * freq), samplerate=freq, channels=2)
 
 #recording....
 sd.wait()
-print("Recording Completed!\n")
+print("\nRecording Completed!\n")
 
 #convert to audio for saving
 title = "recording.wav"
