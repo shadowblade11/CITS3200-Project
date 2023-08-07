@@ -68,6 +68,15 @@ python -m pip install -r requirements.txt
 
 > **Note:** The virtual environment initialization is successful if you see `(.venv)` to the left of the command line. You will need to restart the virtual environment every time you restart the project. This can be done by re-running `source ./.venv/bin/activate`. (Note: slightly different to Windows command)
 
+**Setting up the database**
+
+Initialize the database with
+'''bash
+flask db init
+flask db migrate
+flask db upgrade
+'''
+
 ---
 ## Running the App
 Run app with  
