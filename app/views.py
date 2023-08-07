@@ -46,7 +46,7 @@ def register():
         user = User(id=form.id.data, username=form.username.data, email=form.email.data)
         user.set_passwd(form.passwd1.data)
         db.session.add(user)
-        db.session.commit()
+        db.session.commit() # Get the data user submitted and write into the database
         flash("Registration successful!")
         return url_for('login')
     return render_template('register.html', title='Register', form=form)
