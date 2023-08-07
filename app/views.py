@@ -1,12 +1,10 @@
 from flask_login import current_user, login_user, logout_user
 
-from app import app, db
+from app import app, db, verification
 from flask import render_template, redirect, url_for, flash, request
 
 from app.forms import RegistrationForm
 from app.models import User
-
-from flask_mail import Message
 
 
 @app.route('/')
@@ -40,8 +38,10 @@ def register():
         return url_for('index')
     form = RegistrationForm()
     if form.validate_on_submit():
-        if request.form.get('send_verification'):  # user requests for verification code
-            pass
+        if request.form.get('send_verification') and not form.email.data is None:  # user requests for verification code
+            verification.send_v_code(email_addr=form.email.data)
+            flash("Verification code has been sent to your email. "
+                  "Please check your inbox or junk folder and enter the code.")
         user = User(id=form.id.data, username=form.username.data, email=form.email.data)
         user.set_passwd(form.passwd1.data)
         db.session.add(user)
