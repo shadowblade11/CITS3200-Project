@@ -9,6 +9,7 @@
   - [Windows](#windows)
   - [Linux/MacOS](#linuxmacos)
 - [Running the App](#running-the-app)
+- [Relevant links:](#relevant-links)
 
 ## Project Description
 This project has a two-fold aim. On one hand, it aims at providing students of Italian from the beginners stream a way of monitoring their progress in the area of pronunciation and fluency. On the other, it is meant to provide data for the investigation of whether repetition of strings of words impacts the learning of pronunciation and fluency in Italian, and whether an innovative way of receiving feedback motivates students in their learning.  
@@ -42,6 +43,7 @@ python -m pip install -r requirements.txt
 ```
 
 > **Note:** The virtual environment initialization is successful if you see `(.venv)` to the left of the command line. You will need to restart the virtual environment every time you restart the project. This can be done by re-running `.\.venv\Scripts\activate`. (Note: slightly different to MacOS/Linux command)
+> To deactivate venv, run `deactivate`
 
 ---
 
@@ -67,6 +69,7 @@ python -m pip install -r requirements.txt
 ```
 
 > **Note:** The virtual environment initialization is successful if you see `(.venv)` to the left of the command line. You will need to restart the virtual environment every time you restart the project. This can be done by re-running `source ./.venv/bin/activate`. (Note: slightly different to Windows command)
+> To deactivate venv, run `deactivate`
 
 ---
 ## Running the App
@@ -75,3 +78,7 @@ Run app with
 flask --app app run
 ```
 while within the virtual environment. (.venv)  
+
+## Relevant links:
+[Figma](https://www.figma.com/file/iRdR7IwBRmGQy51VEWec3x/Student-Login?type=design&node-id=0%3A1&mode=design&t=RxDeRqttoMxhIba1-1) (website design)
+
