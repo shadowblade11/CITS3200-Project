@@ -6,8 +6,6 @@ from flask_wtf import FlaskForm
 class RegistrationForm(FlaskForm):
 
     id = IntegerField('Student ID', validators=[DataRequired(message="Please enter your student ID")])
-    username = StringField('User Name', validators=[DataRequired(message="Please enter your user name")])
-    email = StringField('Email', validators=[DataRequired(message="Please enter your email address"), Email()])
     v_code = StringField('Verification Code', validators=[DataRequired(message="Please enter the verification code "
                                                                                "you received")])
     send_verification = SubmitField('Send')
