@@ -107,14 +107,22 @@ def writeToFile(binData, fileName):
     file.write(binData)
   print("[DATA] : The following file has been written to the working directory: ", fileName)
 
+#right now this is just called from the soundTest.py to store the recordings in the upload and will retrieve the latest entry in the db
 def storeRecording(fileName):
   filePath = fileName
   file_blob = convertBinary(filePath)
   lastEntry = insertDB(filePath, file_blob)
   readBlobData(lastEntry)
-   
+
+#if need to store italian audio but can set up when webpage is settled
+def storeAudio(fileName):  
+  filePath = fileName
+  file_blob = convertBinary(filePath)
+  lastEntry = insertDB(filePath, file_blob)
+  readBlobData(lastEntry)
+
 def main():
-  #filePath = "italianAud.wav"
+  #filePath = ""
   #file_blob = convertBinary(filePath)
   #lastEntry = insertDB(filePath, file_blob)
   #readBlobData(lastEntry)
