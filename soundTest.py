@@ -32,7 +32,9 @@ if ".wav" in title:
     audio = AudioSegment.from_wav("recording.wav")
 else:
     audio = AudioSegment.from_mp3("recording.mp3")
-storeRecording(title)
+
+#call app.py to store
+#storeRecording(title)
 
 #can be used when webpage is settled
 #print("Playing audio now.... .... ....\n")

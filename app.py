@@ -3,8 +3,6 @@ import platform
 import sqlite3
 from sqlite3 import Error
 
-
-
 # deleteRecord and checkTables just for debugging purposes
 def deleteRecord():
     try:
@@ -128,9 +126,7 @@ def main():
   #readBlobData(lastEntry)
   checkTables()
   deleteRecord()
+  checkTables()
 
 if __name__ == "__main__":
     main()
-
-
-
