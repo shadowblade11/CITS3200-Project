@@ -2,25 +2,26 @@ import subprocess
 import numpy
 
 #seconds to sample audio for
-sampleTime = 5
+sampleTime = 7
 
 #number of points to scan cross correlation over
-span = 150
+span = 10
 
 #step size in points for cross correlation
 step = 1
 
 #minimum number of point that must overlap
-minOverlap = 20
+minOverlap = 4
 
 #report match when cross correlation has a preak excceding threshold
 threshold = 0.5
 
 #calculating fingerprint
 def calculateFingerprint(filename):
-    fpcalc = subprocess.check_outputc('fpcalc -raw -length %i %s' % (sampleTime, filename))
+    fpcalc = subprocess.check_output("fpcalc -raw -length %i %s" % (sampleTime, filename), shell=True, encoding="utf-8")
     fingerprintIndex = fpcalc.find('FINGERPRINT=') + 12
-    fingerprints = map(int, fpcalc[fingerprintIndex].split(','))
+    fingerprints = fpcalc[fingerprintIndex:].split(',')
+    fingerprints = [int(x) for x in fingerprints] 
 
     return fingerprints
 
@@ -51,6 +52,7 @@ def crossCorrelation(x,y,offset):
         offset = -offset 
         y = y[offset:]
         x = x[:len(y)]
+
     if min(len(x), len(y)) < minOverlap:
         #should not reach here
         return
@@ -66,8 +68,10 @@ def compare(x,y,span,step):
 
     corrXY = []
 
-    for offset in numpy.arrange(-span, span + 1, step):
-        corrXY.append(crossCorrelation(x,y,offset))
+    for offset in numpy.arange(-span, span + 1, step):
+        result = crossCorrelation(x,y,offset)
+        corrXY.append(result)
+
     return corrXY
 
 #return index of max value in list
@@ -93,6 +97,6 @@ def correlate(source, target):
     fingerprtinTarget = calculateFingerprint(target)
 
     corr = compare(fingerprintSource, fingerprtinTarget, span, step)
-    maxCorrOffset = getMaxCorr(corr,source,target)
+    getMaxCorr(corr,source,target)  
 
 
