@@ -7,8 +7,8 @@ def initialise():
     parser.add_argument("-o", "--target-file", help="target file")
     args = parser.parse_args()
 
-    SOURCEFILE = args.sourceFile if args.sourceFile else None
-    TARGETFILE = args.targetFile if args.targetFile else None
+    SOURCEFILE = args.source_file if args.source_file else None
+    TARGETFILE = args.target_file if args.target_file else None
 
     if not SOURCEFILE or not TARGETFILE:
         raise Exception("Source or Target files not specified")
@@ -17,6 +17,7 @@ def initialise():
 
 if __name__ == "__main__" :
     SOURCEFILE, TARGETFILE = initialise()
+    correlate(SOURCEFILE, TARGETFILE)
 
     
 
