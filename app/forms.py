@@ -13,8 +13,6 @@ def check_id(form, field):
 
 class RegistrationForm(FlaskForm):
     id = StringField('Student ID', validators=[DataRequired(message="Please enter your student ID"), check_id])
-    v_code = StringField('Verification Code')
-    send_verification = SubmitField('Send')
     passwd1 = PasswordField('Password', validators=[DataRequired(message="Please enter your password")])
     passwd2 = PasswordField('Repeat Password', validators=[DataRequired(message="Repeat your password"),
                                                            EqualTo('passwd1', message="Password must match")])
@@ -25,3 +23,8 @@ class LoginForm(FlaskForm):
     id = StringField('Student ID', validators=[DataRequired(message="Please enter your student ID"),check_id])
     passwd = PasswordField('Password', validators=[DataRequired(message="Please enter your password")])
     submit = SubmitField('Sign In')
+
+
+class VerificationForm(FlaskForm):
+    v_code = StringField('Verification Code')
+    send_verification = SubmitField('Send')

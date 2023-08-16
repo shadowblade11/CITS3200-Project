@@ -4,7 +4,7 @@ from wtforms import ValidationError
 from app import app, db, verification
 from flask import render_template, redirect, url_for, flash, request, session
 
-from app.forms import RegistrationForm, LoginForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm
 from app.models import User
 
 
@@ -44,29 +44,30 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
+    form1 = RegistrationForm()
+    form2 = VerificationForm()
     if request.method == 'POST':
-        if request.form.get('send_verification'):  # user requests for verification code
+        if form2.validate_on_submit():  # user requests for verification code
             v_code = verification.generate_v_code(6)  # Generate verification code for user
             print(v_code)
             session['verification_code'] = v_code
-            # verification.send_v_code(email_addr=form.id.data + '@student.uwa.edu.au', v_code=v_code)
+            # verification.send_v_code(email_addr=rForm.id.data + '@student.uwa.edu.au', v_code=v_code)
             flash("Verification code has been sent to your email. "
                   "Please check your inbox or junk folder and enter the code.")
-        if request.form.get('submit'):
-            if session['verification_code'] == form.v_code.data:
+        if form1.validate_on_submit():
+            if session['verification_code'] == form1.v_code.data:
                 # TODO: check user's verification code
-                user = User(id=form.id.data)
-                user.set_passwd(form.passwd1.data)
+                user = User(id=form1.id.data)
+                user.set_passwd(form1.passwd1.data)
                 return redirect(url_for('login'))
             else:
                 print("doesnt match")
-                form.v_code.errors = list(form.v_code.errors)
-                form.v_code.errors.append("Incorrect verification code")  # Add an error message to the form field
+                form1.v_code.errors = list(form1.v_code.errors)
+                form1.v_code.errors.append("Incorrect verification code")  # Add an error message to the form field
         # db.session.add(user)
         # db.session.commit()  # Get the data user submitted and write into the database
         # flash("Registration successful!")
         # return url_for('login')
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form1=form1, form2=form2)
 
 
