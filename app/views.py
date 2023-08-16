@@ -7,6 +7,7 @@ from app.forms import RegistrationForm, LoginForm
 from app.models import User
 
 
+
 @app.route('/index')
 def index():
     return render_template("index.html")
@@ -23,6 +24,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         if form.submit.data:
+            user = User(id=form.id.data, passwd=form.passwd.data)
+            print(user)
+            # User.check_passwd(form.passwd.data,"1234")
             return redirect(url_for('index'))
         elif form.register.data:
             return redirect(url_for('register'))
@@ -39,8 +43,6 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        return url_for('index')
     form = RegistrationForm()
     if form.validate_on_submit():
         if request.form.get('send_verification') and not form.id.data is None:  # user requests for verification code
