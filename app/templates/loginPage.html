@@ -13,7 +13,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Login</title>
-  <link rel="stylesheet" href="../static/loginPage.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
 </head>
 
 <body>
@@ -39,7 +39,7 @@
                 {{ form.submit }}
             </p>
             <p>
-                {{ form.register }}
+                <a href="{{ url_for('register') }}">Do not have an account? Click here to register!</a>
             </p>
         </form>
     </div>

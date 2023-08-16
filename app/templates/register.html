@@ -1,47 +1,66 @@
 <!DOCTYPE html>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
     <style>
-        .errors{
+        .errors {
             color: red;
         }
+
+        .disabled-button {
+            background-color: gray; /* Change this to your desired color */
+            color: white; /* Change this to your desired text color */
+        }
     </style>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Login</title>
-  <link rel="stylesheet" href="../static/loginPage.css">
 </head>
 
 <body>
     <div class="login-container">
-        <h1>Sign in to Italian Voice</h1>
-        <form action="/login" method="post">
+        <h1>Account Registration</h1>
+        <form action="" method="post">
             {{ form.hidden_tag() }}
             <p>
                 {{ form.id.label }}<br>{{ form.id(size=9) }}
             </p>
             {% if form.id.errors %}
-        <ul class="errors">
-            {% for error in form.id.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+                <ul class="errors">
+                    {% for error in form.id.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
             <p>
-                {{ form.passwd.label }}<br>{{ form.passwd(size=32)}}
+                {{ form.v_code.label }}<br>{{ form.v_code(size=6) }}
             </p>
+            {% if form.v_code.errors %}
+                <ul class="errors">
+                    {% for error in form.v_code.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <p>
+                {{ form.send_verification }}
+            </p>
+
+            <p>
+                {{ form.passwd1.label }}<br>{{ form.passwd1(size=32) }}
+            </p>
+            <p>
+                {{ form.passwd2.label }}<br>{{ form.passwd2(size=32) }}
+            </p>
+
             <p>
                 {{ form.submit }}
-            </p>
-            <p>
-                {{ form.register }}
             </p>
         </form>
     </div>
 </body>
+
 </html>
