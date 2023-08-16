@@ -8,22 +8,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Login</title>
-  <link rel="stylesheet" href="loginPage.css">
+  <link rel="stylesheet" href="../static/loginPage.css">
 </head>
 
 <body>
   <div class="login-container">
     <h1>Sign in to Italian Voice</h1>
-    <form action="#" method="post">
-      <label for="username">Student ID</label>
-      <input type="text" id="username" name="username" required>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+      <p>
+          {{ form.id.label }}<br>{{ form.id(size=9) }}
+      </p>
 
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
-      <div class="button">
-        <input type="submit" value="Login" class="Loginbtn">
-        <input type="submit" value="Register" class="Registerbtn">
-      </div>
+      <p>
+          {{ form.passwd.label }}<br>{{ form.passwd(size=32)}}
+      </p>
+      <p>
+          {{ form.submit }}
+      </p>
+        <p>
+            {{ form.register }}
+        </p>
   </div>
   </form>
   </div>

@@ -1,11 +1,11 @@
-from wtforms import StringField, IntegerField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
 from flask_wtf import FlaskForm
 
 
 class RegistrationForm(FlaskForm):
 
-    id = IntegerField('Student ID', validators=[DataRequired(message="Please enter your student ID")])
+    id = StringField('Student ID', validators=[DataRequired(message="Please enter your student ID")])
     v_code = StringField('Verification Code', validators=[DataRequired(message="Please enter the verification code "
                                                                                "you received")])
     send_verification = SubmitField('Send')
@@ -14,5 +14,9 @@ class RegistrationForm(FlaskForm):
                                                            EqualTo('passwd1',message="Password must match")])
     submit = SubmitField('Register')
 
+
 class LoginForm(FlaskForm):
-    pass
+    id = StringField('Student ID', validators=[DataRequired(message="Please enter your student ID")])
+    passwd = PasswordField('Password', validators=[DataRequired(message="Please enter your password")])
+    submit = SubmitField('Sign In')
+    register = SubmitField('Do not have a account? Click here to register!')
