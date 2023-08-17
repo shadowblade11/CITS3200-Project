@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,49 +11,38 @@
         }
     </style>
 </head>
-
 <body>
     <div class="login-container">
         <h1>Account Registration</h1>
-        <form action="" method="post">
-            {{ form1.hidden_tag() }}
+        <form action="{{url_for('register')}}" method="post">
+            {{ form.hidden_tag() }}
             <p>
-                {{ form1.id.label }}<br>{{ form1.id(size=9) }}
+                {{ form.id.label }}<br>{{ form.id(size=9) }}
             </p>
-            {% if form1.id.errors %}
+            {% if form.id.errors %}
                 <ul class="errors">
-                    {% for error in form1.id.errors %}
+                    {% for error in form.id.errors %}
                         <li>{{ error }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
-            <form action="" method="post"><p>
-                {{ form2.v_code.label }}<br>{{ form2.v_code(size=6) }}
+            <p>
+                {{ form.passwd1.label }}<br>{{ form.passwd1(size=32) }}
             </p>
-            {% if form2.v_code.errors %}
+            <p>
+                {{ form.passwd2.label }}<br>{{ form.passwd2(size=32) }}
+            </p>
+        {% if form.passwd2.errors %}
                 <ul class="errors">
-                    {% for error in form2.v_code.errors %}
+                    {% for error in form.passwd2.errors %}
                         <li>{{ error }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
-
             <p>
-        {{ form2.send_verification }}
-</p></form>
-
-
-            <p>
-                {{ form1.passwd1.label }}<br>{{ form1.passwd1(size=32) }}
-            </p>
-            <p>
-                {{ form1.passwd2.label }}<br>{{ form1.passwd2(size=32) }}
-            </p>
-            <p>
-                {{ form1.submit }}
+                {{ form.submit }}
             </p>
         </form>
     </div>
 </body>
-
 </html>
