@@ -22,16 +22,12 @@ def signup():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.submit.data:
-            if form.id.data and form.passwd.data:
-                user = User(id=form.id.data)
-                user.set_passwd(passwd=form.passwd.data)
-                print(user.check_passwd("1234"))
-                return redirect(url_for('index'))
-            else:
-                flash("Please fill in both fields to sign in.")
+        user = User(id=form.id.data)
+        user.set_passwd(passwd=form.passwd.data)
+        print(user.check_passwd("1234"))
+        return redirect(url_for('index'))
     if current_user.is_authenticated:
-        return render_template("index.html")
+        return redirect(url_for('index'))
     return render_template('loginPage.html', form=form)
 
 
@@ -57,12 +53,20 @@ def register():
 @app.route('/verify', methods=['POST', 'GET'])
 def verify():
     form = VerificationForm()
-    # email_addr = session.get('id') + "@student.uwa.edu.au"
-    # verification.send_v_code(email_addr, session.get('v_code'))
+
+    if 'id' not in session:
+        flash("You can only access the verification page from the registration page.")
+        return redirect(url_for('register'))
+
     if request.method == 'POST':
-        if session['v_code'] == form.v_code.data:  # TODO: add data into database and the resend function implementation
-            user = User(id=session['id'], is_admin=False)
+        if session['v_code'] == form.v_code.data:
+            user = User(id=session['id'])
             user.set_passwd(session['passwd'])
-            print(user)
+            session.pop('id')  # Clear the session variable
             return redirect(url_for('login'))
+        else:
+            # Verification code doesn't match
+            form.v_code.errors = ["Incorrect verification code"]
+
     return render_template('verify.html', title='Register', form=form)
+

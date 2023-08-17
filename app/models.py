@@ -23,5 +23,10 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.id}>'
 
+    def __init__(self,id):
+        self.id = id
+        self.is_admin = False
+
+
 # class Test(UserMixin, db.Model):
 #     pass
