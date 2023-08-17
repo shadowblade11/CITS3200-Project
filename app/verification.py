@@ -32,6 +32,3 @@ def send_v_code(email_addr, v_code):
         print("send successfully")
     except Exception as e:
         print("Error: ", str(e))
-
-
-# send_v_code("23011392@student.uwa.edu.au")

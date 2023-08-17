@@ -39,7 +39,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('/'))
+    return redirect(url_for('login'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -47,7 +47,7 @@ def register():
     form1 = RegistrationForm()
     form2 = VerificationForm()
     if request.method == 'POST':
-        if form2.validate_on_submit():  # user requests for verification code
+        if form2.validate_on_submit():
             v_code = verification.generate_v_code(6)  # Generate verification code for user
             print(v_code)
             session['verification_code'] = v_code
