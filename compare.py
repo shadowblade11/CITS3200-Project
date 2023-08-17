@@ -1,3 +1,5 @@
+#USAGE: python compare.py -i SOURCEFILE -o TARGETFILE
+
 import argparse
 from correlation import correlate
 
