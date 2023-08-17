@@ -12,6 +12,7 @@ def load_user(id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     passwd = db.Column(db.String(128))
+    is_admin = db.Column(db.Boolean)
 
     def set_passwd(self, passwd):
         self.password_hash = generate_password_hash(passwd)

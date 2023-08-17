@@ -47,12 +47,22 @@ def register():
     if form.validate_on_submit():
         session['id'] = form.id.data
         session['passwd'] = form.passwd2.data
+        v_code = verification.generate_v_code(6)
+        print(v_code)
+        session['v_code'] = v_code
         return redirect(url_for('verify'))
-    return render_template('register.html',form=form,title='Register')
+    return render_template('register.html', form=form, title='Register')
 
 
-@app.route('/verify',methods=['POST','GET'])
+@app.route('/verify', methods=['POST', 'GET'])
 def verify():
     form = VerificationForm()
-    print(session.get('id'))
-    return render_template('verify.html', title='Register',form=form)
+    # email_addr = session.get('id') + "@student.uwa.edu.au"
+    # verification.send_v_code(email_addr, session.get('v_code'))
+    if request.method == 'POST':
+        if session['v_code'] == form.v_code.data:  # TODO: add data into database and the resend function implementation
+            user = User(id=session['id'], is_admin=False)
+            user.set_passwd(session['passwd'])
+            print(user)
+            return redirect(url_for('login'))
+    return render_template('verify.html', title='Register', form=form)

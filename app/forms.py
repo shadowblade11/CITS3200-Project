@@ -28,4 +28,4 @@ class LoginForm(FlaskForm):
 class VerificationForm(FlaskForm):
     # id = StringField('Student ID', validators=[DataRequired(message="Please enter your student ID"), check_id])
     v_code = StringField('Verification Code')
-    send_verification = SubmitField('Send')
+    send_verification = SubmitField('Check')
