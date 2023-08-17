@@ -8,12 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
     <style>
         .errors {
-            color: red;
-        }
-
-        .disabled-button {
-            background-color: gray; /* Change this to your desired color */
-            color: white; /* Change this to your desired text color */
+            color: #a12323;
         }
     </style>
 </head>
@@ -55,7 +50,6 @@
             <p>
                 {{ form1.passwd2.label }}<br>{{ form1.passwd2(size=32) }}
             </p>
-
             <p>
                 {{ form1.submit }}
             </p>
