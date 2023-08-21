@@ -8,11 +8,10 @@ from app.models import User
 
 
 @app.route('/')
-@app.route('/home/<int:uid>')
+@app.route('/home')
 @login_required
-def home(uid):
+def home():
     return render_template("homePage.html")
-
 
 
 @app.route('/signup')

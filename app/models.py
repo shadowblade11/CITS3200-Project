@@ -10,7 +10,7 @@ def load_user(id):
 
 
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(52), primary_key=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
 
@@ -27,5 +27,7 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
 # class Test(UserMixin, db.Model):
 #     pass

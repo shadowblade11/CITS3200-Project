@@ -4,6 +4,8 @@ from flask_wtf import FlaskForm
 
 
 def check_id(form, field):
+    if field.data == "admin":
+        return
     if not field.data.isdigit():
         raise ValidationError('Input must be an integer')
     if not len(field.data) == 8:
