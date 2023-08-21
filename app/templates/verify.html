@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='verifyPage.css')}}">
+    <style>
+        .errors {
+            color: #a12323;
+        }
+    </style>
+    <script>
+    // Function to start the timer
+    function startTimer(duration, display) {
+        var timer = duration,  seconds;
+        var timeInterval = setInterval(function () {
+        var seconds = Math.max(parseInt(timer % 60, 10), 0);
+        var formattedMinutes = "00";
+        var formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = formattedMinutes + ":" + formattedSeconds;
+
+            if (--timer < 0) {
+                // Enable the button and clear the timer
+                document.getElementById("resend-button").removeAttribute("disabled");
+                clearInterval(timerInterval);
+            }
+        }, 1000);
+    }
+
+    // Start the timer when the page loads
+    window.onload = function () {
+        var time = 59;
+        var display = document.querySelector('#timer');
+        startTimer(time, display);
+    };
+</script>
+
+</head>
+<body>
+    <div class="login-container">
+        <h1>A verification code has been sent to your associated student email, please check and enter.</h1>
+        <br>
+        <br>
+        <form action="{{url_for('verify')}}" method="post">
+            <p>{{ form.v_code.label }}{{ form.v_code }}</p>
+            {% if form.v_code.errors %}
+                <ul class="errors">
+                    {% for error in form.v_code.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p>{{ form.send_verification }}</p>
+        </form>
+        <br>
+    <form action="{{url_for('resend_verification')}}" method="post">
+        <br>
+    <p><button id="resend-button" type="submit" disabled>Resend Verification Code</button></p>
+        <p>Time left: <span id="timer">01:00</span></p>
+
+</form>
+    </div>
+</body>
+</html>
