@@ -15,6 +15,7 @@
     <button id = "start_but">start recording</button>
     <button id = "stop_but">stop recording</button>
     <script>
+
         const startButton = document.getElementById("start_but");
         const stopButton = document.getElementById("stop_but");
         const audio = document.getElementById("recorded");
@@ -23,32 +24,36 @@
         if (navigator.mediaDevices){
             console.log("supported");
         }
+        else{
+            alert("your brower will not work");
+        }
+
         let recordedStream = [];
+
         navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {const audioStream = new MediaRecorder(stream)
-        startButton.onclick = () => {
-            // console.log('nice');
-            audioStream.start();
-            console.log(audioStream.state);
-            bg.style.background="red";
-        }
+            startButton.onclick = () => {
+                audioStream.start();
+                console.log(audioStream.state);
+                bg.style.background="red";
+            }
 
-        stopButton.onclick = () => {
-            audioStream.stop();
-            console.log(audioStream.state);
-            bg.style.background="blue";
-        }
+            stopButton.onclick = () => {
+                audioStream.stop();
+                console.log(audioStream.state);
+                bg.style.background="blue";
+            }
 
-        audioStream.onstop = (e) => {
-            const blob = new Blob(recordedStream, {type: "audio/wav"});
-            recordedStream = [];
-            const audioURL = URL.createObjectURL(blob);
-            audio.src = audioURL;
-            console.log("file upload")
-        }
-        
-        audioStream.ondataavailable = (e) =>{
-            recordedStream.push(e.data);
-        }
+            audioStream.onstop = (e) => {
+                const blob = new Blob(recordedStream, {type: "audio/wav"});
+                recordedStream = [];
+                const audioURL = URL.createObjectURL(blob);
+                audio.src = audioURL;
+                console.log("file upload")
+            }
+
+            audioStream.ondataavailable = (e) =>{
+                recordedStream.push(e.data);
+            }
         }).catch((err)=>{
             console.log("problem occurred");
         });
