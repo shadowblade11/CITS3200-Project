@@ -6,12 +6,6 @@
     <title>Document</title>
 </head>
 <body id = "background" style="background-color: blue;">
-    <audio controls>
-        <source src="recording.wav",type="audio/wav">
-    </audio>
-
-    <audio controls id= "recorded">
-    </audio>
     <button id = "start_but">start recording</button>
     <button id = "stop_but">stop recording</button>
     <script>
@@ -47,8 +41,12 @@
                 const blob = new Blob(recordedStream, {type: "audio/wav"});
                 recordedStream = [];
                 const audioURL = URL.createObjectURL(blob);
-                audio.src = audioURL;
-                console.log("file upload");
+                var audioPlayer = document.createElement("audio");
+                document.body.append(audioPlayer);
+                audioPlayer.controls = true;
+                audioPlayer.src = audioURL;
+
+
                 // https://gist.github.com/philipstanislaus/c7de1f43b52531001412
                 var temp = document.createElement("a");
                 document.body.append(temp);
@@ -57,7 +55,7 @@
                 console.log(temp.href);
                 temp.download = "sound.wav";
                 temp.click();
-                // window.URL.revokeObjectURL(audioURL);
+                temp.remove();
 
             }
 
