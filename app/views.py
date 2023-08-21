@@ -66,7 +66,10 @@ def register():
 @app.route('/verify', methods=['POST', 'GET'])
 def verify():
     form = VerificationForm()
-
+    if request.referrer is None:
+        return redirect(url_for('register'))
+    if '/'+request.referrer.split(request.host_url)[-1] != url_for('register'):
+        return redirect(url_for('register'))
     if 'id' not in session:
         flash("You can only access the verification page from the registration page.")
         return redirect(url_for('register'))
