@@ -23,11 +23,6 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.id}>'
 
-    # def __init__(self,id):
-    #     self.password_hash = None
-    #     self.id = id
-    #     self.is_admin = False
-
 
 @login.user_loader
 def load_user(id):

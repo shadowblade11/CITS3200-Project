@@ -8,10 +8,11 @@ from app.models import User
 
 
 @app.route('/')
-@app.route('/home')
+@app.route('/home/<int:uid>')
 @login_required
-def home():
+def home(uid):
     return render_template("homePage.html")
+
 
 
 @app.route('/signup')
@@ -32,6 +33,7 @@ def login():
             return redirect(url_for('login'))
         login_user(user)
         next_page = request.args.get('next')
+        session['uid'] = form.id.data
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
         return redirect(next_page)
@@ -48,10 +50,13 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        if User.query.filter_by(id=int(form.id.data)).first() is not None:
+            message = "ID already exists."
+            return render_template('register.html', form=form, title='Register', message=message)
         session['id'] = form.id.data
         session['passwd'] = form.passwd2.data
         v_code = verification.generate_v_code(6)
-        verification.send_v_code(form.id.data+'@student.uwa.edu.au', v_code)
+        # verification.send_v_code(form.id.data+'@student.uwa.edu.au', v_code)
         print(v_code)
         session['v_code'] = v_code
         return redirect(url_for('verify'))
@@ -79,3 +84,13 @@ def verify():
             form.v_code.errors = ["Incorrect verification code"]
 
     return render_template('verify.html', title='Register', form=form)
+
+
+@app.route('/resend-verification', methods=['POST'])
+def resend_verification():
+    v_code = verification.generate_v_code(6)
+    print(v_code)
+    session['v_code'] = v_code # Update verification code
+    # verification.send_v_code(session.get('id')+'@student.uwa.edu.au',v_code)
+    flash("Verification code has been resent to your email.")
+    return redirect(url_for('verify'))

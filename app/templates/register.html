@@ -22,10 +22,15 @@
             {% if form.id.errors %}
                 <ul class="errors">
                     {% for error in form.id.errors %}
-                        <li>{{ error }}</li>
+                        <ol>{{ error }}</ol>
                     {% endfor %}
                 </ul>
             {% endif %}
+        {% if message %}
+<div class="errors">
+    {{ message }}
+</div>
+{% endif %}
             <p>
                 {{ form.passwd1.label }}<br>{{ form.passwd1(size=32) }}
             </p>

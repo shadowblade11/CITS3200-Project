@@ -10,6 +10,33 @@
             color: #a12323;
         }
     </style>
+    <script>
+    // Function to start the timer
+    function startTimer(duration, display) {
+        var timer = duration,  seconds;
+        var timeInterval = setInterval(function () {
+        var seconds = Math.max(parseInt(timer % 60, 10), 0);
+        var formattedMinutes = "00";
+        var formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = formattedMinutes + ":" + formattedSeconds;
+
+            if (--timer < 0) {
+                // Enable the button and clear the timer
+                document.getElementById("resend-button").removeAttribute("disabled");
+                clearInterval(timerInterval);
+            }
+        }, 1000);
+    }
+
+    // Start the timer when the page loads
+    window.onload = function () {
+        var time = 59;
+        var display = document.querySelector('#timer');
+        startTimer(time, display);
+    };
+</script>
+
 </head>
 <body>
     <div class="login-container">
@@ -25,6 +52,11 @@
             {% endif %}
             <p>{{ form.send_verification }}</p>
         </form>
+    <form action="{{url_for('resend_verification')}}" method="post">
+    <p><button id="resend-button" type="submit" disabled>Resend Verification Code</button></p>
+        <p>Time left: <span id="timer">01:00</span></p>
+
+</form>
     </div>
 </body>
 </html>
