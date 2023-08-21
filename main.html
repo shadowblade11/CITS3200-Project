@@ -9,13 +9,50 @@
     <audio controls>
         <source src="recording.wav",type="audio/wav">
     </audio>
-    <button id = start_but>start recording</button>
-    <button id = stop_but>stop recording</button>
+
+    <audio controls id= "recorded">
+    </audio>
+    <button id = "start_but">start recording</button>
+    <button id = "stop_but">stop recording</button>
     <script>
         const startButton = document.getElementById("start_but");
         const stopButton = document.getElementById("stop_but");
+        const audio = document.getElementById("recorded");
 
-        
+        let audioStream;
+        let recordedStream = [];
+
+
+        const handleAudio = event => {
+            if (event.data.size > 0){
+                recordedStream.push(event.data)
+            }
+        }
+        startButton.addEventListener('click',async()=>{
+            if (!window.AudioContext || !window.AudioWorkletNode || !window.MediaStreamAudioSourceNode){
+                console.log("broken");
+                return ;
+            }
+            else{
+                console.log("works");
+            }
+            const stream = await navigator.mediaDevices.getUserMedia({audio:true})
+            audioStream = new MediaRecorder(stream);
+            audioStream.ondataavailable = handleAudio;
+            audioStream.start();
+        });
+
+        stopButton.addEventListener('click',async()=>{
+            if (audioStream){
+                audioStream.stop();
+            }
+            console.log("stopped audio");
+        });
+
+        audioStream.addEventListener('stop',()=>{
+            const file = new Blob(recordedStream,{type:'audio/wav'});
+            audio.src = URL.createObjectURL(file);
+        })
     </script>
 </body>
 </html>
