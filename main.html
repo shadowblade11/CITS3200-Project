@@ -48,7 +48,17 @@
                 recordedStream = [];
                 const audioURL = URL.createObjectURL(blob);
                 audio.src = audioURL;
-                console.log("file upload")
+                console.log("file upload");
+                // https://gist.github.com/philipstanislaus/c7de1f43b52531001412
+                var temp = document.createElement("a");
+                document.body.append(temp);
+                temp.innerHTML = "test";
+                temp.href = audioURL;
+                console.log(temp.href);
+                temp.download = "sound.wav";
+                temp.click();
+                // window.URL.revokeObjectURL(audioURL);
+
             }
 
             audioStream.ondataavailable = (e) =>{
