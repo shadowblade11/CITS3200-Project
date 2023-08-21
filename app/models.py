@@ -11,7 +11,7 @@ def load_user(id):
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    passwd = db.Column(db.String(128))
+    password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
 
     def set_passwd(self, passwd):
@@ -23,10 +23,14 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.id}>'
 
-    def __init__(self,id):
-        self.id = id
-        self.is_admin = False
+    # def __init__(self,id):
+    #     self.password_hash = None
+    #     self.id = id
+    #     self.is_admin = False
 
 
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 # class Test(UserMixin, db.Model):
 #     pass

@@ -5,16 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Page</title>
-  <link rel="stylesheet" href="homePage.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='homePage.css')}}">
     
  
 </head>
 
 <body>
   <div class="top-bar">
-    <a href="#">Home</a>
+    <a href="{{ url_for('home') }}">Home</a>
     <a href="#">Grades</a>
-    <a href="#">Log Out</a>
+    <a href="{{ url_for('logout') }}">Log Out</a>
   </div>
 
   <div class="content">
@@ -28,8 +28,8 @@
         <option value="Test4">Test4</option> 
     </select>
     <h2>Unassessed Test</h2>
-    <label for="Assessed Test">Unassessed Test</label> 
-    <select name="UnTEST" id="UnTest"> 
+    <label for="Assessed Test">Unassessed Test</label>
+    <select name="UnTEST" id="UnTest">
         <option value="Test1">Test1</option> 
         <option value="Test2">Test2</option> 
         <option value="Test3">Test3</option> 

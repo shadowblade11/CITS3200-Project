@@ -12,6 +12,7 @@ migrate = Migrate(app,db)
 
 app.debug = True
 login = LoginManager(app)
+login.login_view = 'login'
 
 app.app_context().push()
 
