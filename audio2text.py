@@ -1,25 +1,19 @@
 import speech_recognition as sr
-import epitran as epi
+import epitran
 
-source = "recording.wav"
-target = "recording1.wav"
+def getPhone(audioFile): 
+    r = sr.Recognizer()
+    with sr.AudioFile(audioFile) as source:
+        audio_data = r.record(source)
+        text = r.recognize_google(audio_data, language="it-IT")
+        print(text)
+        epi = epitran.Epitran('ita-Latn')
+        phone = epi.transliterate(text)
+        print(phone)
 
-r = sr.Recognizer()
+if __name__ == "__main__" :
+    source = "recording.wav"
+    getPhone(source)
+    submittedAudio = "recording1.wav"
+    getPhone(submittedAudio)
 
-with sr.AudioFile(source) as source:
-    audio_data = r.record(source)
-    text = r.recognize_google(audio_data, language="it-IT")
-    print(text)
-    epitran = epi.Epitran('ita-Latn') 
-    print(epitran.transliterate(text)) 
-
-
-with sr.AudioFile(target) as source:
-    audio_data = r.record(source)
-    text = r.recognize_google(audio_data, language="it-IT")
-    print(text)
-    epitran = epi.Epitran('ita-Latn')
-    print(epitran.transliterate(text))
-
-##can use allosaurus 
-# python -m allosaurus.run -i <filename>
