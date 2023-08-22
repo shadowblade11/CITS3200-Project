@@ -3,6 +3,8 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import wavio as wv
 from audioApp import storeRecording
+import numpy as np
+import os
 
 #sampling frequency
 freq = 44100
@@ -19,8 +21,11 @@ sd.wait()
 print("\nRecording Completed!\n")
 
 #convert to audio for saving
-title = "recording.wav"
+title = "sample.wav"
 write(title, freq, recording)
+os.system("ffmpeg -i %s recording.wav" % title + "> /dev/null 2>&1")
+os.system("rm sample.wav")
+
 
 ### PLAYING AUDIO ### 
 #need to download ffmpeg to work
@@ -34,7 +39,7 @@ else:
     audio = AudioSegment.from_mp3("recording.mp3")
 
 #call app.py to store
-storeRecording(title)
+#storeRecording("recording.wav")
 
 #can be used when webpage is settled
 #print("Playing audio now.... .... ....\n")
