@@ -57,6 +57,11 @@
                 // temp.click();
                 // temp.remove();
 
+                // $.post("/save-audio",audioURL)
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "http://127.0.0.1:5000/save-audio", true);
+                xmlhttp.setRequestHeader("Content-type", "audio/wav");
+                xmlhttp.send(audioURL);
             }
 
             audioStream.ondataavailable = (e) =>{

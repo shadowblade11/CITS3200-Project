@@ -20,7 +20,9 @@ def test():
     return render_template('main.html')
 
 
-@app.route("/save-audio")
+@app.route("/save-audio",methods=['POST'])
 def save_audio():
     data = request.data
-    
+    print(f'this is the {data}')
+    return "temp"
+
