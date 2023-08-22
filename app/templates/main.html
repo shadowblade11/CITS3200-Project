@@ -48,20 +48,20 @@
 
 
                 // https://gist.github.com/philipstanislaus/c7de1f43b52531001412
-                // var temp = document.createElement("a");
-                // document.body.append(temp);
-                // temp.innerHTML = "test";
-                // temp.href = audioURL;
-                // console.log(temp.href);
-                // temp.download = "sound.wav";
-                // temp.click();
-                // temp.remove();
+                var temp = document.createElement("a");
+                document.body.append(temp);
+                temp.innerHTML = "test";
+                temp.href = audioURL;
+                console.log(temp.href);
+                temp.download = "sound-working.wav";
+                temp.click();
+                temp.remove();
 
                 // $.post("/save-audio",audioURL)
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.open("POST", "http://127.0.0.1:5000/save-audio", true);
                 xmlhttp.setRequestHeader("Content-type", "audio/wav");
-                xmlhttp.send(audioURL);
+                xmlhttp.send(blob);
             }
 
             audioStream.ondataavailable = (e) =>{
