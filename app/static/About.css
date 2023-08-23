@@ -63,8 +63,8 @@ html {
   .column {
     width: 25%;
     padding: 0 0.5rem;
-    display: inline-block; /* Display team containers inline */
-    vertical-align: top; /* Align to the top */
+    display: inline-block; 
+    vertical-align: top; 
   }
   
   /* Card Styles */
@@ -141,7 +141,7 @@ html {
   }
   
   .button:hover {
-    background-color: #00fef6;
+    background-color:#F5F5DC;
     color: #000000;
   }
   
