@@ -1,4 +1,5 @@
 import subprocess
+from ipapy.ipastring import IPAString
 
 def checkPronounciation(sourcePhone, submittedPhone):
     matchedPhone = 0
@@ -21,13 +22,16 @@ def checkPronounciation(sourcePhone, submittedPhone):
 
 def getPhone(audioFile):
     phones = subprocess.check_output("python -m allosaurus.run -i %s" % audioFile, shell=True, encoding="utf-8")
-    print(phones)
-    return phones
+    print("%s\n"%phones)
+    return phones.lower()
 
 if __name__ == '__main__':
     source = "recording.wav"
+    sourcePhone = IPAString(unicode_string=getPhone(source))
+
     submittedAudio = "recording1.wav"
-    sourcePhone = getPhone(source)
-    submittedPhone = getPhone(submittedAudio)
+    submittedPhone = IPAString(unicode_string=getPhone(submittedAudio))    
 
     checkPronounciation(sourcePhone, submittedPhone)
+
+    #extern doesnt really return proper phones
