@@ -1,5 +1,6 @@
 import subprocess
 from ipapy.ipastring import IPAString
+#### IGNORE THIS ONE KINDA BUGGY ####
 
 def checkPronounciation(sourcePhone, submittedPhone):
     matchedPhone = 0
