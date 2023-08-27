@@ -27,12 +27,14 @@ def getPhone(audioFile):
     return phones.lower()
 
 if __name__ == '__main__':
-    source = "recording.wav"
-    sourcePhone = IPAString(unicode_string=getPhone(source))
+    source = "pronunciation_it_buongiorno.wav"
+    getPhone(source)
+    #sourcePhone = IPAString(unicode_string=getPhone(source))
 
-    submittedAudio = "recording1.wav"
-    submittedPhone = IPAString(unicode_string=getPhone(submittedAudio))    
+    submittedAudio = "recording.wav"
+    getPhone(submittedAudio)
+    #submittedPhone = IPAString(unicode_string=getPhone(submittedAudio))    
 
-    checkPronounciation(sourcePhone, submittedPhone)
+    #checkPronounciation(sourcePhone, submittedPhone)
 
     #extern doesnt really return proper phones
