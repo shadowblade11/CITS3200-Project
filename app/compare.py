@@ -2,8 +2,10 @@
 import wave
 import matplotlib.pyplot as plt
 import numpy as np
-
+from pydub import AudioSegment
 source = "../audio/pronunciation_it_buongiorno.wav"
+
+source2 = "../audio/sound.mp3"
 
 
 # def get_text(audio_file):
@@ -34,7 +36,16 @@ def generate_soundwave_image(file):
     filename = filename[-1].split('.')[0]
     plt.savefig(f"../images/{filename}", transparent = True)
 
-generate_soundwave_image(source)
+
+def convert_to_wav(file):
+    sound = AudioSegment.from_mp3(file)
+    filename = file.split("/")[-1]
+    filename = filename.split(".")[0]
+    sound.export(f"../audio/{filename}",format="wav")
+
+
+convert_to_wav(source2)
+# generate_soundwave_image(source2)
 
 
 # get_text(source)
