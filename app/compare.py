@@ -32,7 +32,7 @@ def generate_soundwave_image(file):
 
     filename = source.split('_')
     filename = filename[-1].split('.')[0]
-    plt.savefig(filename, transparent = True)
+    plt.savefig(f"../images/{filename}", transparent = True)
 
 generate_soundwave_image(source)
 
