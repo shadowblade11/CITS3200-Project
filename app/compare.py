@@ -5,6 +5,7 @@ import numpy as np
 
 source = "../audio/pronunciation_it_buongiorno.wav"
 
+
 # def get_text(audio_file):
 #     rec = Recognizer()
 #     with AudioFile(audio_file) as audio_track:
@@ -25,9 +26,13 @@ def generate_soundwave_image(file):
     print(length)
 
     plt.figure(figsize=(20,5))
-    plt.title("Audio: {}".format(source))
+    # plt.title("Audio: {}".format(source)) #hide the title
     plt.plot(length,raw_audio)
-    plt.savefig("test")
+    plt.axis('off') #hide axis
+
+    filename = source.split('_')
+    filename = filename[-1].split('.')[0]
+    plt.savefig(filename, transparent = True)
 
 generate_soundwave_image(source)
 
