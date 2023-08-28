@@ -1,6 +1,4 @@
-import subprocess
 import ffmpeg
-from pydub import AudioSegment
 src = "../audio/sound.mp3"
 dst = "../audio/test.wav"
 i = ffmpeg.input(src) #get input file path
