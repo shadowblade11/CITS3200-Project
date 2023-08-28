@@ -14,3 +14,15 @@ def signup():
 @app.route('/login')
 def login():
     return render_template('login.html')
+
+@app.route('/About')
+def login():
+    return render_template('About.html')
+
+@app.route('/Account')
+def login():
+    return render_template('AccountPage.html')
+
+@app.route('/Intro')
+def login():
+    return render_template('Intro.html')
