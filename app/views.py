@@ -16,13 +16,13 @@ def login():
     return render_template('login.html')
 
 @app.route('/About')
-def login():
+def about():
     return render_template('About.html')
 
 @app.route('/Account')
-def login():
+def account():
     return render_template('AccountPage.html')
 
 @app.route('/Intro')
-def login():
+def intro():
     return render_template('Intro.html')
