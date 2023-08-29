@@ -2,19 +2,10 @@
 import wave
 import matplotlib.pyplot as plt
 import numpy as np
-
+import ffmpeg
 
 source = "../audio/pronunciation_it_buongiorno.wav"
-source2 = "../audio/sound.wav"
-
-
-# def get_text(audio_file):
-#     rec = Recognizer()
-#     with AudioFile(audio_file) as audio_track:
-#         audio = rec.record(audio_track)
-    
-#     text = rec.recognize_google(audio,language="it-IT")
-#     print(text)
+source2 = "../audio/imported/sound.wav"
 
 def generate_soundwave_image(file):
     soundwave = wave.open(file,"r")
@@ -37,9 +28,15 @@ def generate_soundwave_image(file):
     plt.savefig(f"../images/{filename}", transparent = True)
 
 
+def convert_to_wav_working_format(file):
+    i = ffmpeg.input(file) #get input file path
+    filename = file.split("/")[-1]
+    filename = filename.split(".")[0]
+    o = ffmpeg.output(i,f"../audio/{filename}.wav") #get output file path
+    ffmpeg.run(o) #run the command
+    print("successful")
 
 
 
-
-# convert_to_wav(source2)
-generate_soundwave_image(source2)
+convert_to_wav_working_format(source2)
+# generate_soundwave_image(source2)
