@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../static/Account.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='Account.css')}}">
   <title>Italiano In Pratica</title>
   <nav class="navbar">
     <ul class="navbar-list">
       <li><a href="/Intro">Home</a></li>
-      <li><a href="/login">Login</a></li>
+      <li><a href="{{url_for('login')}}">Login</a></li>
       <li><a href="/About">About</a></li>
       <li><a href="/Account">Account</a></li>
-      <li><a href="/index">Index</a></li>
+      <li><a href="{{url_for('home')}}">Index</a></li>
       <li><a href="/">Contact</a></li>
     </ul>
 </nav>
@@ -28,7 +28,7 @@
 <div class="profileSection">
   <p style="margin:0;"><b>User:</b> {{ user.username }}</p>
   <img src={{user.profile_picture}} class="ProfilePicture" alt="Profile Picture" id="profilePic" height="100px" width="100px">
-  <!-- Need a reference like: ../images/ProfilePictures/{{ user.profile_picture }} as image src -->
+{#  TODO: <!-- Need a reference like: ../images/ProfilePictures/{{ user.profile_picture }} as image src -->#}
   <p><b>Score:</b> {{ user.score }}</p>
 </div>
 

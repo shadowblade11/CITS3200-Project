@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ css }}">
+  <title>Italiano In Pratica</title>
+    <style>
+        .errors{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <ul class="navbar-list">
+    <li><a href="{{ url_for('intro') }}">Home</a></li>
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    <li><a href="{{url_for('about')}}">About</a></li>
+    <li><a href="/Account">Account</a></li>
+    <li><a href="/index">Index</a></li>
+    <li><a href="/">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

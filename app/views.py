@@ -6,18 +6,24 @@ from app import app, db, verification
 from app.forms import RegistrationForm, LoginForm, VerificationForm
 from app.models import User
 
+import datetime
+
 
 @app.route('/')
+@app.route('/intro')
+def intro():
+    return render_template("Intro.html",css="./static/Intro.css")
+
+
+@app.route('/about')
+def about():
+    return render_template("About.html", css='./static/About.css')
+
+
 @app.route('/home/<int:uid>')
 @login_required
 def home(uid):
-    return render_template("homePage.html")
-
-
-
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
+    return render_template("homePage.html", css='./static/homePage.css')
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -37,7 +43,7 @@ def login():
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
         return redirect(next_page)
-    return render_template('loginPage.html', form=form)
+    return render_template('loginPage.html', form=form, css='./static/loginPage.css')
 
 
 @app.route('/logout')
@@ -59,6 +65,7 @@ def register():
         # verification.send_v_code(form.id.data+'@student.uwa.edu.au', v_code)
         print(v_code)
         session['v_code'] = v_code
+        session['start_time'] = datetime.datetime.now()
         return redirect(url_for('verify'))
     return render_template('register.html', form=form, title='Register')
 
@@ -68,23 +75,24 @@ def verify():
     form = VerificationForm()
     if request.referrer is None:
         return redirect(url_for('register'))
-    if '/'+request.referrer.split(request.host_url)[-1] != url_for('register'):
+    if '/' + request.referrer.split(request.host_url)[-1] != url_for('register'):
         return redirect(url_for('register'))
     if 'id' not in session:
         flash("You can only access the verification page from the registration page.")
         return redirect(url_for('register'))
 
     if request.method == 'POST':
-        if session['v_code'] == form.v_code.data:
+        if session['v_code'] != form.v_code.data and (
+                datetime.datetime.now() - session['start_time']).total_seconds() > 60:
+            # Verification code doesn't match
+            form.v_code.errors = ["Incorrect verification code"]
+        elif session['v_code'] == form.v_code.data:
             user = User(id=session['id'])
             user.set_passwd(session['passwd'])
             session.pop('id')  # Clear the session variable
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('login'))
-        else:
-            # Verification code doesn't match
-            form.v_code.errors = ["Incorrect verification code"]
 
     return render_template('verify.html', title='Register', form=form)
 
@@ -93,7 +101,7 @@ def verify():
 def resend_verification():
     v_code = verification.generate_v_code(6)
     print(v_code)
-    session['v_code'] = v_code # Update verification code
+    session['v_code'] = v_code  # Update verification code
     # verification.send_v_code(session.get('id')+'@student.uwa.edu.au',v_code)
     flash("Verification code has been resent to your email.")
     return redirect(url_for('verify'))

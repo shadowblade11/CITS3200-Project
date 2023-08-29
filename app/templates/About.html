@@ -1,25 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../static/About.css">
-  <title>About</title>
-  <nav class="navbar">
-    <ul class="navbar-list">
-		<li><a href="/Intro">Home</a></li>
-		<li><a href="/login">Login</a></li>
-		<li><a href="/About">About</a></li>
-		<li><a href="/Account">Account</a></li>
-		<li><a href="/index">Index</a></li>
-		<li><a href="/">Contact</a></li>
-	  </ul>
-</nav>
-</head>
-
-<body>
-
+{% block content %}
 <div class="about-section">
 		<div class="header-text">
 			<h1>Italiano In Pratica</h1>
@@ -36,13 +17,13 @@
 				<p>This page provides an overview of the testing modes and features available.</p>
 			</div>
 			<div class="image-container">
-				<img src="../static/images/Intro.png" alt="HomePage">
+				<img src=".{{ url_for('static',filename = 'Images/Intro.png') }}" alt="HomePage">
 			</div>
 		</div>
 		
 		<div class="AUText">
 			<div class="image-container">
-				<img src="../static/images/Testing.png" alt="AudioTests"> 
+				<img src="{{ url_for('static',filename = 'Images/Testing.png') }}" alt="AudioTests">
 			</div>
 			<div class="text-container">
 				<h2 style="text-align:left">How Does It Work?</h2>
@@ -70,7 +51,7 @@
 		<div class="row">
 			<div class="column">
 				<div class="card">
-					<img src="../static/images/Caruso.png" alt="Dr.Marinella Caruso" style="width:100%">
+					<img src="{{ url_for('static',filename = 'Images/Caruso.png') }}" alt="Dr.Marinella Caruso" style="width:100%">
 					<div class="team-container">
 						<h3>Dr.Marinella Caruso</h3>
 						<p class="title">Senior Lecturer</p>
@@ -95,6 +76,5 @@
 			</div>
 		</div>
 	</div>
-	
-</body>
-</html>
+
+{% endblock %}

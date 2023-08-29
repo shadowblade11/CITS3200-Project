@@ -1,22 +1,7 @@
-<!DOCTYPE html>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <style>
-        .errors{
-            color: red;
-        }
-    </style>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Login</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
-</head>
+{% block content %}
 
-<body>
     <div class="login-container">
         <h1>Sign in to Italian Voice</h1>
         <form action="/login" method="post">
@@ -43,5 +28,4 @@
             </p>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

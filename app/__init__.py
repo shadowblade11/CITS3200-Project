@@ -16,4 +16,4 @@ login.login_view = 'login'
 
 app.app_context().push()
 
-from app import views,models # imports templates for the app to use
+from app import views,models

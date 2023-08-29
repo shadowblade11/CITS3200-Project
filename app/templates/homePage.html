@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Page</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='homePage.css')}}">
-    
- 
-</head>
-
-<body>
-  <div class="top-bar">
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="#">Grades</a>
-    <a href="{{ url_for('logout') }}">Log Out</a>
-  </div>
+{% block content %}
 
   <div class="content">
     <h1>Home Page</h1>
@@ -36,6 +21,5 @@
         <option value="Test4">Test4</option> 
     </select>
   </div>
-</body>
 
-</html>
+{% endblock %}
