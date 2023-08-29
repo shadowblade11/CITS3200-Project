@@ -1,34 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="intro_page.css">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/Intro.css">
+  <title>Italiano In Pratica</title>
 </head>
 <body>
 
-<ul>
-  <li><a href="#home">Home</a></li>
-  <li><a href="#news">News</a></li>
-  <li><a href="#contact">Contact</a></li>
-  <li><a href="#about">About</a></li>
-</ul>
+<nav class="navbar">
+  <ul class="navbar-list">
+    <li><a href="/Intro">Home</a></li>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/About">About</a></li>
+    <li><a href="/Account">Account</a></li>
+    <li><a href="/index">Index</a></li>
+    <li><a href="/">Contact</a></li>
+  </ul>
+</nav>
 
 <div class="intro-container">
-  
-    <div class="text-container">
-      <h1>Italiano In Pratica</h1>
-      <p>Welcome to Italiano In Pratica. Test your Italian pronunciation and fluency.</p>
-      <p>Click below to sign in, or sign up now!</p>
-      <form action="/login">
-        <button class="button button1">Start Practicing</button>
-      </form>
-    </div>
 	
 	<div class="image-container">
-	<img class="image" src="uwa-logo.svg" alt="Logo">
+		<img class="image" src="../static/images/uwa-logo.svg" alt="Logo">
 	</div>
-  
+	
+  <div class="text-container">
+    <h1>Italiano In Pratica</h1>
+    <p>Welcome to Italiano In Pratica. Test your Italian pronunciation and fluency.</p>
+    <p>Click below to sign in or sign up now!</p>
+    <form action="/login">
+      <button class="button button1">Start Practicing</button>
+    </form>
   </div>
+  
+</div>
 
 </body>
 </html>
