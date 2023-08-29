@@ -25,12 +25,14 @@ def generate_soundwave_image(file, filename):
 
 def convert_to_wav_working_format(file,filename):
     i = ffmpeg.input(file) #get input file path
-    o = ffmpeg.output(i,f"../audio/{filename}") #get output file path
-    ffmpeg.run(o,quiet=True, overwrite_output=True) #run the command
+    # o = ffmpeg.output(i,f"../audio/{filename}",af="silenceremove=1:0:-50dB") #get output file path, also removes the silent noise at the start
+    o = ffmpeg.output(i,f"../audio/{filename}") #no silent noise removed
+    ffmpeg.run(o, overwrite_output=True, quiet=True) #run the command
     print("successful")
 
 
-filename="sound.wav"
+list_of_audio = ["sound.wav","buon_pomeriggio.wav","buongiorno.wav"]
+filename=list_of_audio[1]
 path = "../audio/"
 src = path+f"/imported/{filename}"
 dst = path+f"{filename}"
