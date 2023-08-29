@@ -1,20 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Page</title>
-  <link rel="stylesheet" href="testPage.css"> 
-</head>
-
-<body>
-  <div class="top-bar">
-    <a href="#">Home</a>
-    <a href="#">Grades</a>
-    <a href="#">Log Out</a>
-  </div>
-
+{% extends "base.html" %}
+{% block content %}
   <div class="content">
     <h1>New Audio</h1>
     <button class="save-button">Save</button>
@@ -33,5 +18,4 @@
       alert('Page information saved.');
     });
   </script>
-</body>
-</html>
+{% endblock %}

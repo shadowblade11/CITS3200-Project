@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="login-container">
+    <h1>Sign in to Italian Voice</h1>
+    <form action="{{ url_for('administratorLogin') }}" method="post">
+      <label for="username">Admin ID</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+      <div class="button">
+        <input type="submit" value="Login" class="Loginbtn">
+        <input type="submit" value="Register" class="Registerbtn">
+      </div>
+  </form>
+  </div>
+{% endblock %}

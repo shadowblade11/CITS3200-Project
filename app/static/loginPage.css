@@ -20,10 +20,11 @@ flex-direction: column;
 }
 
 .login-container h1 {
+  font-size: 48px;
   margin-bottom: 20px;
   align-items: center;
   font-family: 'Italianno', cursive; 
-  font-size: 53px ;
+  font-size: 55px ;
   align-content: center;
   margin-top: auto;
 }

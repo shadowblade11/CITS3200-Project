@@ -3,7 +3,7 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
 from app import app, db, verification
-from app.forms import RegistrationForm, LoginForm, VerificationForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import User
 
 import datetime
@@ -12,7 +12,7 @@ import datetime
 @app.route('/')
 @app.route('/intro')
 def intro():
-    return render_template("Intro.html",css="./static/Intro.css")
+    return render_template("Intro.html", css="./static/Intro.css")
 
 
 @app.route('/about')
@@ -20,9 +20,9 @@ def about():
     return render_template("About.html", css='./static/About.css')
 
 
-@app.route('/home/<int:uid>')
+@app.route('/home')
 @login_required
-def home(uid):
+def home():
     return render_template("homePage.html", css='./static/homePage.css')
 
 
@@ -44,6 +44,13 @@ def login():
             next_page = url_for('home')
         return redirect(next_page)
     return render_template('loginPage.html', form=form, css='./static/loginPage.css')
+
+
+@app.route('/administratorLogin', methods=['GET', 'POST'])
+def administratorLogin():
+    form = AdminForm()
+
+    return render_template('adminLogin.html', css='./static/adminLogin.css', form=form)
 
 
 @app.route('/logout')
@@ -73,15 +80,9 @@ def register():
 @app.route('/verify', methods=['POST', 'GET'])
 def verify():
     form = VerificationForm()
-    if request.referrer is None:
-        return redirect(url_for('register'))
-    if '/' + request.referrer.split(request.host_url)[-1] != url_for('register'):
-        return redirect(url_for('register'))
-    if 'id' not in session:
-        flash("You can only access the verification page from the registration page.")
-        return redirect(url_for('register'))
 
     if request.method == 'POST':
+        print('post')
         if session['v_code'] != form.v_code.data and (
                 datetime.datetime.now() - session['start_time']).total_seconds() > 60:
             # Verification code doesn't match
@@ -89,10 +90,19 @@ def verify():
         elif session['v_code'] == form.v_code.data:
             user = User(id=session['id'])
             user.set_passwd(session['passwd'])
+            print(user)
             session.pop('id')  # Clear the session variable
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('login'))
+
+        if request.referrer is None:
+            return redirect(url_for('register'))
+        if '/' + request.referrer.split(request.host_url)[-1] != url_for('register'):
+            return redirect(url_for('register'))
+        if 'id' not in session:
+            flash("You can only access the verification page from the registration page.")
+            return redirect(url_for('register'))
 
     return render_template('verify.html', title='Register', form=form)
 
@@ -105,3 +115,9 @@ def resend_verification():
     # verification.send_v_code(session.get('id')+'@student.uwa.edu.au',v_code)
     flash("Verification code has been resent to your email.")
     return redirect(url_for('verify'))
+
+
+@login_required
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    return render_template('testPage.html', css='./static/testPage.css')
