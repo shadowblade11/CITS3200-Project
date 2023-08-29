@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Page</title>
+  <link rel="stylesheet" href="testPage.css"> 
+</head>
+
+<body>
+  <div class="top-bar">
+    <a href="#">Home</a>
+    <a href="#">Grades</a>
+    <a href="#">Log Out</a>
+  </div>
+
+  <div class="content">
+    <h1>New Audio</h1>
+    <button class="save-button">Save</button>
+  </div>
+  <script>
+    const saveButton = document.querySelector('.save-button');
+
+    saveButton.addEventListener('click', function() {
+      const pageTitle = document.title;
+      const pageContent = document.querySelector('.content').innerHTML;
+      
+      // Store data in local storage
+      localStorage.setItem('pageTitle', pageTitle);
+      localStorage.setItem('pageContent', pageContent);
+
+      alert('Page information saved.');
+    });
+  </script>
+</body>
+</html>
