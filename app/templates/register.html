@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
+    <style>
+        .errors {
+            color: #a12323;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Account Registration</h1>
+        <form action="{{url_for('register')}}" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.id.label }}{{ form.id(size=9) }}
+            </p>
+            {% if form.id.errors %}
+                <ul class="errors">
+                    {% for error in form.id.errors %}
+                        <ol>{{ error }}</ol>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% if message %}
+<div class="errors">
+    {{ message }}
+</div>
+{% endif %}
+            <p>
+                {{ form.passwd1.label }}{{ form.passwd1(size=32) }}
+            </p>
+            <p>
+                {{ form.passwd2.label }}{{ form.passwd2(size=32) }}
+            </p>
+        {% if form.passwd2.errors %}
+                <ul class="errors">
+                    {% for error in form.passwd2.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p>
+                {{ form.submit }}
+            </p>
+        </form>
+    </div>
+</body>
+</html>

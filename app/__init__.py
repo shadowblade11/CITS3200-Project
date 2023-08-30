@@ -1,11 +1,19 @@
 from flask import Flask
-
-DB_NAME = "database.db"    
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from config import Config
+from flask_login import LoginManager
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+db = SQLAlchemy(app)
+migrate = Migrate(app,db)
+
+app.debug = True
+login = LoginManager(app)
+login.login_view = 'login'
 
 app.app_context().push()
 
-from app import views # imports templates for the app to use
+from app import views,models

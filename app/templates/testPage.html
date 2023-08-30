@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="content">
+    <h1>New Audio</h1>
+    <button class="save-button">Save</button>
+  </div>
+  <script>
+    const saveButton = document.querySelector('.save-button');
+
+    saveButton.addEventListener('click', function() {
+      const pageTitle = document.title;
+      const pageContent = document.querySelector('.content').innerHTML;
+      
+      // Store data in local storage
+      localStorage.setItem('pageTitle', pageTitle);
+      localStorage.setItem('pageContent', pageContent);
+
+      alert('Page information saved.');
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="account-section">
+  <div class="header-text">
+    <h1>Update Account</h1>
+  </div>
+</div>
+
+<div class="profileSection">
+  <p style="margin:0;"><b>User:</b> {{ user.username }}</p>
+  <img src={{user.profile_picture}} class="ProfilePicture" alt="Profile Picture" id="profilePic" height="100px" width="100px">
+{#  TODO: <!-- Need a reference like: ../images/ProfilePictures/{{ user.profile_picture }} as image src -->#}
+  <p><b>Score:</b> {{ user.score }}</p>
+</div>
+
+<div class = "container">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        value="{{ user.email }}"
+      />
+    </div>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        value="{{ user.username }}"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password1">New Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password1"
+        name="password1"
+        placeholder="Enter new password"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password2">New Password (Confirm)</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password2"
+        name="password2"
+        placeholder="Confirm new password"
+      />
+    </div>
+    <div class="form-group">
+      <label for="profile_picture">Change Profile Picture</label>
+      <br />
+      <input type="file" id="profile_picture" name="profile_picture"/>
+    </div>
+    <br />
+    <button type="submit" value=Upload class="btn btn-primary">Submit</button>
+      
+  </form>
+</div>
+{% endblock %}

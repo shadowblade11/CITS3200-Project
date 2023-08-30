@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="about-section">
+		<div class="header-text">
+			<h1>Italiano In Pratica</h1>
+			<h2>How To Use The Site</h2>
+		</div>
+	</div>
+
+	<div class="row-container">
+		<div class="AUText">
+			<div class="text-container">
+				<h2 style="text-align:left">Welcome to Italiano In Pratica</h2>
+				<p>This web application provides a way for students to practice their Italian language skills.</p>
+				<p>Under the 'test' tab, students can access authentic italian audio and practice repeating phrases to achieve a high similarity score.</p>
+				<p>This page provides an overview of the testing modes and features available.</p>
+			</div>
+			<div class="image-container">
+				<img src=".{{ url_for('static',filename = 'Images/Intro.png') }}" alt="HomePage">
+			</div>
+		</div>
+		
+		<div class="AUText">
+			<div class="image-container">
+				<img src="{{ url_for('static',filename = 'Images/Testing.png') }}" alt="AudioTests">
+			</div>
+			<div class="text-container">
+				<h2 style="text-align:left">How Does It Work?</h2>
+				<p>Under the 'test' tab, students will see tests the oral tests available and are colour coded by due date.</p>
+				<p>Upon selecting a test, students will see the number of questions available and the option to start the test. Once opened, students will see each test and use the media buttons to play the audio. Students will then be prompted to record and repeat their responses.</p>
+				<p>Students will then perform a self evaluation to assess their performance and submit a score. After completeing all tests and the self assessment, students will submit their audio files and results. Our audio similarity function will produce a score assessing the closeness of the recording to the provided audio.</p>
+			</div>
+			
+		</div>
+
+		<div class="AUText">
+			<div class="text-container">
+				<h2 style="text-align:left">Teaching Team Support</h2>
+				<p>The teaching team will be able to access student results, create new tests and upload audio files. These tasks will be accessible from the 'Admin' section via the log-in page. Only UWA staff or members of the teaching team will have access to the admin side of the application.</p>
+				<p>For any support, questions or queries, please contact the CITS3200 project team. or Dr. Marinella Caruso.</p>
+			</div>
+			<div class="image-container">
+				<img src="../static/images/uwa-logo.svg" alt="UWALogo">
+			</div>
+		</div>
+	</div>
+
+	<div class="Team">
+		<h2 style="text-align:center">Teaching Team</h2>
+		<div class="row">
+			<div class="column">
+				<div class="card">
+					<img src="{{ url_for('static',filename = 'Images/Caruso.png') }}" alt="Dr.Marinella Caruso" style="width:100%">
+					<div class="team-container">
+						<h3>Dr.Marinella Caruso</h3>
+						<p class="title">Senior Lecturer</p>
+						<p>School of Humanities, Discipline of European Languages and Cultures</p>
+						<p>marinella.caruso@uwa.edu.au</p>
+						<p><button class="button">Contact</button></p>
+					</div>
+				</div>
+			</div>
+
+			<div class="column">
+				<div class="card">
+					<img src="../static/images/Generic-Profile-Image.png" alt="Team" style="width:100%">
+					<div class="team-container">
+						<h3>Project Team</h3>
+						<p class="title">CITS 3200 Students</p>
+						<p>Project team from CITS 3200. For support contact below.</p>
+						<p>21386988@student.uwa.edu.au</p>
+						<p><button class="button">Contact</button></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
