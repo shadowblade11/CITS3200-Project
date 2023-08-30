@@ -38,7 +38,7 @@ if __name__ == "__main__" :
     source = "pronunciation_it_buon_pomeriggio.wav" #change to the file you need
     sourcePhone = IPAString(unicode_string=getPhone(source)) ## converting the unicode string to IPA string (done by the package)
     
-    submittedAudio = "pronunciation_it_buongiorno.wav" #change to the file you need
+    submittedAudio = "recording.wav" #change to the file you need
     submittedPhone = IPAString(unicode_string=getPhone(submittedAudio))
     
     checkPronounciation(sourcePhone, submittedPhone) ## getting a score
