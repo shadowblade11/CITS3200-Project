@@ -18,7 +18,7 @@ def generate_soundwave_image(file, filename):
     # plt.title("Audio: {}".format(source)) #hide the title
     plt.plot(length,raw_audio)
     plt.axis('off') #hide axis
-    print(filename)
+    # print(filename)
     plt.savefig(f"../images/{filename}", transparent = True)
 
 
@@ -30,6 +30,8 @@ def convert_to_wav_working_format(file,filename):
     print("successful")
 
 
+
+#this would be encapulated into a function once it is linked to the html page
 list_of_audio = ["1 come ti chiami.m4a","2 come stai.m4a","3 questo e Matteo.m4a"]
 filename=list_of_audio[1]
 filename,suffix = filename.split(".")
@@ -43,5 +45,8 @@ else:
     src = path+f"/imported/{filename}.wav"
     dst = path+f"{filename}.wav"
 
+
+
+#actual functions to run
 convert_to_wav_working_format(src,filename)
 generate_soundwave_image(dst,filename)
