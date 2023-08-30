@@ -35,7 +35,7 @@ def convert_to_wav_working_format(file,filename):
 
 def compare(audio1, audio2):
     reference_audio, _ = librosa.load(audio1, sr=None)
-    user_audio, _ = librosa.load(audio2, sr=True)
+    user_audio, _ = librosa.load(audio2, sr=None)
     # print(reference_audio,user_audio)
 
     mfcc_reference = librosa.feature.mfcc(y=reference_audio)
