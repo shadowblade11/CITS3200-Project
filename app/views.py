@@ -23,7 +23,14 @@ def about():
 @app.route('/home')
 @login_required
 def home():
+    user = session.get('uid')
     return render_template("homePage.html", css='./static/homePage.css')
+
+
+@app.route('/adminHome')
+def adminHome():
+    user = session.get('uid')
+    return render_template("adminHome.html", css="./static/adminHome.css")
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -32,7 +39,7 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(id=int(form.id.data)).first()
+        user = User.query.filter_by(id=form.id.data).first()
         print(user)
         if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
@@ -48,13 +55,21 @@ def login():
 
 @app.route('/administratorLogin', methods=['GET', 'POST'])
 def administratorLogin():
+    if (current_user.is_authenticated and
+            User.query.filter_by(id=session.get('uid')).first().is_admin):
+        print(current_user)
+        return redirect(url_for('adminHome'))
     form = AdminForm()
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.username.data).first()
-        if not user.is_admin or user.check_passwd(form.passwd.data):
-            return redirect(url_for('login'))
-
-        # TODO: check passwd
+        if not user.is_admin or user.check_passwd(form.passwd.data):  # TODO: error
+            return redirect(url_for('administratorLogin'))
+        login_user(user)
+        next_page = request.args.get('next')
+        session['uid'] = form.username.data
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('adminHome')
+        return redirect(next_page)
     return render_template('adminLogin.html', css='./static/adminLogin.css', form=form)
 
 
@@ -125,3 +140,9 @@ def resend_verification():
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     return render_template('testPage.html', css='./static/testPage.css')
+
+
+@login_required
+@app.route('/addtest', methods=['GET', 'POST'])
+def addtest():
+    return render_template('adminAddtest.html', css='./static/adminAddtest.css')

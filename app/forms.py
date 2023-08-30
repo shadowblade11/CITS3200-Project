@@ -36,7 +36,6 @@ class LoginForm(FlaskForm):
 
 
 class VerificationForm(FlaskForm):
-    # id = StringField('Student ID', validators=[DataRequired(message="Please enter your student ID"), check_id])
     v_code = StringField('Verification Code')
     send_verification = SubmitField('Check')
 
@@ -44,4 +43,5 @@ class VerificationForm(FlaskForm):
 class AdminForm(FlaskForm):
     username = StringField('Admin email', validators=[DataRequired(message="Please enter your Admin email")])
     passwd = PasswordField('Password', validators=[DataRequired(message="Please enter your password")])
+    submit = SubmitField('Sign In')
     # marinella.caruso@uwa.edu.au
