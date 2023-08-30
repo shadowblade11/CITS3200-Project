@@ -19,7 +19,7 @@ def generate_soundwave_image(file, filename):
     plt.plot(length,raw_audio)
     plt.axis('off') #hide axis
     # print(filename)
-    plt.savefig(f"../images/{filename}", transparent = True)
+    plt.savefig(f"./static/images/{filename}", transparent = True)
 
 
 def convert_to_wav_working_format(file,filename):
