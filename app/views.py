@@ -23,7 +23,7 @@ def test():
 @app.route("/save-audio",methods=['POST'])
 def save_audio():
     data = request.data
-    with open("audio/sound.wav",'ab') as f:
+    with open("audio/imported/sound.wav",'wb') as f:
         f.write(data)
     f.close()
     return "temp"
