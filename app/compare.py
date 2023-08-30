@@ -47,11 +47,17 @@ def compare(audio1, audio2):
 
     print(similarity_score)
 
+    distance = np.linalg.norm(np.mean(mfcc_reference, axis=1) - np.mean(mfcc_user, axis=1))
+    max_distance = 1000  # Adjust this value based on your data and desired scoring range
+    similarity_score = 10 - (10 * distance / max_distance)
+    
+    print(similarity_score)
+
 
 
 #this would be encapulated into a function once it is linked to the html page
-list_of_audio = ["1 come ti chiami.m4a","2 come stai.m4a","3 questo e Matteo.m4a"]
-filename=list_of_audio[1]
+list_of_audio = ["1 come ti chiami.m4a","2 come stai.m4a","3 questo e Matteo.m4a", "sound.wav"]
+filename=list_of_audio[-1]
 filename,suffix = filename.split(".")
 
 if suffix != "wav":
