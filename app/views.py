@@ -34,7 +34,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(id=int(form.id.data)).first()
         print(user)
-        if user is None or not user.check_passwd(form.passwd.data):
+        if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
             return redirect(url_for('login'))
         login_user(user)
@@ -49,7 +49,12 @@ def login():
 @app.route('/administratorLogin', methods=['GET', 'POST'])
 def administratorLogin():
     form = AdminForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(id=form.username.data).first()
+        if not user.is_admin or user.check_passwd(form.passwd.data):
+            return redirect(url_for('login'))
 
+        # TODO: check passwd
     return render_template('adminLogin.html', css='./static/adminLogin.css', form=form)
 
 
@@ -82,7 +87,6 @@ def verify():
     form = VerificationForm()
 
     if request.method == 'POST':
-        print('post')
         if session['v_code'] != form.v_code.data and (
                 datetime.datetime.now() - session['start_time']).total_seconds() > 60:
             # Verification code doesn't match
