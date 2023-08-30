@@ -2,6 +2,9 @@ import wave
 import matplotlib.pyplot as plt
 import numpy as np
 import ffmpeg
+import librosa
+from scipy.spatial.distance import euclidean
+from fastdtw import fastdtw
 
 def generate_soundwave_image(file, filename):
     soundwave = wave.open(file,"r")
@@ -30,6 +33,21 @@ def convert_to_wav_working_format(file,filename):
     print("successful")
 
 
+def compare(audio1, audio2):
+    reference_audio, _ = librosa.load(audio1, sr=None)
+    user_audio, _ = librosa.load(audio2, sr=True)
+    # print(reference_audio,user_audio)
+
+    mfcc_reference = librosa.feature.mfcc(y=reference_audio)
+    mfcc_user = librosa.feature.mfcc(y=user_audio)
+
+    distance, _ = fastdtw(mfcc_reference.T,mfcc_user.T, dist = euclidean)
+    max_length = max(mfcc_reference.shape[1], mfcc_user.shape[1])
+    similarity_score = 1 - (distance / max_length)
+
+    print(similarity_score)
+
+
 
 #this would be encapulated into a function once it is linked to the html page
 list_of_audio = ["1 come ti chiami.m4a","2 come stai.m4a","3 questo e Matteo.m4a"]
@@ -45,8 +63,9 @@ else:
     src = path+f"/imported/{filename}.wav"
     dst = path+f"{filename}.wav"
 
+compare("../audio/1 come ti chiami.wav","../audio/1 come ti chiami.wav")
 
 
 #actual functions to run
-convert_to_wav_working_format(src,filename)
-generate_soundwave_image(dst,filename)
+# convert_to_wav_working_format(src,filename)
+# generate_soundwave_image(dst,filename)
