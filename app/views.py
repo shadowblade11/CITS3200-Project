@@ -28,7 +28,7 @@ def save_audio():
     f.close()
     return "temp"
 
-@app.route("/get-image",methods=["GET"])
-def get_image():
-    return "../images/1 come ti chiami.png"
+# @app.route("/get-image",methods=["GET"])
+# def get_image():
+#     return "../../images/1 come ti chiami.png"
 
