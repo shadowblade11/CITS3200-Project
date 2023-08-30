@@ -10,7 +10,7 @@
 
 <body>
   <div class="top-bar">
-    <a href="{{ url_for('adminHome') }}">Home</a>
+    <a href="{{ url_for('home',username = current_user.username) }}">Home</a>
     <a href="{{ url_for('addtest') }}">Add Test</a>
   </div>
 

@@ -27,10 +27,11 @@ def home(username):
     return render_template("homePage.html", css='/static/homePage.css', username=username)
 
 
-@app.route('/adminHome/<username>')
-def adminHome(username):
-    user = User.query.filter_by(id=username).first_or_404()
-    return render_template("adminHome.html", css="/static/adminHome.css", username=username)
+@app.route('/adminHome',methods=["GET", "POST"])
+@login_required
+def adminHome():
+    print("hallo")
+    return render_template("adminHome.html", css="/static/adminHome.css")
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -49,6 +50,7 @@ def login():
         session['uid'] = form.id.data
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home', username=user.id)
+            print(next_page)
         return redirect(next_page)
     return render_template('loginPage.html', form=form, css='./static/loginPage.css')
 
@@ -57,17 +59,18 @@ def login():
 def administratorLogin():
     if (current_user.is_authenticated and
             User.query.filter_by(id=session.get('uid')).first().is_admin):
-        return redirect(url_for('adminHome', username=current_user.id))
+        print("ID : ",current_user.id)
+        return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.username.data).first()
-        if not user.is_admin or user.check_passwd(form.passwd.data):  # TODO: error
+        if not user.is_admin or not user.check_passwd(form.passwd.data):
             return redirect(url_for('administratorLogin'))
         login_user(user)
         next_page = request.args.get('next')
         session['uid'] = form.username.data
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('adminHome',username=user.id)
+            next_page = url_for('adminHome')  # Provide the 'username' parameter
         return redirect(next_page)
     return render_template('adminLogin.html', css='/static/adminLogin.css', form=form)
 
