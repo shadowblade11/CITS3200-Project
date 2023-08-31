@@ -27,7 +27,6 @@ def is_consonant(ipa):
     return cons
 
 def phone_recognize_file(path, emit=1.2, lang='eng'):
-
     model = allosaurus.app.read_recognizer()
     out = model.recognize(path, lang, timestamp=True, emit=emit)
     
@@ -37,10 +36,10 @@ def phone_recognize_file(path, emit=1.2, lang='eng'):
     return phones
 
 if __name__ == '__main__':
-    submittedPath = 'recording.wav'
-    submittedPhones = phone_recognize_file(submittedPath)
-    print(submittedPhones)
-    print("\n")
+    #submittedPath = 'recording.wav'
+    #submittedPhones = phone_recognize_file(submittedPath)
+    #print(submittedPhones)
+    #print("\n")
 
     sourcePath = 'audiofiles_wav/Come_Ti_Chiami.wav'
     sourcePhones = phone_recognize_file(sourcePath)

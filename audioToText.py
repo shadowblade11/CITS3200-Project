@@ -35,7 +35,7 @@ def getPhone(audioFile):
 
 if __name__ == "__main__" :
     
-    source = "audiofiles_wav/molto_bene_grazie.wav" #change to the file you need
+    source = "audiofiles_wav/Come_Ti_Chiami.wav" #change to the file you need
     sourcePhone = IPAString(unicode_string=getPhone(source)) ## converting the unicode string to IPA string (done by the package)
     
     submittedAudio = "recording.wav" #change to the file you need
