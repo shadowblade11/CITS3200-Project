@@ -19,12 +19,18 @@ def intro():
 def about():
     return render_template("About.html", css='./static/About.css')
 
+@app.route('/adminLogin')
+def admin():
+    return render_template("adminLogin.html", css='./static/adminLogin.css')
 
 @app.route('/home')
 @login_required
 def home():
     return render_template("homePage.html", css='./static/homePage.css')
 
+@app.route('/contact')
+def contact():
+    return render_template("contact.html", css='./static/contact.css')
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -125,3 +131,15 @@ def resend_verification():
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     return render_template('testPage.html', css='./static/testPage.css')
+
+@app.route('/Account')
+def Account():
+    return render_template("AccountPage.html", css='./static/Account.css')
+
+@app.route('/start')
+def start():
+    return render_template("startPage.html", css='./static/startPage.css')
+
+@app.route('/test')
+def testPage():
+    return render_template("testPage.html", css='./static/testPage.css')

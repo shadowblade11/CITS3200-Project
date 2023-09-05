@@ -1,67 +1,71 @@
 body {
-    background-color: rgba(205, 226, 184, 1);
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+  background-color: rgba(205, 226, 184, 1);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.errors {
+  color: #a12323;
+}
   
-  .Register-container {
-    background-color: white;
-    padding: 70px;
-    border-radius: 30px;
-    box-shadow: 0 2px 10px rgba(205, 226, 184, 1);
-    width: 400px;
-    flex-direction: column; 
-  }
+.Register-container {
+  background-color: white;
+  padding: 70px;
+  border-radius: 30px;
+  box-shadow: 0 2px 10px rgba(205, 226, 184, 1);
+  width: 400px;
+  flex-direction: column; 
+}
+
+.Register-container h1 {
+  display: flex;
+  font-size: 60px;
+  margin-bottom: 20px;
+  align-items: center;
+  font-family: 'Italianno', cursive; 
+  align-content: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.Register-container label,
+.login-container input {
+  display: block;
+  margin-bottom: 30px;
+}
+
+.Register-container input[type="text"],
+.Register-container input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.Register-container input[type="submit"] {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.button{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; 
   
-  .Register-container h1 {
-    display: flex;
-    font-size: 60px;
-    margin-bottom: 20px;
-    align-items: center;
-    font-family: 'Italianno', cursive; 
-    align-content: center;
-    text-align: center;
-    justify-content: center;
-  }
-  
-  .Register-container label,
-  .login-container input {
-    display: block;
-    margin-bottom: 30px;
-  }
-  
-  .Register-container input[type="text"],
-  .Register-container input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .Register-container input[type="submit"] {
-    background-color: rgb(0, 0, 0);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  .button{
-    display: flex;
-    justify-content: center;
-    margin-top: 10px; 
-   
-    border: none;
-    padding: 20px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  .Registerbtn{
-    color: black;
-    margin: 70px;
-  }
+  border: none;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.Registerbtn{
+  color: black;
+  margin: 70px;
+}

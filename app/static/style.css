@@ -4,6 +4,10 @@
   border-bottom: 1px solid black;
 }
 
+.errors {
+  color: red;
+}
+
 .navbar-list {
   list-style-type: none;
   margin: 0;

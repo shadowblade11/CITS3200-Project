@@ -1,0 +1,85 @@
+#contact_us{
+    color: white;
+  }
+  
+  body {
+    background-color: rgba(205, 226, 184, 1);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  body > div{
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .contact-section {
+      display: flex;
+      padding: 50px;
+      text-align: center;
+      background:  rgba(205, 226, 184, 1);
+      color: black;
+    }
+  
+    .header-text {
+      flex: 1;
+    }
+  
+  input[type=text], select, textarea {
+      width: 100%;
+      padding: 1%;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      margin-top: 1%;
+      margin-bottom: 1%;
+      resize: vertical;
+    }
+    
+    input[type=submit] {
+      background-color: #000000;
+      color: white;
+      padding: 1% 2%;
+      border: none;
+      cursor: pointer;
+    }
+    
+    input[type=submit]:hover {
+      background-color: #00eeff;
+    }
+    
+    .container {
+      border-radius: 1%;
+      background-color: #f2f2f2;
+      padding: 2%;
+      margin-top: 2%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+  
+    .row-container {
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      width: 60%;
+    }
+  
+    .row-container .row {
+      margin-top: 3%;
+      display: flex;
+      text-align: center;
+    }
+  
+    .text-container {
+      flex: 1;
+      font-size: large;
+    }
+    
+  
