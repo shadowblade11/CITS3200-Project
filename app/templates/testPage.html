@@ -8,21 +8,22 @@
   <div style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
     <audio controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
     <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="500" height="200"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
+    <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
   </div>
   {% endfor %}
   
   <script>
-    const saveButton = document.querySelector('.save-button');
+    // const saveButton = document.querySelector('.save-button');
 
-    saveButton.addEventListener('click', function() {
-      const pageTitle = document.title;
-      const pageContent = document.querySelector('.content').innerHTML;
+    // saveButton.addEventListener('click', function() {
+    //   const pageTitle = document.title;
+    //   const pageContent = document.querySelector('.content').innerHTML;
       
-      // Store data in local storage
-      localStorage.setItem('pageTitle', pageTitle);
-      localStorage.setItem('pageContent', pageContent);
+    //   // Store data in local storage
+    //   localStorage.setItem('pageTitle', pageTitle);
+    //   localStorage.setItem('pageContent', pageContent);
 
-      alert('Page information saved.');
-    });
+    //   alert('Page information saved.');
+    // });
   </script>
 {% endblock %}
