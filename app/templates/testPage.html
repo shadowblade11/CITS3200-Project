@@ -4,6 +4,13 @@
     <h1>New Audio</h1>
     <button class="save-button">Save</button>
   </div>
+  {% for clip in audio_clips%}
+  <div>
+    <!-- <audio src = "../audio/{{week}}/{{clip}}">{{clip}}</audio> -->
+    
+  </div>
+  {% endfor %}
+  <audio controls=true src="../../audio/week1/1 come ti chiami.wav"></audio>
   <script>
     const saveButton = document.querySelector('.save-button');
 
