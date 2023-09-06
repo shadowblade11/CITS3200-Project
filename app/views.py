@@ -9,6 +9,9 @@ from app.models import User
 import datetime
 
 
+from app.compare import generate_soundwave_image, convert_to_wav_working_format
+
+
 @app.route('/')
 @app.route('/intro')
 def intro():
@@ -124,7 +127,11 @@ def resend_verification():
 @login_required
 @app.route('/test', methods=['GET', 'POST'])
 def test():
-    return render_template('testPage.html', css='./static/testPage.css')
+    # print(request.args.get('data')) #way to get folder
+    week = request.args.get('data')
+    path = f"../audio/{week}"
+    print(path)
+    return render_template('testPage.html', css='./static/testPage.css', path=path)
 
 @app.route('/audio-test')
 def audio_test():
