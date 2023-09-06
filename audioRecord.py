@@ -2,7 +2,7 @@
 import sounddevice as sd
 from scipy.io.wavfile import write
 import wavio as wv
-from audioApp import storeRecording
+from not_in_use.audioApp import storeRecording
 import numpy as np
 import os
 

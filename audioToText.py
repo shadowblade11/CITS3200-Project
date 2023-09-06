@@ -19,7 +19,7 @@ def checkPronounciation(sourcePhone, submittedPhone):
     
     
     score = matchedPhone / len(longString) * 100   ## score out of 100%
-    print(score)
+    return score
 
 def getPhone(audioFile): 
     r = sr.Recognizer()
@@ -27,18 +27,18 @@ def getPhone(audioFile):
         audio_data = r.record(source)
         text = r.recognize_google(audio_data, language="it-IT") ## initialisation + getting the audio to text conversion
         text = text.replace(" ", "")
-        print("%s\n"%text)
+        #print("%s\n"%text)
         epi = epitran.Epitran('ita-Latn') ## using the package to get the phoneme string from the text
         phone = epi.transliterate(text)
-        print("%s\n"%phone)
+        #print("%s\n"%phone)
         return phone.lower()
 
-if __name__ == "__main__" :
-    
-    source = "audiofiles_wav/Come_Ti_Chiami.wav" #change to the file you need
+def convertAudio(sourceFile, submittedFile):
+    source = sourceFile #change to the file you need
     sourcePhone = IPAString(unicode_string=getPhone(source)) ## converting the unicode string to IPA string (done by the package)
-    
-    submittedAudio = "recording.wav" #change to the file you need
+
+    submittedAudio = submittedFile #change to the file you need
     submittedPhone = IPAString(unicode_string=getPhone(submittedAudio))
-    
-    checkPronounciation(sourcePhone, submittedPhone) ## getting a score
+    score = checkPronounciation(sourcePhone, submittedPhone) ## getting a score
+
+    return score
