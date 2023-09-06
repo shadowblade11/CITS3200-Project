@@ -11,6 +11,7 @@ import datetime
 
 from app.compare import generate_soundwave_image, convert_to_wav_working_format
 
+import os
 
 @app.route('/')
 @app.route('/intro')
@@ -129,9 +130,11 @@ def resend_verification():
 def test():
     # print(request.args.get('data')) #way to get folder
     week = request.args.get('data')
-    path = f"../audio/{week}"
-    print(path)
-    return render_template('testPage.html', css='./static/testPage.css', path=path)
+    path = f"./audio/{week}/"
+    # print(path)
+    audio_clips = os.listdir(path)
+    print(audio_clips)
+    return render_template('testPage.html', css='./static/testPage.css', audio_clips=audio_clips, week = week)
 
 @app.route('/audio-test')
 def audio_test():
