@@ -32,8 +32,15 @@
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
         listOfDivs[index].style.background = "red";
+        navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
+          const audioStream = new MediaRecorder(stream);
+          audioStream.start();
+        }).catch((err)=>{
+          alert("problem");
+        });
         setTimeout(() => {
           listOfDivs[index].style.background="none";
+          audioStream.stop();
         },timeoutseconds);
       }
     })
