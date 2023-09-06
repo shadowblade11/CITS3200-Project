@@ -125,7 +125,6 @@ def resend_verification():
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     return render_template('testPage.html', css='./static/testPage.css')
-    return render_template('login.html')
 
 @app.route('/audio-test')
 def audio_test():
@@ -138,8 +137,4 @@ def save_audio():
         f.write(data)
     f.close()
     return "temp"
-
-# @app.route("/get-image",methods=["GET"])
-# def get_image():
-#     return "../../images/1 come ti chiami.png"
 
