@@ -26,11 +26,13 @@ def generate_soundwave_image(file, filename):
 
 
 def convert_to_wav_working_format(file,filename):
+    threshold = "-30dB" #need to mess around with threshold
+    flag = f"areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}"
     i = ffmpeg.input(file) #get input file path
-    # o = ffmpeg.output(i,f"../audio/{filename}.wav",af="silenceremove=1:0:-50dB") #get output file path, also removes the silent noise at the start
-    o = ffmpeg.output(i,f"../audio/{filename}.wav") #no silent noise removed
+    o = ffmpeg.output(i,f"../audio/{filename}.wav",af=f"{flag},{flag}") #get output file path, also removes the silent noise
+    # o = ffmpeg.output(i,f"../audio/{filename}.wav") #no silent noise removed
     ffmpeg.run(o, overwrite_output=True, quiet=True) #run the command
-    print("successful")
+    # print("successful")
 
 
 def compare(audio1, audio2):
@@ -77,7 +79,7 @@ def get_global_normalisation_param(audio_list):
 
 #this would be encapulated into a function once it is linked to the html page
 list_of_audio = ["1 come ti chiami.m4a","2 come stai.m4a","3 questo e Matteo.m4a", "sound.wav"]
-filename=list_of_audio[-1]
+filename=list_of_audio[0]
 filename,suffix = filename.split(".")
 
 if suffix != "wav":
@@ -92,7 +94,7 @@ else:
 
 list_of_audio_2 = ["1 come ti chiami.wav","2 come stai.wav","3 questo e Matteo.wav", "sound.wav"]
 
-v = get_global_normalisation_param(list_of_audio_2)
+# v = get_global_normalisation_param(list_of_audio_2)
 # normalise_audio(list_of_audio_2,v)
 
 
@@ -101,5 +103,5 @@ v = get_global_normalisation_param(list_of_audio_2)
 
 
 #actual functions to run
-# convert_to_wav_working_format(src,filename)
-# generate_soundwave_image(dst,filename)
+convert_to_wav_working_format(src,filename)
+generate_soundwave_image(dst,filename)
