@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="login-container">
+        <h1>Sign in to Italian Voice</h1>
+        <form action="{{ url_for('administratorLogin') }}" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.username.label }}{{ form.username(size=48) }}
+            </p>
+            {% if form.id.errors %}
+        <ul class="errors">
+            {% for error in form.id.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+            <p>
+                {{ form.passwd.label }}{{ form.passwd(size=32)}}
+            </p>
+            <p>
+                {{ form.submit }}
+            </p>
+        </form>
+    </div>
+{% endblock %}
