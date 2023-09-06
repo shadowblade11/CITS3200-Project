@@ -5,13 +5,11 @@
     <button class="save-button">Save</button>
   </div>
   {% for clip in audio_clips%}
-  <div>
-    <!-- <audio src = "../audio/{{week}}/{{clip}}">{{clip}}</audio> -->
-    
+  <div> <!--this is where you can put the css file, so each "question is its own div"-->
+    <audio controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip) }}"></audio>
   </div>
   {% endfor %}
-  <audio controls=true src="../../audio/week1/1 come ti chiami.wav" type="audio/wav"></audio>
-  <audio controls=true src="{{ url_for('static', filename='audio/' + week + '/' + '1 come ti chiami.wav') }}"></audio>
+  
   <script>
     const saveButton = document.querySelector('.save-button');
 
