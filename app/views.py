@@ -133,6 +133,7 @@ def test():
     path = f"./app/static/audio/{week}/"
     # print(path)
     audio_clips = os.listdir(path)
+    audio_clips = [i.split('.')[0] for i in audio_clips]
     print(audio_clips)
     return render_template('testPage.html', css='./static/testPage.css', audio_clips=audio_clips, week = week)
 
