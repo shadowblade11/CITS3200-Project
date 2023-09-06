@@ -10,7 +10,8 @@
     
   </div>
   {% endfor %}
-  <audio controls=true src="../../audio/week1/1 come ti chiami.wav"></audio>
+  <audio controls=true src="../../audio/week1/1 come ti chiami.wav" type="audio/wav"></audio>
+  <audio controls=true src="{{ url_for('static', filename='audio/' + week + '/' + '1 come ti chiami.wav') }}"></audio>
   <script>
     const saveButton = document.querySelector('.save-button');
 
