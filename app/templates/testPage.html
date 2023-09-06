@@ -28,11 +28,13 @@
 
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('div.segment');
+    const timeoutseconds = 5000; //adding a timeout as previously discussed (5000 = 5 seconds)
     recordButtons.forEach((recordButton,index) => {
-      console.log(index);
-      console.log(recordButton.innerHTML);
       recordButton.onclick = () => {
         listOfDivs[index].style.background = "red";
+        setTimeout(() => {
+          listOfDivs[index].style.background="none";
+        },timeoutseconds);
       }
     })
   </script>
