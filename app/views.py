@@ -128,7 +128,7 @@ def test():
     return render_template('login.html')
 
 @app.route('/audio-test')
-def test():
+def audio_test():
     return render_template('main.html')
 
 @app.route("/save-audio",methods=['POST'])
