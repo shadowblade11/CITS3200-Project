@@ -5,7 +5,7 @@
     <button class="save-button">Save</button>
   </div>
   {% for clip in audio_clips%}
-  <div style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
+  <div class="segment"style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
     <audio controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
     <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="500" height="200"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
     <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
@@ -25,5 +25,15 @@
 
     //   alert('Page information saved.');
     // });
+
+    const recordButtons = document.querySelectorAll('button.record');
+    const listOfDivs = document.querySelectorAll('div.segment');
+    recordButtons.forEach((recordButton,index) => {
+      console.log(index);
+      console.log(recordButton.innerHTML);
+      recordButton.onclick = () => {
+        listOfDivs[index].style.background = "red";
+      }
+    })
   </script>
 {% endblock %}
