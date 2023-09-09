@@ -68,11 +68,20 @@
             
             const audioURL = URL.createObjectURL(blob);
             console.log(audioURL);
-            var audioPlayer = document.createElement("audio");
-            audioPlayer.controls = true;
-            audioPlayer.src = audioURL;
 
-            listOfDivs[index].appendChild(audioPlayer);
+            const existingAudioPlayer = document.getElementById("audioplayer" + index);
+
+            if (existingAudioPlayer){
+              existingAudioPlayer.src = audioURL;
+
+            }else{
+              var audioPlayer = document.createElement("audio");
+              audioPlayer.controls = true;
+              audioPlayer.id = "audioplayer" + index;
+              audioPlayer.src = audioURL;
+              listOfDivs[index].appendChild(audioPlayer);
+            }
+
           }
 
 
