@@ -9,7 +9,7 @@
   </div>
   {% for clip in audio_clips%}
   <div class="segment"style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
-    <audio controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
+    <audio class = "supplied_clip" id="{{clip}}" controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
     <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="500" height="200"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
     <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
     <button class="submit">Submit</button> <!-- perhaps add a microphone img-->
@@ -96,7 +96,12 @@
       submitButton.onclick = () =>{
         var blob = blobList[index];
         // var xmlhttp = new XMLHttpRequest();
-        console.log(blob);
+        if (blob){
+          console.log(blob);
+
+        }
+        const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
+        // console.log(audioplayer.id);
       }
 
     })
