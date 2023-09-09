@@ -53,6 +53,23 @@
           mediaRecorders[index].ondataavailable = (e) => {
             recordedChunksList[index].push(e.data);
           }
+          
+
+
+          mediaRecorders[index].onstop = () => {
+            console.log("creating audioplayer");
+            const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
+            recordedChunksList[index] = [];
+            
+            const audioURL = URL.createObjectURL(blob);
+            console.log(audioURL);
+            var audioPlayer = document.createElement("audio");
+            document.body.append(audioPlayer);
+            audioPlayer.controls = true;
+            audioPlayer.src = audioURL //this line seems to be producing the error
+          }
+
+
 
         }).catch((err)=>{
           console.log(err);
@@ -62,18 +79,7 @@
         setTimeout(() => {
           listOfDivs[index].style.background="none";
           mediaRecorders[index].stop();
-          console.log(recordedChunksList[index], index);
-          const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
-
-          recordedChunksList[index] = [];
-
-          const audioURL = URL.createObjectURL(blob);
-          console.log(audioURL);
-          var audioPlayer = document.createElement("audio");
-          document.body.append(audioPlayer);
-          audioPlayer.controls = true;
-          audioPlayer.src = audioURL
-
+          // console.log(recordedChunksList[index], index);
         },timeoutseconds);
 
       }
