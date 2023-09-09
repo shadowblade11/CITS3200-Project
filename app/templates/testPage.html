@@ -47,7 +47,7 @@
           mediaRecorders[index].start();
 
 
-          console.log(audioStream.state);
+          console.log(mediaRecorders[index].state);
 
 
           mediaRecorders[index].ondataavailable = (e) => {
@@ -62,7 +62,7 @@
         setTimeout(() => {
           listOfDivs[index].style.background="none";
           mediaRecorders[index].stop();
-          console.log(recordedChunksList[index]);
+          console.log(recordedChunksList[index], index);
         },timeoutseconds);
 
       }
