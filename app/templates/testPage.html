@@ -32,9 +32,10 @@
 
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('div.segment');
+    const submitButtons = document.querySelectorAll('button.submit');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
 
-    let audioStreams = [];
+    let blobList = [];
     let mediaRecorders = [];
     let recordedChunksList = [];
 
@@ -44,26 +45,19 @@
         listOfDivs[index].style.background = "red";
         navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
 
-
           mediaRecorders[index] = new MediaRecorder(stream);
-
-
           recordedChunksList[index] = [];
+
           mediaRecorders[index].start();
-
-
-          console.log(mediaRecorders[index].state);
-
 
           mediaRecorders[index].ondataavailable = (e) => {
             recordedChunksList[index].push(e.data);
           }
           
-
-
           mediaRecorders[index].onstop = () => {
             console.log("creating audioplayer");
             const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
+            blobList[index] = blob;
             recordedChunksList[index] = [];
             
             const audioURL = URL.createObjectURL(blob);
@@ -84,7 +78,6 @@
 
           }
 
-
         }).catch((err)=>{
           console.log(err);
           alert("problem");
@@ -97,6 +90,15 @@
         },timeoutseconds);
 
       }
+    })
+
+    submitButtons.forEach((submitButton,index) => {
+      submitButton.onclick = () =>{
+        var blob = blobList[index];
+        // var xmlhttp = new XMLHttpRequest();
+        console.log(blob);
+      }
+
     })
   </script>
 {% endblock %}
