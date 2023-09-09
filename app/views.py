@@ -134,8 +134,10 @@ def test():
     # print(path)
     audio_clips = os.listdir(path)
     audio_clips = [i.split('.')[0] for i in audio_clips]
-    print(audio_clips)
-    return render_template('testPage.html', css='./static/testPage.css', audio_clips=audio_clips, week = week)
+    # print(audio_clips)
+    # print(current_user)
+    #TODO figure how to get current user's id (temp using 123)
+    return render_template('testPage.html', css='./static/testPage.css', audio_clips=audio_clips, week = week, user="123")
 
 @app.route('/audio-test')
 def audio_test():

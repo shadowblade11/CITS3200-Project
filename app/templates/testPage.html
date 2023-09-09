@@ -4,6 +4,9 @@
     <h1>New Audio</h1>
     <button class="save-button">Save</button>
   </div>
+  <div class="content">
+    <h1>Hello {{user}}</h1>
+  </div>
   {% for clip in audio_clips%}
   <div class="segment"style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
     <audio controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
@@ -33,6 +36,7 @@
     let audioStreams = [];
     let mediaRecorders = [];
     let recordedChunksList = [];
+
 
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
@@ -69,7 +73,6 @@
 
             listOfDivs[index].appendChild(audioPlayer);
           }
-
 
 
         }).catch((err)=>{
