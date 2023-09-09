@@ -63,6 +63,17 @@
           listOfDivs[index].style.background="none";
           mediaRecorders[index].stop();
           console.log(recordedChunksList[index], index);
+          const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
+
+          recordedChunksList[index] = [];
+
+          const audioURL = URL.createObjectURL(blob);
+          console.log(audioURL);
+          var audioPlayer = document.createElement("audio");
+          document.body.append(audioPlayer);
+          audioPlayer.controls = true;
+          audioPlayer.src = audioURL
+
         },timeoutseconds);
 
       }
