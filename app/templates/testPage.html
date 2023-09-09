@@ -64,9 +64,10 @@
             const audioURL = URL.createObjectURL(blob);
             console.log(audioURL);
             var audioPlayer = document.createElement("audio");
-            document.body.append(audioPlayer);
             audioPlayer.controls = true;
-            audioPlayer.src = audioURL //this line seems to be producing the error
+            audioPlayer.src = audioURL;
+
+            listOfDivs[index].appendChild(audioPlayer);
           }
 
 
