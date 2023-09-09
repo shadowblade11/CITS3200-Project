@@ -29,19 +29,32 @@
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('div.segment');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
+
+    let audioStreams = [];
+    let mediaRecorders = [];
+    let recordedChunksList = [];
+
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
         listOfDivs[index].style.background = "red";
         navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
           const audioStream = new MediaRecorder(stream);
+          recordedChunksList[index] = [];
           audioStream.start();
+          console.log(audioStream.state);
         }).catch((err)=>{
           alert("problem");
         });
+
         setTimeout(() => {
           listOfDivs[index].style.background="none";
           audioStream.stop();
+          console.log(recordedChunksList[index]);
         },timeoutseconds);
+
+        audioStream.ondataavailable = (e) => {
+          recordedChunksList[index].push(e.data);
+        }
       }
     })
   </script>
