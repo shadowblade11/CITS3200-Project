@@ -161,5 +161,9 @@ def save_audio():
         return 'Upload successful', 200
     except Exception as e:
         return str(e), 400
-        
+    
 
+@app.route("/send-image",methods=["POST"])
+def send_image():
+    print(request.json)
+    return "test",200
