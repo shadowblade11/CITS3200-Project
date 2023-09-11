@@ -25,14 +25,17 @@ def generate_soundwave_image(file, filename):
     plt.savefig(f"./static/images/{filename}", transparent = True)
 
 
-def convert_to_wav_working_format(file,filename):
-    threshold = "-30dB" #need to mess around with threshold
-    flag = f"areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}"
-    i = ffmpeg.input(file) #get input file path
-    o = ffmpeg.output(i,f"../audio/{filename}.wav",af=f"{flag},{flag}") #get output file path, also removes the silent noise
-    # o = ffmpeg.output(i,f"../audio/{filename}.wav") #no silent noise removed
-    ffmpeg.run(o, overwrite_output=True, quiet=True) #run the command
-    # print("successful")
+def convert_to_wav_working_format(file):
+    try:
+        threshold = "-30dB" #need to mess around with threshold
+        flag = f"areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}"
+        i = ffmpeg.input(file) #get input file path
+        o = ffmpeg.output(i,file,af=f"{flag},{flag}") #get output file path, also removes the silent noise
+        # o = ffmpeg.output(i,f"../audio/{filename}.wav") #no silent noise removed
+        ffmpeg.run(o, overwrite_output=True, quiet=True) #run the command
+        # print("successful")
+    except Exception as e:
+        print(e)
 
 
 def compare(audio1, audio2):
