@@ -137,6 +137,7 @@ def test():
     # print(audio_clips)
     # print(current_user)
     #TODO figure how to get current user's id (temp using 123)
+    #TODO also once figured out a way to get current user id, use os commands to check if their folder exists, if not, then create it
     return render_template('testPage.html', css='./static/testPage.css', audio_clips=audio_clips, week = week, user="123")
 
 @app.route('/audio-test')
