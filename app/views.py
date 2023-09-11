@@ -152,6 +152,12 @@ def save_audio():
     print(data["user"])
     print(data["name"])
     print(data["attempt"])
+    print(data["week"])
+
+    if os.path.exists(f"audio/users"/{data["user"]}/{data["week"]}):
+        print("exists")
+    else:
+        print('no such file')
     # with open("audio/imported/sound.wav",'wb') as f:
         # f.write(data)
     # f.close()
