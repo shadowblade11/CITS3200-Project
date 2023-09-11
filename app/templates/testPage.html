@@ -100,13 +100,10 @@
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
         var blob = blobList[index];
-        // var xmlhttp = new XMLHttpRequest();
         var count = submissionAttempts[index];
-        // console.log(count);
         if (blob && count.innerHTML != 0){
           console.log(blob);
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-          // console.log(audioplayer.id);
           let name_of_clip = audioplayer.id;
           let data_to_send = {
             "user": userID,
