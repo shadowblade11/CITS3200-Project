@@ -91,7 +91,6 @@
         setTimeout(() => {
           listOfDivs[index].style.background="none";
           mediaRecorders[index].stop();
-          // console.log(recordedChunksList[index], index);
         },timeoutseconds);
 
       }
@@ -104,14 +103,8 @@
         if (blob && count.innerHTML != 0){
           console.log(blob);
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
+
           let name_of_clip = audioplayer.id;
-          // let data_to_send = {
-          //   "user": userID,
-          //   "week":weekID,
-          //   "name": name_of_clip,
-          //   "blob": blob,
-          //   "attempt": count.innerHTML
-          // };
 
           const formData = new FormData();
           formData.append('blob',blob);
@@ -121,11 +114,20 @@
           formData.append('attempt', count.innerHTML);
 
           count.innerHTML--;
-          // console.log(data_to_send.blob);
-          // let json_data = JSON.stringify(data_to_send);
+
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.open("POST", "save-audio",true);
-          // xmlhttp.setRequestHeader("Content-Type", "application/json");
+          xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        // Request was successful
+                        console.log(xmlhttp.responseText);
+                    } else {
+                        // Request failed
+                        console.error("Request failed with status: " + xmlhttp.status);
+                    }
+                }
+            };
           xmlhttp.send(formData);
           
         }
