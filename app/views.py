@@ -162,7 +162,12 @@ def save_audio():
     attempt = request.form['attempt']
     print(name_of_clip)
     print(blob)
-    # PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
+    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
+    try:
+        blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav")
+        print('passed')
+    except:
+        print('failed')
     # if os.path.exists(PATH_TO_FOLDER):
     #     print("exists")
     # else:
