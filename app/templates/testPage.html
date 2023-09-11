@@ -98,11 +98,11 @@
       submitButton.onclick = () =>{
         var blob = blobList[index];
         // var xmlhttp = new XMLHttpRequest();
-        var count = submissionAttempts[index].innerHTML;
-        console.log(count);
-        if (blob && count < 3){
+        var count = submissionAttempts[index];
+        // console.log(count);
+        if (blob && count.innerHTML < 3){
           console.log(blob);
-          // count++;
+          count.innerHTML++;
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
           // console.log(audioplayer.id);
           let name_of_clip = audioplayer.id;
