@@ -153,11 +153,13 @@ def save_audio():
     print(data["name"])
     print(data["attempt"])
     print(data["week"])
-    PATH_TO_FOLDER = f"audio/users/{data['user']}/{data['week']}"
+    PATH_TO_FOLDER = f"./app/static/audio/users/{data['user']}/{data['week']}"
     if os.path.exists(PATH_TO_FOLDER):
         print("exists")
     else:
         print('no such file')
+        os.mkdir(PATH_TO_FOLDER)
+
     # with open("audio/imported/sound.wav",'wb') as f:
         # f.write(data)
     # f.close()
