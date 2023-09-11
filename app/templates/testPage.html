@@ -5,7 +5,7 @@
     <button class="save-button">Save</button>
   </div>
   <div class="content">
-    <h1>Hello {{user}}</h1>
+    <h1 id="user">Hello {{user}}</h1>
   </div>
   {% for clip in audio_clips%}
   <div class="segment"style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
@@ -36,6 +36,7 @@
     const submitButtons = document.querySelectorAll('button.submit');
     const submissionAttempts = document.querySelectorAll('p.count');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
+    const userID = document.getElementById("user").innerHTML.replace('Hello ','');
 
     let blobList = [];
     let mediaRecorders = [];
@@ -102,21 +103,22 @@
         // console.log(count);
         if (blob && count.innerHTML != 0){
           console.log(blob);
-          count.innerHTML--;
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
           // console.log(audioplayer.id);
           let name_of_clip = audioplayer.id;
           let data_to_send = {
+            "user": userID,
             "name": name_of_clip,
             "blob": blob,
             "attempt": count.innerHTML
           };
+          count.innerHTML--;
           let json_data = JSON.stringify(data_to_send);
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.open("POST", "save-audio",true);
           xmlhttp.setRequestHeader("Content-Type", "application/json");
           xmlhttp.send(json_data);
-
+          
         }
 
       }

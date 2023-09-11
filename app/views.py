@@ -148,7 +148,9 @@ def save_audio():
     # data = request.data
     # print(data)
     data = request.get_json()
+    print(data["user"])
     print(data["name"])
+    print(data["attempt"])
     # with open("audio/imported/sound.wav",'wb') as f:
         # f.write(data)
     # f.close()
