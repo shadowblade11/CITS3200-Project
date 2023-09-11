@@ -13,7 +13,7 @@
     <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="500" height="200"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
     <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
     <button class="submit">Submit</button> <!-- perhaps add a img-->
-    <p class = "count">0</p>
+    <p class = "count">3</p>
   </div>
   {% endfor %}
   
@@ -100,15 +100,16 @@
         // var xmlhttp = new XMLHttpRequest();
         var count = submissionAttempts[index];
         // console.log(count);
-        if (blob && count.innerHTML < 3){
+        if (blob && count.innerHTML != 0){
           console.log(blob);
-          count.innerHTML++;
+          count.innerHTML--;
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
           // console.log(audioplayer.id);
           let name_of_clip = audioplayer.id;
           let data_to_send = {
             "name": name_of_clip,
-            "blob": blob
+            "blob": blob,
+            "attempt": count.innerHTML
           };
 
         }
