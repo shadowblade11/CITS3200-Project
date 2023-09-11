@@ -165,7 +165,13 @@ def save_audio():
 
 @app.route("/send-image",methods=["POST"])
 def send_image():
-    print(request.json)
     data = request.json
-    print(data['name'])
+    name_of_clip = data['name']
+    user = data['user']
+    week = data['week']
+    attempt = data['attempt']
+    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
+    convert_to_wav_working_format(PATH_TO_FOLDER)
+
+
     return "some path to something",200
