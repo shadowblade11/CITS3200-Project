@@ -149,19 +149,20 @@ def save_audio():
     # data = request.data
     # print(data)
     data = request.get_json()
-    print(data["user"])
-    print(data["name"])
-    print(data["attempt"])
-    print(data["week"])
-    PATH_TO_FOLDER = f"./app/static/audio/users/{data['user']}/{data['week']}"
+    user = data["user"]
+    name_of_clip = data["name"]
+    week = data["week"]
+    attempt = data["attempt"]
+    blob = data["blob"]
+    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
     if os.path.exists(PATH_TO_FOLDER):
         print("exists")
     else:
         print('no such file')
         os.mkdir(PATH_TO_FOLDER)
 
-    # with open("audio/imported/sound.wav",'wb') as f:
-        # f.write(data)
-    # f.close()
+    with open(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav") as f:
+        f.write(blob)
+    f.close()
     return "temp" #this shouldn't be temp, but idk what it should be, fix later (TODO)
 
