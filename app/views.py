@@ -145,9 +145,12 @@ def audio_test():
 
 @app.route("/save-audio",methods=['POST'])
 def save_audio():
-    data = request.data
-    with open("audio/imported/sound.wav",'wb') as f:
-        f.write(data)
-    f.close()
+    # data = request.data
+    # print(data)
+    data = request.get_json()
+    print(data["name"])
+    # with open("audio/imported/sound.wav",'wb') as f:
+        # f.write(data)
+    # f.close()
     return "temp" #this shouldn't be temp, but idk what it should be, fix later (TODO)
 
