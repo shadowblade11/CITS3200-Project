@@ -166,4 +166,6 @@ def save_audio():
 @app.route("/send-image",methods=["POST"])
 def send_image():
     print(request.json)
-    return "test",200
+    data = request.json
+    print(data['name'])
+    return "some path to something",200
