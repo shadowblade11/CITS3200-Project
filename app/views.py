@@ -161,7 +161,7 @@ def save_audio():
         print('no such file')
         os.mkdir(PATH_TO_FOLDER)
 
-    with open(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav") as f:
+    with open(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav", "wb") as f:
         f.write(blob)
     f.close()
     return "temp" #this shouldn't be temp, but idk what it should be, fix later (TODO)
