@@ -153,8 +153,8 @@ def save_audio():
     print(data["name"])
     print(data["attempt"])
     print(data["week"])
-
-    if os.path.exists(f"audio/users"/{data["user"]}/{data["week"]}):
+    PATH_TO_FOLDER = f"audio/users/{data['user']}/{data['week']}"
+    if os.path.exists(PATH_TO_FOLDER):
         print("exists")
     else:
         print('no such file')
