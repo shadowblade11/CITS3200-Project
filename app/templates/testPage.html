@@ -12,7 +12,8 @@
     <audio class = "supplied_clip" id="{{clip}}" controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
     <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="500" height="200"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
     <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
-    <button class="submit">Submit</button> <!-- perhaps add a microphone img-->
+    <button class="submit">Submit</button> <!-- perhaps add a img-->
+    <p class = "count">0</p>
   </div>
   {% endfor %}
   
@@ -33,6 +34,7 @@
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('div.segment');
     const submitButtons = document.querySelectorAll('button.submit');
+    const submissionAttempts = document.querySelectorAll('p.count');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
 
     let blobList = [];
@@ -96,12 +98,21 @@
       submitButton.onclick = () =>{
         var blob = blobList[index];
         // var xmlhttp = new XMLHttpRequest();
-        if (blob){
+        var count = submissionAttempts[index].innerHTML;
+        console.log(count);
+        if (blob && count < 3){
           console.log(blob);
+          // count++;
+          const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
+          // console.log(audioplayer.id);
+          let name_of_clip = audioplayer.id;
+          let data_to_send = {
+            "name": name_of_clip,
+            "blob": blob
+          };
 
         }
-        const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-        // console.log(audioplayer.id);
+
       }
 
     })
