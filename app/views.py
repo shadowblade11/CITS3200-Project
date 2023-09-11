@@ -148,19 +148,26 @@ def audio_test():
 def save_audio():
     # data = request.data
     # print(data)
-    data = request.get_json()
-    user = data["user"]
-    name_of_clip = data["name"]
-    week = data["week"]
-    attempt = data["attempt"]
-    blob = data["blob"]
-    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
-    if os.path.exists(PATH_TO_FOLDER):
-        print("exists")
-    else:
-        print('no such file')
-        os.mkdir(PATH_TO_FOLDER)
+    # data = request.get_json()
+    # user = data["user"]
+    # name_of_clip = data["name"]
+    # week = data["week"]
+    # attempt = data["attempt"]
+    # blob = data["blob"]
+
+    blob = request.files['blob']
+    user = request.form['user']
+    week = request.form['week']
+    name_of_clip = request.form['name']
+    attempt = request.form['attempt']
+    print(name_of_clip)
     print(blob)
+    # PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
+    # if os.path.exists(PATH_TO_FOLDER):
+    #     print("exists")
+    # else:
+    #     print('no such file')
+    #     os.mkdir(PATH_TO_FOLDER)
     # with open(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav", "wb") as f:
     #     f.write(blob)
     # f.close()

@@ -105,19 +105,28 @@
           console.log(blob);
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
           let name_of_clip = audioplayer.id;
-          let data_to_send = {
-            "user": userID,
-            "week":weekID,
-            "name": name_of_clip,
-            "blob": blob,
-            "attempt": count.innerHTML
-          };
+          // let data_to_send = {
+          //   "user": userID,
+          //   "week":weekID,
+          //   "name": name_of_clip,
+          //   "blob": blob,
+          //   "attempt": count.innerHTML
+          // };
+
+          const formData = new FormData();
+          formData.append('blob',blob);
+          formData.append('user', userID);
+          formData.append('week', weekID);
+          formData.append('name', name_of_clip);
+          formData.append('attempt', count.innerHTML);
+
           count.innerHTML--;
-          let json_data = JSON.stringify(data_to_send);
+          // console.log(data_to_send.blob);
+          // let json_data = JSON.stringify(data_to_send);
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.open("POST", "save-audio",true);
-          xmlhttp.setRequestHeader("Content-Type", "application/json");
-          xmlhttp.send(json_data);
+          // xmlhttp.setRequestHeader("Content-Type", "application/json");
+          xmlhttp.send(formData);
           
         }
 
