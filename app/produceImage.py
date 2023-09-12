@@ -4,6 +4,7 @@ import numpy as np
 
 
 def generate_soundwave_image(file, output_path, filename):
+    plt.switch_backend('Agg')
     soundwave = wave.open(file,"r")
     # print(soundwave.getframerate())
     raw_audio = soundwave.readframes(-1)
