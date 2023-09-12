@@ -158,7 +158,7 @@ def save_audio():
     os.makedirs(PATH_TO_FOLDER,exist_ok=True)
 
     try:
-        blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav")
+        blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav")
         return 'Upload successful', 200
     except Exception as e:
         return str(e), 400
@@ -172,9 +172,10 @@ def send_image():
     user = data['user']
     week = data['week']
     attempt = data['attempt']
-    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
-    OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-processed.wav"
+    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-raw.wav"
+    OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
     convert_to_wav_working_format(PATH_TO_FOLDER,OUTPUT_PATH)
+    os.remove(PATH_TO_FOLDER)
 
 
     return "some path to something",200
