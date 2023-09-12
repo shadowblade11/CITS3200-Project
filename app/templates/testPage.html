@@ -142,11 +142,17 @@
                               console.log(xmlhttpImage.responseText);
                               name_of_clip = name_of_clip.replaceAll(' ','_');
                               let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
-                              var image = document.createElement("img");
-                              image.src = filename;
-                              image.width = "500";
-                              image.height = "200";
-                              listOfDivs[index].appendChild(image);
+                              var img = document.getElementById("recorded_image");
+                              if(img){
+                                img.src = filename;
+                              }else{
+                                var create_image = document.createElement("img");
+                                create_image.src = filename;
+                                create_image.width = "500";
+                                create_image.height = "200";
+                                create_image.id = "recorded_image";
+                                listOfDivs[index].appendChild(create_image);
+                              }
                             }
                             else{
                               console.log("error");
