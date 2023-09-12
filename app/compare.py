@@ -31,9 +31,9 @@ def convert_to_wav_working_format(file,output):
         print(output)
         threshold = "-30dB" #need to mess around with threshold
         flag = f"areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}"
-        i = ffmpeg.input(file) #get input file path
+        i = ffmpeg.input(f"{file}") #get input file path
         print("error here 1")
-        o = ffmpeg.output(i,output,af=f"{flag},{flag}") #get output file path, also removes the silent noise
+        o = ffmpeg.output(i,f"{output}",af=f"{flag},{flag}") #get output file path, also removes the silent noise
         print("error here 2")
         # o = ffmpeg.output(i,f"../audio/{filename}.wav") #no silent noise removed
         ffmpeg.run(o, overwrite_output=True) #run the command
