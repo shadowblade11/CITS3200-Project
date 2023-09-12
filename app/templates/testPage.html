@@ -140,6 +140,12 @@
                           if(xmlhttpImage.readyState==4){
                             if(xmlhttpImage.status==200){
                               console.log(xmlhttpImage.responseText);
+                              name_of_clip.replaceAll(' ','_');
+                              let source = "{{ url_for('static', filename='images/users/' + user + '/' + week + '/' + clip + '.png') }}";
+                              source.replace('week',weekID);
+                              source.replace('user',userID);
+                              source.replace('clip',name_of_clip);
+                              console.log(source);
                             }
                             else{
                               console.log("error");
