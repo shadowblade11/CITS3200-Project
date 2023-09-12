@@ -140,14 +140,14 @@
                           if(xmlhttpImage.readyState==4){
                             if(xmlhttpImage.status==200){
                               console.log(xmlhttpImage.responseText);
-                              name_of_clip.replaceAll(' ','_');
-                              console.log(userID);
-                              let filename = 'images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
+                              name_of_clip = name_of_clip.replaceAll(' ','_');
+                              console.log(name_of_clip);
+                              let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
                               console.log(filename);
                               let source = `{{ url_for('static', filename='tempvalue')}}`;
-                              source.replace("tempvalue",file)
+                              source.replace("tempvalue",filename);
                               var image = document.createElement("img");
-                              image.src = source;
+                              image.src = filename;
                               listOfDivs[index].appendChild(image);
                               console.log(source);
                             }
