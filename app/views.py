@@ -188,7 +188,7 @@ def send_image():
 
     os.makedirs(PATH_TO_IMAGE_FOLDER,exist_ok=True)
 
-    generate_soundwave_image(OUTPUT_PATH,PATH_TO_IMAGE_FOLDER,name_of_clip)
+    image = generate_soundwave_image(OUTPUT_PATH,PATH_TO_IMAGE_FOLDER,name_of_clip)
 
 
-    return "some path to something",200
+    return image,200
