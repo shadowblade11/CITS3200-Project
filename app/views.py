@@ -176,7 +176,8 @@ def send_image():
     OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
     state = convert_to_wav_working_format(PATH_TO_FOLDER,OUTPUT_PATH)
     if state == 0:
-        os.remove(PATH_TO_FOLDER)
+        # os.remove(PATH_TO_FOLDER)
+        pass
     else:
         print('something went wrong')
 
