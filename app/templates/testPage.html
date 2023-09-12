@@ -60,13 +60,11 @@
           }
           
           mediaRecorders[index].onstop = () => {
-            console.log("creating audioplayer");
             const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
             blobList[index] = blob;
             recordedChunksList[index] = [];
             
             const audioURL = URL.createObjectURL(blob);
-            console.log(audioURL);
 
             const existingAudioPlayer = document.getElementById("audioplayer" + index);
 
@@ -101,7 +99,6 @@
         var blob = blobList[index];
         var count = submissionAttempts[index];
         if (blob && count.innerHTML != 0){
-          console.log(blob);
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
 
           let name_of_clip = audioplayer.id;
@@ -129,8 +126,6 @@
           xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
                     if (xmlhttp.status == 200) {
-                        // Request was successful
-                        // console.log(xmlhttp.responseText);
                         xmlhttpImage = new XMLHttpRequest();
                         xmlhttpImage.open("POST","send-image",true);
                         xmlhttpImage.setRequestHeader('Content-Type','application/json');
@@ -139,7 +134,6 @@
                         xmlhttpImage.onreadystatechange = function() {
                           if(xmlhttpImage.readyState==4){
                             if(xmlhttpImage.status==200){
-                              console.log(xmlhttpImage.responseText);
                               name_of_clip = name_of_clip.replaceAll(' ','_');
                               let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
                               var img = document.getElementById("recorded_image" + index);
