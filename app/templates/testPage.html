@@ -141,15 +141,12 @@
                             if(xmlhttpImage.status==200){
                               console.log(xmlhttpImage.responseText);
                               name_of_clip = name_of_clip.replaceAll(' ','_');
-                              console.log(name_of_clip);
                               let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
-                              console.log(filename);
-                              let source = `{{ url_for('static', filename='tempvalue')}}`;
-                              source.replace("tempvalue",filename);
                               var image = document.createElement("img");
                               image.src = filename;
+                              image.width = "500";
+                              image.height = "200";
                               listOfDivs[index].appendChild(image);
-                              console.log(source);
                             }
                             else{
                               console.log("error");
