@@ -144,7 +144,7 @@
                               let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
                               var img = document.getElementById("recorded_image" + index);
                               if(img){
-                                img.src = filename;
+                                img.src = filename + "?timestamp=" + new Date().getTime();
                               }else{
                                 var create_image = document.createElement("img");
                                 create_image.src = filename;
