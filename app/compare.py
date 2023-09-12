@@ -6,6 +6,8 @@ import librosa
 from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
 
+import os
+
 def generate_soundwave_image(file, filename):
     soundwave = wave.open(file,"r")
     # print(soundwave.getframerate())
@@ -26,6 +28,7 @@ def generate_soundwave_image(file, filename):
 
 
 def convert_to_wav_working_format(input_file,output_file):
+    print(os.getcwd())
     try:
         print(input_file)
         print(output_file)
