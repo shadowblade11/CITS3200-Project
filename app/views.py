@@ -170,8 +170,9 @@ def send_image():
     user = data['user']
     week = data['week']
     attempt = data['attempt']
-    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
-    convert_to_wav_working_format(PATH_TO_FOLDER)
+    PATH_TO_FOLDER = f"./static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
+    OUTPUT_PATH = f"./static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-processed.wav"
+    convert_to_wav_working_format(PATH_TO_FOLDER,OUTPUT_PATH)
 
 
     return "some path to something",200
