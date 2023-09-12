@@ -152,10 +152,11 @@ def save_audio():
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
     print(name_of_clip)
-
+    name_of_clip = name_of_clip.replace(" ","_")
     PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
 
     os.makedirs(PATH_TO_FOLDER,exist_ok=True)
+
     try:
         blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav")
         return 'Upload successful', 200
@@ -167,6 +168,7 @@ def save_audio():
 def send_image():
     data = request.json
     name_of_clip = data['name']
+    name_of_clip = name_of_clip.replace(" ","_")
     user = data['user']
     week = data['week']
     attempt = data['attempt']
