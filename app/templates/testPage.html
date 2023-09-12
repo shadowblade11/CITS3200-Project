@@ -141,8 +141,9 @@
                             if(xmlhttpImage.status==200){
                               console.log(xmlhttpImage.responseText);
                               name_of_clip.replaceAll(' ','_');
-                              let source = "{{ url_for('static', filename='images/users/'" + userID + '/' + week + '/' + name_of_clip +"'.png') }}";
-                              var image = document.createElement("img")
+                              console.log(userID);
+                              let source = "{{ url_for('static', filename='images/users/123/week1/1_come_ti_chiami.png)}}";
+                              var image = document.createElement("img");
                               image.src = source;
                               listOfDivs[index].appendChild(image);
                               console.log(source);
