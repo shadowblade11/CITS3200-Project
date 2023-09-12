@@ -48,36 +48,42 @@
 
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
+        // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
         listOfDivs[index].style.background = "red";
+
         navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
 
-          mediaRecorders[index] = new MediaRecorder(stream);
+          //initalise the recordedChunk to contain an empty list
           recordedChunksList[index] = [];
 
-          mediaRecorders[index].start();
-
+          // make new media recorder and push data to recordedchunk
+          mediaRecorders[index] = new MediaRecorder(stream);
           mediaRecorders[index].ondataavailable = (e) => {
             recordedChunksList[index].push(e.data);
           }
-          
+
+          mediaRecorders[index].start();
+
           mediaRecorders[index].onstop = () => {
+            // make a blob and add to list
             const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
             blobList[index] = blob;
+            // clear the recordedchunk
             recordedChunksList[index] = [];
             
-            const audioURL = URL.createObjectURL(blob);
-
+            //indicate that new audio clip has been made
             newRecording[index] = 1;
+
+            // check if audioplayer exist and change src to audioclip
             const existingAudioPlayer = document.getElementById("audioplayer" + index);
-
             if (existingAudioPlayer){
-              existingAudioPlayer.src = audioURL;
+              existingAudioPlayer.src = URL.createObjectURL(blob);
 
-            }else{
+            }else{ //create new audioplayer if it doesn't exist
               var audioPlayer = document.createElement("audio");
               audioPlayer.controls = true;
               audioPlayer.id = "audioplayer" + index;
-              audioPlayer.src = audioURL;
+              audioPlayer.src = URL.createObjectURL(blob);
               listOfDivs[index].appendChild(audioPlayer);
             }
 
@@ -88,6 +94,7 @@
           alert("problem");
         });
 
+        // add timeout to recording
         setTimeout(() => {
           listOfDivs[index].style.background="none";
           mediaRecorders[index].stop();
