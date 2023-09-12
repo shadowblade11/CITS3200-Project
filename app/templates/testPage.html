@@ -142,7 +142,10 @@
                               console.log(xmlhttpImage.responseText);
                               name_of_clip.replaceAll(' ','_');
                               console.log(userID);
-                              let source = `{{ url_for('static', filename='images/users/123/week1/1_come_ti_chiami.png')}}`;
+                              let filename = 'images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
+                              console.log(filename);
+                              let source = `{{ url_for('static', filename='tempvalue')}}`;
+                              source.replace("tempvalue",file)
                               var image = document.createElement("img");
                               image.src = source;
                               listOfDivs[index].appendChild(image);
