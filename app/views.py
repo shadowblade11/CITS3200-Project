@@ -188,7 +188,9 @@ def send_image():
 
     os.makedirs(PATH_TO_IMAGE_FOLDER,exist_ok=True)
 
-    image = generate_soundwave_image(OUTPUT_PATH,PATH_TO_IMAGE_FOLDER,name_of_clip)
+    image_check = generate_soundwave_image(OUTPUT_PATH,PATH_TO_IMAGE_FOLDER,name_of_clip)
 
+    if image_check == 0:
+        return f"{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}",200
 
-    return image,200
+    return "invalid",200

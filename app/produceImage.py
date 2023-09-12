@@ -23,4 +23,4 @@ def generate_soundwave_image(file, output_path, filename):
     plt.savefig(f"{output_path}/{filename}", transparent = True)
     plt.close()
 
-    return f"{output_path}/{filename}"
+    return 0
