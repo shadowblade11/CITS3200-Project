@@ -25,15 +25,17 @@ def generate_soundwave_image(file, filename):
     plt.savefig(f"./static/images/{filename}", transparent = True)
 
 
-def convert_to_wav_working_format(file,output):
+def convert_to_wav_working_format(input_file,output_file):
     try:
-        print(file)
-        print(output)
+        input_file = input_file.replace(" ","\\ ")
+        output_file = output_file.replace(" ","\\ ")
+        print(input_file)
+        print(output_file)
         threshold = "-30dB" #need to mess around with threshold
         flag = f"areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}"
-        i = ffmpeg.input(f"{file}") #get input file path
+        i = ffmpeg.input(input_file) #get input file path
         print("error here 1")
-        o = ffmpeg.output(i,f"{output}",af=f"{flag},{flag}") #get output file path, also removes the silent noise
+        o = ffmpeg.output(i,output_file,af=f"{flag},{flag}") #get output file path, also removes the silent noise
         print("error here 2")
         # o = ffmpeg.output(i,f"../audio/{filename}.wav") #no silent noise removed
         ffmpeg.run(o, overwrite_output=True) #run the command
