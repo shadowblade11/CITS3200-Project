@@ -43,6 +43,7 @@
     let blobList = [];
     let mediaRecorders = [];
     let recordedChunksList = [];
+    let newRecording = [];
 
 
     recordButtons.forEach((recordButton,index) => {
@@ -66,6 +67,7 @@
             
             const audioURL = URL.createObjectURL(blob);
 
+            newRecording[index] = 1;
             const existingAudioPlayer = document.getElementById("audioplayer" + index);
 
             if (existingAudioPlayer){
@@ -98,7 +100,8 @@
       submitButton.onclick = () =>{
         var blob = blobList[index];
         var count = submissionAttempts[index];
-        if (blob && count.innerHTML != 0){
+        var new_clip = newRecording[index];
+        if (blob && count.innerHTML != 0 && new_clip == 1){
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
 
           let name_of_clip = audioplayer.id;
@@ -161,7 +164,7 @@
                 }
             };
           xmlhttp.send(formData);
-          
+          newRecording[index] = 0;
         }
 
       }
