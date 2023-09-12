@@ -142,7 +142,7 @@
                               console.log(xmlhttpImage.responseText);
                               name_of_clip.replaceAll(' ','_');
                               console.log(userID);
-                              let source = "{{ url_for('static', filename='images/users/123/week1/1_come_ti_chiami.png)}}";
+                              let source = `{{ url_for('static', filename='images/users/123/week1/1_come_ti_chiami.png')}}`;
                               var image = document.createElement("img");
                               image.src = source;
                               listOfDivs[index].appendChild(image);
