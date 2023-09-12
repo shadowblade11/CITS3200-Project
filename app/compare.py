@@ -36,7 +36,7 @@ def convert_to_wav_working_format(file,output):
         o = ffmpeg.output(i,output,af=f"{flag},{flag}") #get output file path, also removes the silent noise
         print("error here 2")
         # o = ffmpeg.output(i,f"../audio/{filename}.wav") #no silent noise removed
-        ffmpeg.run(o, overwrite_output=True, quiet=True) #run the command
+        ffmpeg.run(o, overwrite_output=True) #run the command
         print("error here 3")
         # print("successful")
     except Exception as e:
