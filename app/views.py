@@ -174,16 +174,21 @@ def send_image():
     user = data['user']
     week = data['week']
     attempt = data['attempt']
-    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-raw.wav"
+    PATH_TO_AUDIO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-raw.wav"
     OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
-    state = convert_to_wav_working_format(PATH_TO_FOLDER,OUTPUT_PATH)
+    state = convert_to_wav_working_format(PATH_TO_AUDIO_FOLDER,OUTPUT_PATH)
     if state == 0:
         # os.remove(PATH_TO_FOLDER)
         pass
     else:
         print('something went wrong')
 
-    
+
+    PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{week}"
+
+    os.makedirs(PATH_TO_IMAGE_FOLDER,exist_ok=True)
+
+    generate_soundwave_image(OUTPUT_PATH,PATH_TO_IMAGE_FOLDER,name_of_clip)
 
 
     return "some path to something",200
