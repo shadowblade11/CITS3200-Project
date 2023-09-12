@@ -142,7 +142,7 @@
                               console.log(xmlhttpImage.responseText);
                               name_of_clip = name_of_clip.replaceAll(' ','_');
                               let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
-                              var img = document.getElementById("recorded_image");
+                              var img = document.getElementById("recorded_image" + index);
                               if(img){
                                 img.src = filename;
                               }else{
@@ -150,7 +150,7 @@
                                 create_image.src = filename;
                                 create_image.width = "500";
                                 create_image.height = "200";
-                                create_image.id = "recorded_image";
+                                create_image.id = "recorded_image" + index;
                                 listOfDivs[index].appendChild(create_image);
                               }
                             }
