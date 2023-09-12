@@ -105,23 +105,23 @@
 
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
-        var blob = blobList[index];
-        var count = submissionAttempts[index];
-        var new_clip = newRecording[index];
+        // make sure audioclip exists, submission is allowed, and its a new clip
         if (blob && count.innerHTML != 0 && new_clip == 1){
+        // get needed information
+          var blob = blobList[index];
+          var count = submissionAttempts[index];
+          var new_clip = newRecording[index];
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-
           let name_of_clip = audioplayer.id;
 
+          //create form and json
           const formData = new FormData();
           formData.append('blob',blob);
           formData.append('user', userID);
           formData.append('week', weekID);
           formData.append('name', name_of_clip);
           formData.append('attempt', count.innerHTML);
-
-          
-          let json = JSON.stringify(
+          const json = JSON.stringify(
             {
               "user":userID,
               "name":name_of_clip,
@@ -130,12 +130,16 @@
             }
           )
 
+          //decrease count
           count.innerHTML--;
+
+          // send audio to be saved
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.open("POST", "save-audio",true);
           xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
                     if (xmlhttp.status == 200) {
+                        // on success, request for image creation
                         xmlhttpImage = new XMLHttpRequest();
                         xmlhttpImage.open("POST","send-image",true);
                         xmlhttpImage.setRequestHeader('Content-Type','application/json');
@@ -145,11 +149,15 @@
                           if(xmlhttpImage.readyState==4){
                             if(xmlhttpImage.status==200){
                               name_of_clip = name_of_clip.replaceAll(' ','_');
+                              
+                              //path for image
                               let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
+
+                              // check if img exist and update src
                               var img = document.getElementById("recorded_image" + index);
                               if(img){
-                                img.src = filename + "?timestamp=" + new Date().getTime();
-                              }else{
+                                img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
+                              }else{ // create new img
                                 var create_image = document.createElement("img");
                                 create_image.src = filename;
                                 create_image.width = "500";
