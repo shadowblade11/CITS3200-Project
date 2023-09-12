@@ -39,8 +39,9 @@ def convert_to_wav_working_format(file,output):
         ffmpeg.run(o, overwrite_output=True) #run the command
         print("error here 3")
         # print("successful")
-    except Exception as e:
+    except ffmpeg._run.Error as e:
         print(e)
+
 
 
 def compare(audio1, audio2):
