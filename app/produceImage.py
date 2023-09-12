@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def generate_soundwave_image(file, filename):
+def generate_soundwave_image(file, output_path, filename):
     soundwave = wave.open(file,"r")
     # print(soundwave.getframerate())
     raw_audio = soundwave.readframes(-1)
@@ -19,4 +19,5 @@ def generate_soundwave_image(file, filename):
     plt.plot(length,raw_audio)
     plt.axis('off') #hide axis
     # print(filename)
-    plt.savefig(f"./static/images/{filename}", transparent = True)
+    
+    plt.savefig(f"{output_path}/{filename}", transparent = True)
