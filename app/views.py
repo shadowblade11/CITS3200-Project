@@ -174,8 +174,11 @@ def send_image():
     attempt = data['attempt']
     PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-raw.wav"
     OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
-    convert_to_wav_working_format(PATH_TO_FOLDER,OUTPUT_PATH)
-    os.remove(PATH_TO_FOLDER)
+    state = convert_to_wav_working_format(PATH_TO_FOLDER,OUTPUT_PATH)
+    if state == 0:
+        os.remove(PATH_TO_FOLDER)
+    else:
+        print('something went wrong')
 
 
     return "some path to something",200
