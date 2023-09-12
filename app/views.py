@@ -9,7 +9,9 @@ from app.models import User
 import datetime
 
 
-from app.compare import generate_soundwave_image, convert_to_wav_working_format
+from app.compare import convert_to_wav_working_format
+
+from app.produceImage import generate_soundwave_image
 
 import os
 
