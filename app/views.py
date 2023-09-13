@@ -19,10 +19,6 @@ def intro():
 def about():
     return render_template("About.html", css='./static/About.css')
 
-@app.route('/adminLogin')
-def admin():
-    return render_template("adminLogin.html", css='./static/adminLogin.css')
-
 @app.route('/home')
 @login_required
 def home():
@@ -53,8 +49,8 @@ def login():
     return render_template('loginPage.html', form=form, css='./static/loginPage.css')
 
 
-@app.route('/administratorLogin', methods=['GET', 'POST'])
-def administratorLogin():
+@app.route('/adminLogin', methods=['GET', 'POST'])
+def adminLogin():
     form = AdminForm()
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.username.data).first()
