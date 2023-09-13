@@ -1,45 +1,21 @@
 {% extends "base.html" %}
-
-{% block content %} 
-
-<div class="contact-section">
-	<div class="header-text">
-		<h1>Contact Us</h1>
-	</div>
-</div>
-
-<div class="row-container">
-    <div class="row">
-        <div class="text-container">
-            <h2>Support, Technical Isssues and Marks</h2>
-            <p>Messages will be sent to the admin account.</p>
-        </div>
+{% block content %}
+  <div class="contact-container">
+        <h1>Contact Us</h1>
+        <form action="{{ url_for('contact') }}" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.name.label }}{{ form.name(size=48) }}
+            </p>
+            <p>
+                {{ form.email.label }}{{ form.email(size=48) }}
+            <p>
+                {{ form.subject.label }}{{ form.subject(size=48) }}
+            </p>
+            <p>
+                {{ form.message.label }}{{ form.message(cols=40, rows=10) }}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
     </div>
-</div>
-
-<div class="container">
-  <form action="/action_page.php">
-    <label for="fname">First Name</label>
-    <input type="text" id="fname" name="firstname" placeholder="Your name">
-
-    <label for="snum">Student Number</label>
-    <input type="text" id="snum" name="Student Number" placeholder="e.g 21386988">
-
-    <label for="email">Email</label>
-    <input type="text" id="email" email="email" placeholder="E-mail Address">
-
-    <label for="Topic">Topic</label>
-    <select id="topic" name="topic">
-      <option value="Support">Support</option>
-      <option value="Technical Issue">Technical Issue</option>
-      <option value="Marks">Marks</option>
-    </select>
-
-    <label for="message">Message</label>
-    <textarea id="message" name="Message" placeholder="Write something..." style="height:200px"></textarea>
-
-    <input type="submit" value="Submit">
-  </form>
-</div>
-
-  {% endblock content %} 
+{% endblock %}

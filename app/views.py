@@ -3,7 +3,7 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
 from app import app, db, verification
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
 import datetime
@@ -30,7 +30,8 @@ def home():
 
 @app.route('/contact')
 def contact():
-    return render_template("contact.html", css='./static/contact.css')
+    form = ContactForm()
+    return render_template('contact.html', form=form, css='./static/contact.css')
 
 @app.route('/login', methods=["GET", "POST"])
 def login():

@@ -10,12 +10,12 @@
                 {{ form.id.label }}{{ form.id(size=9) }}
             </p>
             {% if form.id.errors %}
-        <ul class="errors">
-            {% for error in form.id.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+                <ul class="errors">
+                    {% for error in form.id.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
             <p>
                 {{ form.passwd.label }}{{ form.passwd(size=32)}}

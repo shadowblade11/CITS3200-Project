@@ -45,3 +45,10 @@ class AdminForm(FlaskForm):
     username = StringField('Admin email', validators=[DataRequired(message="Please enter your Admin email")])
     passwd = PasswordField('Password', validators=[DataRequired(message="Please enter your password")])
     # marinella.caruso@uwa.edu.au
+
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    subject = StringField('Subject', validators=[DataRequired()])
+    message = StringField('Message', validators=[DataRequired()])
+    submit = SubmitField('Submit')
