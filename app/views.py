@@ -40,7 +40,6 @@ def home(username):
 @app.route('/adminHome', methods=["GET", "POST"])
 @login_required
 def adminHome():
-    print("hallo")
     return render_template("adminHome.html", css=url_for('static', filename='adminHome.css'))
 
 
@@ -57,7 +56,6 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.id.data).first()
-        print(user)
         if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
             return redirect(url_for('login'))
@@ -66,7 +64,6 @@ def login():
         session['uid'] = form.id.data
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home', username=user.id)
-            print(next_page)
         return redirect(next_page)
     return render_template('loginPage.html', form=form, css=url_for('static', filename='loginPage.css'))
 
@@ -75,7 +72,6 @@ def login():
 def administratorLogin():
     if (current_user.is_authenticated and
             User.query.filter_by(id=session.get('uid')).first().is_admin):
-        print("ID : ", current_user.id)
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
@@ -86,7 +82,7 @@ def administratorLogin():
         next_page = request.args.get('next')
         session['uid'] = form.username.data
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('adminHome')  # Provide the 'username' parameter
+            next_page = url_for('adminHome')
         return redirect(next_page)
     return render_template('adminLogin.html', css=url_for('static', filename='adminLogin.css'), form=form)
 
@@ -127,7 +123,6 @@ def verify():
         elif session['v_code'] == form.v_code.data:
             user = User(id=session['id'])
             user.set_passwd(session['passwd'])
-            print(user)
             session.pop('id')  # Clear the session variable
             db.session.add(user)
             db.session.commit()
@@ -165,7 +160,6 @@ def test(username):
     audio_clips = [i.split('.')[0] for i in audio_clips]
     # print(audio_clips)
     # print(current_user)
-    # TODO figure how to get current user's id (temp using 123)
     # TODO also once figured out a way to get current user id,
     #  use os commands to check if their folder exists, if not, then create it
     return render_template('testPage.html', css=url_for('static', filename='testPage.css'),
@@ -243,6 +237,6 @@ def start():
     return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
 
 
-@app.route('/test')
-def testPage():
-    return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
+# @app.route('/test')
+# def testPage():
+#     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
