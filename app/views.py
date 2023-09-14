@@ -155,8 +155,8 @@ def resend_verification():
 
 
 @login_required
-@app.route('/test', methods=['GET', 'POST'])
-def test():
+@app.route('/test/<username>', methods=['GET', 'POST'])
+def test(username):
     # print(request.args.get('data')) #way to get folder
     week = request.args.get('data')
     path = f"./app/static/audio/{week}/"
@@ -166,8 +166,10 @@ def test():
     # print(audio_clips)
     # print(current_user)
     # TODO figure how to get current user's id (temp using 123)
-    # TODO also once figured out a way to get current user id, use os commands to check if their folder exists, if not, then create it
-    return render_template('testPage.html', css=url_for('static', filename='testPage.css'), audio_clips=audio_clips, week=week, user="123")
+    # TODO also once figured out a way to get current user id,
+    #  use os commands to check if their folder exists, if not, then create it
+    return render_template('testPage.html', css=url_for('static', filename='testPage.css'),
+                           audio_clips=audio_clips, week=week, username=username)
 
 
 @app.route('/audio-test')
