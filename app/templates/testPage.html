@@ -44,18 +44,21 @@
     let mediaRecorders = [];
     let recordedChunksList = [];
     let newRecording = [];
+    let RECORDING = 0;
 
 
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
         // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
-        listOfDivs[index].style.background = "red";
-
-        navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
-
-          //initalise the recordedChunk to contain an empty list
-          recordedChunksList[index] = [];
-
+        if (RECORDING == 0){
+          RECORDING = 1;
+          listOfDivs[index].style.background = "red";
+          
+          navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
+            
+            //initalise the recordedChunk to contain an empty list
+            recordedChunksList[index] = [];
+            
           // make new media recorder and push data to recordedchunk
           mediaRecorders[index] = new MediaRecorder(stream);
           mediaRecorders[index].ondataavailable = (e) => {
@@ -86,20 +89,22 @@
               audioPlayer.src = URL.createObjectURL(blob);
               listOfDivs[index].appendChild(audioPlayer);
             }
-
+            
           }
-
+          
         }).catch((err)=>{
           console.log(err);
           alert("problem");
         });
-
+        
         // add timeout to recording
         setTimeout(() => {
           listOfDivs[index].style.background="none";
           mediaRecorders[index].stop();
+          RECORDING = 0;
         },timeoutseconds);
-
+      }
+        
       }
     })
 
