@@ -1,21 +1,194 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="content">
+  <!-- <div class="content">
     <h1>New Audio</h1>
     <button class="save-button">Save</button>
+  </div> -->
+  <div class="content">
+    <h1 id="user">Hello {{user}}</h1>
+    <h1 id="week">This is {{week}} Test</h1>
   </div>
+  {% for clip in audio_clips%}
+  <div class="segment"style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
+    <audio class = "supplied_clip" id="{{clip}}" controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
+    <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="500" height="200"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
+    <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
+    <button class="submit">Submit</button> <!-- perhaps add a img-->
+    <p class = "count">3</p>
+  </div>
+  {% endfor %}
+  
   <script>
-    const saveButton = document.querySelector('.save-button');
+    // const saveButton = document.querySelector('.save-button');
 
-    saveButton.addEventListener('click', function() {
-      const pageTitle = document.title;
-      const pageContent = document.querySelector('.content').innerHTML;
+    // saveButton.addEventListener('click', function() {
+    //   const pageTitle = document.title;
+    //   const pageContent = document.querySelector('.content').innerHTML;
       
-      // Store data in local storage
-      localStorage.setItem('pageTitle', pageTitle);
-      localStorage.setItem('pageContent', pageContent);
+    //   // Store data in local storage
+    //   localStorage.setItem('pageTitle', pageTitle);
+    //   localStorage.setItem('pageContent', pageContent);
 
-      alert('Page information saved.');
-    });
+    //   alert('Page information saved.');
+    // });
+
+    const recordButtons = document.querySelectorAll('button.record');
+    const listOfDivs = document.querySelectorAll('div.segment');
+    const submitButtons = document.querySelectorAll('button.submit');
+    const submissionAttempts = document.querySelectorAll('p.count');
+    const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
+    const userID = document.getElementById("user").innerHTML.replace('Hello ','');
+    const weekID = document.getElementById("week").innerHTML.replace('This is ','').replace(' Test','');
+
+    let blobList = [];
+    let mediaRecorders = [];
+    let recordedChunksList = [];
+    let newRecording = [];
+    let RECORDING = 0;
+
+
+    recordButtons.forEach((recordButton,index) => {
+      recordButton.onclick = () => {
+        // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
+        if (RECORDING == 0){
+          RECORDING = 1;
+          listOfDivs[index].style.background = "red";
+          
+          navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
+            
+            //initalise the recordedChunk to contain an empty list
+            recordedChunksList[index] = [];
+            
+          // make new media recorder and push data to recordedchunk
+          mediaRecorders[index] = new MediaRecorder(stream);
+          mediaRecorders[index].ondataavailable = (e) => {
+            recordedChunksList[index].push(e.data);
+          }
+
+          mediaRecorders[index].start();
+
+          mediaRecorders[index].onstop = () => {
+            // make a blob and add to list
+            const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
+            blobList[index] = blob;
+            // clear the recordedchunk
+            recordedChunksList[index] = [];
+            
+            //indicate that new audio clip has been made
+            newRecording[index] = 1;
+
+            // check if audioplayer exist and change src to audioclip
+            const existingAudioPlayer = document.getElementById("audioplayer" + index);
+            if (existingAudioPlayer){
+              existingAudioPlayer.src = URL.createObjectURL(blob);
+
+            }else{ //create new audioplayer if it doesn't exist
+              var audioPlayer = document.createElement("audio");
+              audioPlayer.controls = true;
+              audioPlayer.id = "audioplayer" + index;
+              audioPlayer.src = URL.createObjectURL(blob);
+              listOfDivs[index].appendChild(audioPlayer);
+            }
+            
+          }
+          
+        }).catch((err)=>{
+          console.log(err);
+          alert("problem");
+        });
+        
+        // add timeout to recording
+        setTimeout(() => {
+          listOfDivs[index].style.background="none";
+          mediaRecorders[index].stop();
+          RECORDING = 0;
+        },timeoutseconds);
+      }
+        
+      }
+    })
+
+    submitButtons.forEach((submitButton,index) => {
+      submitButton.onclick = () =>{
+        // make sure audioclip exists, submission is allowed, and its a new clip
+        var blob = blobList[index];
+        var count = submissionAttempts[index];
+        var new_clip = newRecording[index];
+        if (blob && count.innerHTML != 0 && new_clip == 1){
+        // get needed information
+          const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
+          let name_of_clip = audioplayer.id;
+
+          //create form and json
+          const formData = new FormData();
+          formData.append('blob',blob);
+          formData.append('user', userID);
+          formData.append('week', weekID);
+          formData.append('name', name_of_clip);
+          formData.append('attempt', count.innerHTML);
+          const json = JSON.stringify(
+            {
+              "user":userID,
+              "name":name_of_clip,
+              "week":weekID,
+              "attempt":count.innerHTML
+            }
+          )
+
+          //decrease count
+          count.innerHTML--;
+
+          // send audio to be saved
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.open("POST", "save-audio",true);
+          xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        // on success, request for image creation
+                        xmlhttpImage = new XMLHttpRequest();
+                        xmlhttpImage.open("POST","send-image",true);
+                        xmlhttpImage.setRequestHeader('Content-Type','application/json');
+                        xmlhttpImage.send(json)
+
+                        xmlhttpImage.onreadystatechange = function() {
+                          if(xmlhttpImage.readyState==4){
+                            if(xmlhttpImage.status==200){
+                              name_of_clip = name_of_clip.replaceAll(' ','_');
+                              
+                              //path for image
+                              let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
+
+                              // check if img exist and update src
+                              var img = document.getElementById("recorded_image" + index);
+                              if(img){
+                                img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
+                              }else{ // create new img
+                                var create_image = document.createElement("img");
+                                create_image.src = filename;
+                                create_image.width = "500";
+                                create_image.height = "200";
+                                create_image.id = "recorded_image" + index;
+                                listOfDivs[index].appendChild(create_image);
+                              }
+                            }
+                            else{
+                              console.log("error");
+                            }
+                          }
+                        }
+
+                    } else {
+                        // Request failed
+                        console.error("Request failed with status: " + xmlhttp.status);
+                    }
+                }
+            };
+          xmlhttp.send(formData);
+          newRecording[index] = 0;
+        }
+
+      }
+
+    })
   </script>
 {% endblock %}
