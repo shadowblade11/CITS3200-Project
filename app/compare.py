@@ -1,3 +1,4 @@
+import numpy as np
 import librosa
 from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
@@ -69,4 +70,3 @@ list_of_audio_2 = ["1 come ti chiami.wav","2 come stai.wav","3 questo e Matteo.w
 
 
 # compare("../audio/1 come ti chiami.wav","../audio/1 come ti chiami.wav")
-
