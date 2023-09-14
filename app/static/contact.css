@@ -22,7 +22,7 @@ body {
   align-items: center;
 }
 
-.login-container {
+.contact-container {
   background-color: white;
   padding: 70px;
   border-radius: 30px;
@@ -31,7 +31,7 @@ body {
   flex-direction: column; 
 }
 
-.login-container h1 {
+.contact-container h1 {
   font-size: 48px;
   margin-bottom: 20px;
   align-items: center;
@@ -41,21 +41,21 @@ body {
   margin-top: auto;
 }
 
-.login-container label,
-.login-container input {
+.contact-container label,
+.contact-container input {
   display: block;
   margin-bottom: 30px;
 }
 
-.login-container input[type="text"],
-.login-container input[type="password"] {
+.contact-container input[type="text"],
+.contact-container input[type="password"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.login-container input[type="submit"] {
+.contact-container input[type="submit"] {
   background-color: rgb(0, 0, 0);
   color: white;
   border: none;
@@ -73,7 +73,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
-.Loginbtn, .Registerbtn{
+.Submitbtn {
   color: black;
   margin: 70px;
 }
@@ -116,3 +116,4 @@ body {
 .navbar-list a:hover {
   color: gray;
 }
+  

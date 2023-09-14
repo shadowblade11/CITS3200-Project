@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
-    <style>
-        .errors {
-            color: #a12323;
-        }
-    </style>
 </head>
 <body>
     <div class="login-container">
@@ -50,4 +45,4 @@
         </form>
     </div>
 </body>
-</html>
+{% endblock %}

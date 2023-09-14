@@ -33,6 +33,10 @@ def adminHome():
     print("hallo")
     return render_template("adminHome.html", css="/static/adminHome.css")
 
+@app.route('/contact')
+def contact():
+    form = ContactForm()
+    return render_template('contact.html', form=form, css='./static/contact.css')
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -148,3 +152,15 @@ def test():
 @app.route('/addtest', methods=['GET', 'POST'])
 def addtest():
     return render_template('adminAddtest.html', css='./static/adminAddtest.css')
+
+@app.route('/Account')
+def Account():
+    return render_template("AccountPage.html", css='./static/Account.css')
+
+@app.route('/start')
+def start():
+    return render_template("startPage.html", css='./static/startPage.css')
+
+@app.route('/test')
+def testPage():
+    return render_template("testPage.html", css='./static/testPage.css')
