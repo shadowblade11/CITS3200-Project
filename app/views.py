@@ -75,7 +75,10 @@ def administratorLogin():
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
+        print(form.username.data)
         user = User.query.filter_by(id=form.username.data).first()
+        if user is None:
+            return redirect(url_for('administratorLogin'))
         if not user.is_admin or not user.check_passwd(form.passwd.data):
             return redirect(url_for('administratorLogin'))
         login_user(user)
