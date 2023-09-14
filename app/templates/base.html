@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ css }}">
   <title>Italiano In Pratica</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 </head>
 <body>
   <nav class="navbar">
     <ul class="navbar-list">
       <li><a href="{{ url_for('intro') }}">Home</a></li>
       <li><a href="{{url_for('login')}}">Login</a></li>
-      <li><a href="{{url_for('adminLogin')}}">Admin</a></li>
+      <li><a href="{{url_for('administratorLogin')}}">Admin</a></li>
       <li><a href="{{url_for('testPage')}}">Tests</a></li>
       <li><a href="{{url_for('about')}}">About</a></li>
       <li><a href="{{url_for('contact')}}">Contact</a></li>
