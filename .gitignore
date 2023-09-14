@@ -1,4 +1,9 @@
 .venv/
 .vscode/
-
 __pycache__/
+
+
+images/
+audio/
+
+ffmpeg.exe
