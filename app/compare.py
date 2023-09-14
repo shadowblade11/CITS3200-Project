@@ -10,8 +10,6 @@ import os
 
 def convert_to_wav_working_format(input_file,output_file):
     try:
-        print(input_file)
-        print(output_file)
         threshold = "-50dB" #need to mess around with threshold
         flag = f"areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}"
         i = ffmpeg.input(input_file) #get input file path

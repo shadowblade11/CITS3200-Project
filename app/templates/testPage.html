@@ -106,12 +106,10 @@
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
         // make sure audioclip exists, submission is allowed, and its a new clip
-        console.log("pressing");
         var blob = blobList[index];
         var count = submissionAttempts[index];
         var new_clip = newRecording[index];
         if (blob && count.innerHTML != 0 && new_clip == 1){
-          console.log("clicking");
         // get needed information
           const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
           let name_of_clip = audioplayer.id;
