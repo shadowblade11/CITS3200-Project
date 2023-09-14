@@ -1,26 +1,8 @@
-import wave
-import matplotlib.pyplot as plt
-import numpy as np
-import ffmpeg
 import librosa
 from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
 
 import os
-
-def convert_to_wav_working_format(input_file,output_file):
-    try:
-        threshold = "-50dB" #need to mess around with threshold
-        flag = f"areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}"
-        i = ffmpeg.input(input_file) #get input file path
-        o = ffmpeg.output(i,output_file,af=f"{flag},{flag}") #get output file path, also removes the silent noise
-        ffmpeg.run(o, overwrite_output=True, quiet=True) #run the command
-        return 0
-    except ffmpeg._run.Error as e:
-        print(e)
-        return -1
-
-
 
 def compare(audio1, audio2):
     reference_audio, _ = librosa.load(audio1, sr=None)
@@ -88,7 +70,3 @@ list_of_audio_2 = ["1 come ti chiami.wav","2 come stai.wav","3 questo e Matteo.w
 
 # compare("../audio/1 come ti chiami.wav","../audio/1 come ti chiami.wav")
 
-
-#actual functions to run
-# convert_to_wav_working_format(src,filename)
-# generate_soundwave_image(dst,filename)

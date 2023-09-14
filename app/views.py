@@ -7,13 +7,12 @@ from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import User
 
 import datetime
+import os
 
 
-from app.compare import convert_to_wav_working_format
-
+from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
 
-import os
 
 @app.route('/')
 @app.route('/intro')
@@ -153,16 +152,18 @@ def save_audio():
     week = request.form['week']
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
-    print(name_of_clip)
     name_of_clip = name_of_clip.replace(" ","_")
     PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
+    print("saving clip")
 
     os.makedirs(PATH_TO_FOLDER,exist_ok=True)
 
     try:
         blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav")
+        print("save successful")
         return 'Upload successful', 200
     except Exception as e:
+        print("save failed")
         return str(e), 400
     
 
