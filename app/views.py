@@ -3,10 +3,15 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
 from app import app, db, verification
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import User
 
 import datetime
+import os
+
+
+from app.conversion import convert_to_wav_working_format
+from app.produceImage import generate_soundwave_image
 
 
 @app.route('/')
@@ -19,15 +24,12 @@ def intro():
 def about():
     return render_template("About.html", css='./static/About.css')
 
+
 @app.route('/home')
 @login_required
 def home():
     return render_template("homePage.html", css='./static/homePage.css')
 
-@app.route('/contact')
-def contact():
-    form = ContactForm()
-    return render_template('contact.html', form=form, css='./static/contact.css')
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -49,8 +51,8 @@ def login():
     return render_template('loginPage.html', form=form, css='./static/loginPage.css')
 
 
-@app.route('/adminLogin', methods=['GET', 'POST'])
-def adminLogin():
+@app.route('/administratorLogin', methods=['GET', 'POST'])
+def administratorLogin():
     form = AdminForm()
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.username.data).first()
@@ -127,16 +129,69 @@ def resend_verification():
 @login_required
 @app.route('/test', methods=['GET', 'POST'])
 def test():
-    return render_template('testPage.html', css='./static/testPage.css')
+    # print(request.args.get('data')) #way to get folder
+    week = request.args.get('data')
+    path = f"./app/static/audio/{week}/"
+    # print(path)
+    audio_clips = os.listdir(path)
+    audio_clips = [i.split('.')[0] for i in audio_clips]
+    # print(audio_clips)
+    # print(current_user)
+    #TODO figure how to get current user's id (temp using 123)
+    #TODO also once figured out a way to get current user id, use os commands to check if their folder exists, if not, then create it
+    return render_template('testPage.html', css='./static/testPage.css', audio_clips=audio_clips, week = week, user="123")
 
-@app.route('/Account')
-def Account():
-    return render_template("AccountPage.html", css='./static/Account.css')
+@app.route('/audio-test')
+def audio_test():
+    return render_template('main.html')
 
-@app.route('/start')
-def start():
-    return render_template("startPage.html", css='./static/startPage.css')
+@app.route("/save-audio",methods=['POST'])
+def save_audio():
+    blob = request.files['blob']
+    user = request.form['user']
+    week = request.form['week']
+    name_of_clip = request.form['name']
+    attempt = request.form['attempt']
+    name_of_clip = name_of_clip.replace(" ","_")
+    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
+    print("saving clip")
 
-@app.route('/test')
-def testPage():
-    return render_template("testPage.html", css='./static/testPage.css')
+    os.makedirs(PATH_TO_FOLDER,exist_ok=True)
+
+    try:
+        blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav")
+        print("save successful")
+        return 'Upload successful', 200
+    except Exception as e:
+        print("save failed")
+        return str(e), 400
+    
+
+@app.route("/send-image",methods=["POST"])
+def send_image():
+    data = request.json
+    name_of_clip = data['name']
+    name_of_clip = name_of_clip.replace(" ","_")
+    user = data['user']
+    week = data['week']
+    attempt = data['attempt']
+    PATH_TO_AUDIO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-raw.wav"
+    OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
+    state = convert_to_wav_working_format(PATH_TO_AUDIO_FOLDER,OUTPUT_PATH)
+    if state == 0:
+        os.remove(PATH_TO_AUDIO_FOLDER)
+    else:
+        print('something went wrong')
+
+
+    PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{week}"
+
+    os.makedirs(PATH_TO_IMAGE_FOLDER,exist_ok=True)
+
+    image_check = generate_soundwave_image(OUTPUT_PATH,PATH_TO_IMAGE_FOLDER,name_of_clip)
+
+    if image_check == 0:
+        return "valid",200
+
+    return "invalid",404
+
