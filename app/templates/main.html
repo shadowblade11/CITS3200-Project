@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body id = "background" style="background-color: blue;">
+    <button id = "start_but">start recording</button>
+    <button id = "stop_but">stop recording</button>
+    <button id = "get_image">Image</button>
+    <img src="../static/x.jpg">
+    <script>
+
+        const startButton = document.getElementById("start_but");
+        const stopButton = document.getElementById("stop_but");
+        const audio = document.getElementById("recorded");
+        const bg = document.getElementById("background");
+
+        if (navigator.mediaDevices){
+            console.log("supported");
+        }
+        else{
+            alert("your brower will not work");
+        }
+
+        let recordedStream = [];
+
+        navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {const audioStream = new MediaRecorder(stream)
+            startButton.onclick = () => {
+                audioStream.start();
+                console.log(audioStream.state);
+                bg.style.background="red";
+            }
+
+            stopButton.onclick = () => {
+                audioStream.stop();
+                console.log(audioStream.state);
+                bg.style.background="blue";
+            }
+
+            audioStream.onstop = (e) => {
+                const blob = new Blob(recordedStream, {type: "audio/wav"});
+                recordedStream = [];
+                const audioURL = URL.createObjectURL(blob);
+                var audioPlayer = document.createElement("audio");
+                document.body.append(audioPlayer);
+                audioPlayer.controls = true;
+                audioPlayer.src = audioURL;
+
+
+                // https://gist.github.com/philipstanislaus/c7de1f43b52531001412
+                // var temp = document.createElement("a");
+                // document.body.append(temp);
+                // temp.innerHTML = "test";
+                // temp.href = audioURL;
+                // console.log(temp.href);
+                // temp.download = "sound-working.wav";
+                // temp.click();
+                // temp.remove();
+
+                // $.post("/save-audio",audioURL)
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "save-audio", true);
+                xmlhttp.setRequestHeader("Content-type", "audio/wav");
+                xmlhttp.send(blob);
+            }
+
+            audioStream.ondataavailable = (e) =>{
+                recordedStream.push(e.data);
+            }
+        }).catch((err)=>{
+            console.log("problem occurred");
+        });
+
+
+
+
+        // const imageButton = document.getElementById("get_image");
+        // imageButton.onclick = () => {
+        //     var xmlhttp = new XMLHttpRequest();
+        //     xmlhttp.open("GET","get-image",true);
+        //     xmlhttp.send(null);
+
+        //     xmlhttp.onload = function() {
+        //         if (xmlhttp.status >= 200 && xmlhttp.status < 400){
+        //             var data = xmlhttp.responseText;
+        //             // console.log(data);
+        //             var img = document.createElement("img");
+        //             img.src = data;
+        //             document.body.append(img);
+        //         }
+        //         else{
+        //             console.log("error");
+        //         }
+        //     }
+        // }
+    </script>
+</body>
+</html>

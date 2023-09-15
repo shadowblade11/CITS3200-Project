@@ -12,6 +12,11 @@ import os
 
 from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
+import os
+
+
+from app.conversion import convert_to_wav_working_format
+from app.produceImage import generate_soundwave_image
 
 
 @app.route('/')
@@ -194,4 +199,3 @@ def send_image():
         return "valid",200
 
     return "invalid",404
-
