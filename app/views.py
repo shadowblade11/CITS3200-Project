@@ -56,8 +56,8 @@ def login():
     return render_template('loginPage.html', form=form, css='./static/loginPage.css')
 
 
-@app.route('/administratorLogin', methods=['GET', 'POST'])
-def administratorLogin():
+@app.route('/adminLogin', methods=['GET', 'POST'])
+def adminLogin():
     form = AdminForm()
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.username.data).first()
