@@ -30,13 +30,13 @@
     align-items: center;
   }
 
-  .button-container {
+  .task-container .task .button-container {
     display: flex;
     width: 50%;
     justify-content: space-around;
     margin-top: 1.5em;
   }
 
-  .count-container {
+  .task-container .task .count-container {
     display: flex;
   }
