@@ -4,20 +4,32 @@
     <h1>New Audio</h1>
     <button class="save-button">Save</button>
   </div> -->
-  <div class="content">
-    <h1 id="user">Hello {{user}}</h1>
-    <h1 id="week">This is {{week}} Test</h1>
+  <div class="test-content">
+    <h1 class="flex">Welcome,&nbsp;<span id="user">{{user}}</span>!</h1>
+    <h1 class="flex">This is test:&nbsp;<span id="week">{{week}}</span></h1>
   </div>
   {% for clip in audio_clips%}
-  <div class="segment"style="border: 2px solid black"> <!--this is where you can put the css file, so each "question is its own div"-->
-    <audio class = "supplied_clip" id="{{clip}}" controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
-    <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="500" height="200"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
-    <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
-    <button class="submit">Submit</button> <!-- perhaps add a img-->
-    <p class = "count">3</p>
+  <div class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
+    <h1 class="task-header">Task: {{loop.index}}</h1>
+    <div class="task">
+      <div class="question-container">
+        <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="400" height="160"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
+        <audio class = "supplied_clip" id="{{clip}}" controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
+      </div>
+      <div class="response-container">
+        <div class="button-container">
+          <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
+          <button class="submit">Submit</button> <!-- perhaps add a img-->
+        </div>
+        <div class="count-container">
+          <p class = "count-text">Submissions:&nbsp;</p>
+          <p class = "count">3</p>
+        </div>
+      </div>
+    </div>
   </div>
   {% endfor %}
-  
+
   <script>
     // const saveButton = document.querySelector('.save-button');
 
@@ -33,7 +45,7 @@
     // });
 
     const recordButtons = document.querySelectorAll('button.record');
-    const listOfDivs = document.querySelectorAll('div.segment');
+    const listOfDivs = document.querySelectorAll('div.task-container');
     const submitButtons = document.querySelectorAll('button.submit');
     const submissionAttempts = document.querySelectorAll('p.count');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
@@ -54,14 +66,14 @@
           RECORDING = 1;
           listOfDivs[index].style.background = "red";
           
-          navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
+            navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
             
             //initalise the recordedChunk to contain an empty list
             recordedChunksList[index] = [];
             
-          // make new media recorder and push data to recordedchunk
-          mediaRecorders[index] = new MediaRecorder(stream);
-          mediaRecorders[index].ondataavailable = (e) => {
+            // make new media recorder and push data to recordedchunk
+            mediaRecorders[index] = new MediaRecorder(stream);
+            mediaRecorders[index].ondataavailable = (e) => {
             recordedChunksList[index].push(e.data);
           }
 
@@ -87,7 +99,7 @@
               audioPlayer.controls = true;
               audioPlayer.id = "audioplayer" + index;
               audioPlayer.src = URL.createObjectURL(blob);
-              listOfDivs[index].appendChild(audioPlayer);
+              listOfDivs[index].querySelector(".response-container").insertBefore(audioPlayer, listOfDivs[index].querySelector(".button-container"));
             }
             
           }
@@ -136,7 +148,7 @@
           )
 
           //decrease count
-          count.innerHTML--;
+          count.innerHTML = Number(count.innerHTML) - 1;
 
           // send audio to be saved
           var xmlhttp = new XMLHttpRequest();
@@ -165,10 +177,10 @@
                               }else{ // create new img
                                 var create_image = document.createElement("img");
                                 create_image.src = filename;
-                                create_image.width = "500";
-                                create_image.height = "200";
+                                create_image.width = "400";
+                                create_image.height = "160";
                                 create_image.id = "recorded_image" + index;
-                                listOfDivs[index].appendChild(create_image);
+                                listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index));
                               }
                             }
                             else{
