@@ -105,4 +105,25 @@ body {
   background-color: #000000;
 }
 
-  
+  /* adminHome.css */
+#feedback-box {
+  margin-top: 20px; /* Add space below the search form */
+}
+
+#feedback-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  resize: vertical; /* Allow vertical resizing of the textarea */
+}
+
+#submit-feedback {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+#student-picture{
+  background-color: #cccccc;
+}
