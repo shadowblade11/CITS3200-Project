@@ -1,25 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grades Page</title>
-  <link rel="stylesheet" href="../static/gradesPage.css">
-</head>
+{% block content %}
 
-<body>
-  <div class="top-bar">
-    <a href="#">Home</a>
-    <a href="#">Grades</a>
-    <a href="#">Log Out</a>
-  </div>
-
-  <div class="content">
-    <h1>Recording</h1>
-    <h1 class = "marks">Marks</h1>
-    <button class="feedback-button">Feedback</button>
+<div class="intro-container">
+	
+  <div class="text-container">
+    <h1>Italiano In Pratica</h1>
+    <form action="{{url_for('login')}}">
+      <button class="button button1">Start Practicing</button>
+    </form>
   </div>
   
-</body>
-</html>
+</div>
+{% endblock %}

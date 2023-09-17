@@ -2,33 +2,32 @@
 <html lang="en">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Italianno&amp;display=swap" rel="stylesheet">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ css }}">
   <title>Italiano In Pratica</title>
-    <style>
-        .errors{
-            color: red;
-        }
-    </style>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 </head>
 <body>
+  <nav class="navbar">
+    <ul class="navbar-list">
+      <li><a href="{{ url_for('intro') }}">Home</a></li>
 
-<nav class="navbar">
-  <ul class="navbar-list">
-    <li><a href="{{ url_for('intro') }}">Home</a></li>
-    <li><a href="{{url_for('login')}}">Login</a></li>
-    <li><a href="{{url_for('logout')}}">Logout</a></li>
-    <li><a href="{{url_for('about')}}">About</a></li>
-    <li><a href="/Account">Account</a></li>
-    <li><a href="/index">Index</a></li>
-    <li><a href="/">Contact</a></li>
-  </ul>
-</nav>
+      {% if current_user.is_anonymous %}
+        <li><a href="{{url_for('login')}}">Login</a></li>
+        <li><a href="{{url_for('administratorLogin')}}">Admin</a></li>
+      {% else %}
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('test', username=username)}}">Tests</a></li>
+        <li><a href="{{url_for('grades')}}">Grades</a></li>
+      {% endif %}
 
+      <li><a href="{{url_for('about')}}">About</a></li>
+      <li><a href="{{url_for('contact')}}">Contact</a></li>
+    </ul>
+  </nav>
 <div class="content">
         {% block content %}{% endblock %}
     </div>

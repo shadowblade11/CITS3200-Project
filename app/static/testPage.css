@@ -1,43 +1,42 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: rgba(205, 226, 184, 1);
-  }
+.test-content {
+  padding: 1rem;
+  text-align: center;
+  margin: 0.5rem;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .top-bar {
-    background-color: #333;
-    color: rgb(255, 255, 255);
-    padding: 10px;
+.flex {
+  display: flex;
+}
+
+.task-container {
+  border: solid 2px black;
+}
+
+  .task-container .task {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
-  .top-bar a {
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-    padding: 10px;
-  }
-
-  .content {
-    padding: 30px;
+  .task-container .task .question-container,
+  .task-container .task .response-container {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
+  .task-container .task .button-container {
+    display: flex;
+    width: 50%;
+    justify-content: space-around;
+    margin-top: 1.5em;
+  }
 
-.save-button {
-  position: fixed;
-  bottom: 20px; 
-  right: 20px; 
-  padding: 10px 20px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-  
+  .task-container .task .count-container {
+    display: flex;
+  }
