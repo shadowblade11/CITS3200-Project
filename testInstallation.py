@@ -6,10 +6,12 @@ import os
 from PIL import Image
 
 class TestClass(unittest.TestCase):
+    #Testing that conversion works
     def testingConversionOfAudio(self):
         state = convert_to_wav_working_format("./test/9 non c'e' male.m4a","./test/9 non c'e' male.wav")
         self.assertEqual(state,0)
 
+    #Testing that production of image works
     def testingProductionOfImage(self):
         #making the image
         generate_soundwave_image("./test/9 non c'e' male.wav","./test","9 non c'e' male.png")
@@ -17,6 +19,7 @@ class TestClass(unittest.TestCase):
         file_exists = os.path.isfile(generated_image_filename)
         self.assertTrue(file_exists, f"Image file not found: {generated_image_filename}")
 
+    #Testing that image is correct
     def testingImage(self):        
         # making the image
         generate_soundwave_image("./test/9 non c'e' male.wav","./test","9 non c'e' male.png")
@@ -30,6 +33,7 @@ class TestClass(unittest.TestCase):
         self.assertEqual(generated_image.size, expected_image.size)
         self.assertEqual(list(generated_image.getdata()), list(expected_image.getdata()))
 
+    #Removing all created files
     @classmethod
     def tearDownClass(cls):
         generated_image_filename = "./test/9 non c'e' male.png"
