@@ -64,7 +64,7 @@
         // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
         if (RECORDING == 0){
           RECORDING = 1;
-          listOfDivs[index].style.background = "red";
+          listOfDivs[index].style.background = "yellow";
           
             navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
             
