@@ -81,6 +81,27 @@ flask db upgrade
 ```
 
 ---
+## Extra Required software (FFmpeg)
+**FFmpeg** is a powerful multimedia framework that can be used to record, convert, and stream audio and video. It's an essential tool for handling multimedia files in various applications and is required for this project to work.
+
+## Installation
+
+
+### Windows
+Head to [FFmpeg](https://www.gyan.dev/ffmpeg/builds/) and download the latest **fullbuild** zip file.
+
+Extract the content from the zip file using your choice of software.
+
+Drag the **FFmpeg.exe** file into the project folder (the **FFmpeg.exe** should be located in ffmpeg-X.X-full_build/bin).
+
+Run the following python script
+```bash
+python3 move.py
+```
+
+
+
+---
 ## Running the App
 Run app with  
 ```bash
