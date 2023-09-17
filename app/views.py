@@ -163,7 +163,6 @@ def resend_verification():
 def test(username):
     # print(request.args.get('data')) #way to get folder
     week = request.args.get('data')
-    print(week)
     path = f"./app/static/audio/{week}/"
     # print(path)
     audio_clips = os.listdir(path)

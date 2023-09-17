@@ -5,8 +5,8 @@
     <button class="save-button">Save</button>
   </div> -->
   <div class="test-content">
-    <h1 class="flex">Welcome,&nbsp;<span id="user">{{user}}</span>!</h1>
-    <h1 class="flex">This is test:&nbsp;<span id="week">{{week}}</span></h1>
+    <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{user}}</span>!</h1>
+    <h1 class="flex">This Is Test:&nbsp;<span id="week">{{week}}</span></h1>
   </div>
   {% for clip in audio_clips%}
   <div class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
@@ -24,6 +24,10 @@
         <div class="count-container">
           <p class = "count-text">Submissions:&nbsp;</p>
           <p class = "count">3</p>
+        </div>
+        <div class="self-assessment">
+          <label for="score-{{loop.index}}">Similarity Score:</label>
+          <input type="number" id="score-{{loop.index}}" name="score-{{loop.index}}" min="10" max="100"/>
         </div>
       </div>
     </div>
@@ -87,6 +91,7 @@
               blobList[index] = blob;
               // clear the recordedchunk
               recordedChunksList[index] = [];
+            
               
               //indicate that new audio clip has been made
               newRecording[index] = 1;
