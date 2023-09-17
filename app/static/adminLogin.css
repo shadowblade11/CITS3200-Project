@@ -32,11 +32,10 @@ body {
 }
 
 .login-container h1 {
-  font-size: 48px;
   margin-bottom: 20px;
   align-items: center;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 55px ;
+  font-family: 'Italianno', cursive;
+  font-size: 60px ;
   align-content: center;
   margin-top: auto;
 }
@@ -114,6 +113,6 @@ body {
 }
 
 .navbar-list a:hover {
-  color: gray;
+  color: grey;
 }
   

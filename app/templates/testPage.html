@@ -31,18 +31,18 @@
   {% endfor %}
 
   <script>
-    // const saveButton = document.querySelector('.save-button');
+    const saveButton = document.querySelector('.save-button');
 
-    // saveButton.addEventListener('click', function() {
-    //   const pageTitle = document.title;
-    //   const pageContent = document.querySelector('.content').innerHTML;
+    saveButton.addEventListener('click', function() {
+      const pageTitle = document.title;
+      const pageContent = document.querySelector('.content').innerHTML;
       
-    //   // Store data in local storage
-    //   localStorage.setItem('pageTitle', pageTitle);
-    //   localStorage.setItem('pageContent', pageContent);
+      // Store data in local storage
+      localStorage.setItem('pageTitle', pageTitle);
+      localStorage.setItem('pageContent', pageContent);
 
     //   alert('Page information saved.');
-    // });
+    });
 
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('div.task-container');

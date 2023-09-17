@@ -6,20 +6,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Page</title>
   <link rel="stylesheet" href="../static/adminHome.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const option1 = document.getElementById("option1");
+    const studentImage = document.getElementById("student-image");
+
+    option1.addEventListener("click", function () {
+      // Replace this with code to set the image source based on the student
+      // You can set the image source to the URL of the student's image
+      studentImage.src = "{{url_for('static',filename="Images/soundwave.png")}}";
+    });
+  });
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Find the search button and student picture elements
+    const searchButton = document.getElementById("search-button");
+    const studentPicture = document.getElementById("student-picture");
+    const studentPicture2 = document.getElementById("student-picture2");
+    // Add a click event listener to the search button
+    searchButton.addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent the form submission (if it's within a form)
+
+      // Replace the src attribute with the URL of the student's picture
+      studentPicture.src = "{{url_for('static', filename='Images/studentdata.png')}}";
+      studentPicture2.src = "{{url_for('static', filename='Images/studentdata2.png')}}";
+
+      // You can set the image source based on the student or your logic here
+      // For now, it's set to a placeholder URL
+    });
+  });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const searchButton = document.getElementById("search-button");
+    const week1Button = document.getElementById("option1");
+    const giveFeedbackButton = document.getElementById("give-feedback-button");
+    const feedbackBox = document.getElementById("feedback-box");
+    const feedbackInput = document.getElementById("feedback-input");
+    const submitButton = document.getElementById("submit-feedback");
+    const week = document.getElementById("week");
+    searchButton.addEventListener("click", function () {
+      week.style.display = "block";
+
+    });
+    // Show the "Give Feedback" button when the "Week 1" button is clicked
+    week1Button.addEventListener("click", function () {
+      week1Button.style.display = "none";
+      giveFeedbackButton.style.display = "block";
+    });
+
+    // Show the feedback box when the "Give Feedback" button is clicked
+    giveFeedbackButton.addEventListener("click", function () {
+      giveFeedbackButton.style.display = "none";
+      feedbackBox.style.display = "block";
+    });
+
+    // Optional: Add functionality to submit feedback
+    submitButton.addEventListener("click", function () {
+      const feedbackText = feedbackInput.value;
+      // You can process and send the feedback to your server here
+      alert("Feedback submitted: " + feedbackText);
+      feedbackBox.style.display = "none"; // Hide the feedback box after submission
+    });
+  });
+</script>
 </head>
 
 <body>
   <div class="top-bar">
-    <a href="#">Home</a>
-    <a href="#">Add Test</a>
+    <a href="{{ url_for('home',username = current_user.username) }}">Home</a>
+    <a href="{{ url_for('addtest') }}">Add Test</a>
   </div>
+
 
   <div class="content">
     <form class="search-form">
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
-      </form>
+    </form>
+      <br>
+      <br>
 
+    <div class="dropdown">
+        <button class="dropbtn" id="week" style="display: none;">Week Recording</button>
+
+     <div class="dropdown-content">
+      <a href="#" id="option1">Week 1</a>
+      <a href="#" id="option2">Week 2</a>
+      <a href="#" id="option3">Week 3</a>
+     </div>
+    </div>
+
+     <div class="student-image" id="student-info">
+  <!-- Student image will be displayed here -->
+        <img id="student-image" alt="" width="100">
+        <button id="give-feedback-button" style="display: none;">Give Feedback</button>
+    <!-- Feedback text box (initially hidden) -->
+        <div id="feedback-box" style="display: none;">
+            <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
+            <button id="submit-feedback">Submit</button>
+        </div>
+     </div>
+      <br>
+      <br>
+      <div class="image-container">
+        <img  id="student-picture" class="student-image" src="" alt="" width="400">
+        <img  id="student-picture2" class="student-image" src="" alt="" width="400">
+      </div>
   </div>
 </body>
 </html>
