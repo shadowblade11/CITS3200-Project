@@ -32,10 +32,9 @@ body {
 }
 
 .login-container h1 {
+  font-size: 55px;
   margin-bottom: 20px;
   align-items: center;
-  font-family: 'Italianno', cursive;
-  font-size: 60px ;
   align-content: center;
   margin-top: auto;
 }

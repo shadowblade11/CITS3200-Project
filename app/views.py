@@ -11,6 +11,8 @@ from app.models import User
 
 import datetime
 
+from app.produceImage import generate_soundwave_image
+
 
 
 
@@ -161,6 +163,7 @@ def resend_verification():
 def test(username):
     # print(request.args.get('data')) #way to get folder
     week = request.args.get('data')
+    print(week)
     path = f"./app/static/audio/{week}/"
     # print(path)
     audio_clips = os.listdir(path)
@@ -169,8 +172,7 @@ def test(username):
     # print(current_user)
     # TODO also once figured out a way to get current user id,
     #  use os commands to check if their folder exists, if not, then create it
-    return render_template('testPage.html', css=url_for('static', filename='testPage.css'),
-                           audio_clips=audio_clips, week=week, username=username)
+    return render_template('testPage.html', css=url_for('static', filename='testPage.css'), audio_clips=audio_clips, week=week, user=username)
 
 
 @app.route('/audio-test')

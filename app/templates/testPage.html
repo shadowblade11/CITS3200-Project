@@ -51,8 +51,8 @@
     const submitButtons = document.querySelectorAll('button.submit');
     const submissionAttempts = document.querySelectorAll('p.count');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
-    const userID = document.getElementById("user").innerHTML.replace('Hello ','');
-    const weekID = document.getElementById("week").innerHTML.replace('This is ','').replace(' Test','');
+    const userID = document.getElementById("user").innerHTML;
+    const weekID = document.getElementById("week").innerHTML;
 
     let blobList = [];
     let mediaRecorders = [];
@@ -64,11 +64,11 @@
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
         // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
-        if (RECORDING == 0){
+        if (RECORDING == 0) {
           RECORDING = 1;
           listOfDivs[index].style.background = "yellow";
-          
-            navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
+        
+          navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
             
             //initalise the recordedChunk to contain an empty list
             recordedChunksList[index] = [];
@@ -76,51 +76,50 @@
             // make new media recorder and push data to recordedchunk
             mediaRecorders[index] = new MediaRecorder(stream);
             mediaRecorders[index].ondataavailable = (e) => {
-            recordedChunksList[index].push(e.data);
-          }
+              recordedChunksList[index].push(e.data);
+            }
 
-          mediaRecorders[index].start();
+            mediaRecorders[index].start();
 
-          mediaRecorders[index].onstop = () => {
-            // make a blob and add to list
-            const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
-            blobList[index] = blob;
-            // clear the recordedchunk
-            recordedChunksList[index] = [];
-            
-            //indicate that new audio clip has been made
-            newRecording[index] = 1;
+            mediaRecorders[index].onstop = () => {
+              // make a blob and add to list
+              const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
+              blobList[index] = blob;
+              // clear the recordedchunk
+              recordedChunksList[index] = [];
+              
+              //indicate that new audio clip has been made
+              newRecording[index] = 1;
 
-            // check if audioplayer exist and change src to audioclip
-            const existingAudioPlayer = document.getElementById("audioplayer" + index);
-            if (existingAudioPlayer){
-              existingAudioPlayer.src = URL.createObjectURL(blob);
+              // check if audioplayer exist and change src to audioclip
+              const existingAudioPlayer = document.getElementById("audioplayer" + index);
+              if (existingAudioPlayer){
+                existingAudioPlayer.src = URL.createObjectURL(blob);
 
-            }else{ //create new audioplayer if it doesn't exist
-              var audioPlayer = document.createElement("audio");
-              audioPlayer.controls = true;
-              audioPlayer.id = "audioplayer" + index;
-              audioPlayer.src = URL.createObjectURL(blob);
-              listOfDivs[index].querySelector(".response-container").insertBefore(audioPlayer, listOfDivs[index].querySelector(".button-container"));
+              }else{ //create new audioplayer if it doesn't exist
+                var audioPlayer = document.createElement("audio");
+                audioPlayer.controls = true;
+                audioPlayer.id = "audioplayer" + index;
+                audioPlayer.src = URL.createObjectURL(blob);
+                listOfDivs[index].querySelector(".response-container").insertBefore(audioPlayer, listOfDivs[index].querySelector(".button-container"));
+              }
+              
             }
             
-          }
-          
-        }).catch((err)=>{
-          console.log(err);
-          alert("problem");
-        });
+          }).catch((err)=>{
+            console.log(err);
+            alert("problem");
+          });
         
-        // add timeout to recording
-        setTimeout(() => {
-          listOfDivs[index].style.background="none";
-          mediaRecorders[index].stop();
-          RECORDING = 0;
-        },timeoutseconds);
+          // add timeout to recording
+          setTimeout(() => {
+            listOfDivs[index].style.background="none";
+            mediaRecorders[index].stop();
+            RECORDING = 0;
+          },timeoutseconds);
+        }
       }
-        
-      }
-    })
+    });
 
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
@@ -154,13 +153,13 @@
 
           // send audio to be saved
           var xmlhttp = new XMLHttpRequest();
-          xmlhttp.open("POST", "save-audio",true);
+          xmlhttp.open("POST", "/save-audio",true);
           xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
                     if (xmlhttp.status == 200) {
                         // on success, request for image creation
                         xmlhttpImage = new XMLHttpRequest();
-                        xmlhttpImage.open("POST","send-image",true);
+                        xmlhttpImage.open("POST","/send-image",true);
                         xmlhttpImage.setRequestHeader('Content-Type','application/json');
                         xmlhttpImage.send(json)
 
@@ -170,7 +169,7 @@
                               name_of_clip = name_of_clip.replaceAll(' ','_');
                               
                               //path for image
-                              let filename = 'static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
+                              let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
 
                               // check if img exist and update src
                               var img = document.getElementById("recorded_image" + index);
