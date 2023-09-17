@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="contact-container">
+        <h1>Contact Us</h1>
+        <form action="{{ url_for('contact') }}" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.name.label }}{{ form.name(size=48) }}
+            </p>
+            <p>
+                {{ form.email.label }}{{ form.email(size=48) }}
+            <p>
+                {{ form.subject.label }}{{ form.subject(size=48) }}
+            </p>
+            <p>
+                {{ form.message.label }}{{ form.message(cols=40, rows=10) }}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
+    </div>
+{% endblock %}
