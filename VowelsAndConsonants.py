@@ -7,11 +7,11 @@ def timestampOutput(output):
     lines = output.split('\n')
     for line in lines:
         tmp = line.split(' ')
-        start = float(tmp[0])
-        duration = float(tmp[1])
-        end = start + duration
+        #start = float(tmp[0])
+        #duration = float(tmp[1])
+        #end = start + duration
         label = tmp[2]
-        records.append(dict(start=start, end=end, label=label))
+        records.append(dict(label=label))
     df = pandas.DataFrame.from_records(records)
     return df
 
