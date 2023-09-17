@@ -1,18 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add test Page</title>
-  <link rel="stylesheet" href="../static/adminAddtest.css">
-</head>
-
+{% extends "base.html" %}
+{% block content %}
 <body>
-  <div class="top-bar">
-    <a href="{{ url_for('adminHome') }}">Home</a>
-    <a href="{{ url_for('addtest') }}">Add Test</a>
-  </div>
     <h1>Create Test</h1>
   <div class="content">
     <form id="test-form" enctype="multipart/form-data">
@@ -56,5 +44,4 @@
       
   </div>
   <h1>Added Test</h1>
-</body>
-</html>
+  {% endblock %}

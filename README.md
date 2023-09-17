@@ -8,6 +8,7 @@
 - [Setting up the Workspace](#setting-up-the-workspace)
   - [Windows](#windows)
   - [Linux/MacOS](#linuxmacos)
+- [Extra Software](#extra-required-software)
 - [Running the App](#running-the-app)
 - [Relevant links:](#relevant-links)
 
@@ -74,11 +75,60 @@ python -m pip install -r requirements.txt
 **Setting up the database**
 
 Initialize the database with
-'''bash
+```bash
 flask db init
 flask db migrate
 flask db upgrade
-'''
+```
+
+---
+## Extra Required software
+**FFmpeg** is a powerful multimedia framework that can be used to record, convert, and stream audio and video. It's an essential tool for handling multimedia files in various applications and is required for this project to work.
+
+## Installation
+
+
+### Windows
+Head to [FFmpeg](https://www.gyan.dev/ffmpeg/builds/) and download the latest **fullbuild** 7zip file.
+
+Extract the content from the zip file using your choice of software (Suggested: [ezy7zip](https://www.ezyzip.com/unzip-7z-files.html) as you can just download the file you need).
+
+Drag the **ffmpeg.exe** file into the project folder (the **ffmpeg.exe** should be located in ffmpeg-X.X-full_build/bin unless using the suggested website to download the exe file individually).
+
+Below is an image of where ffmpeg.exe should be located.
+
+![image depicting where ffmpeg.exe should be located](readmeImages\Capture.PNG)
+
+
+### Linux
+Update the package list first
+```bash
+sudo apt update
+```
+
+Run the following command
+```bash
+sudo apt install ffmpeg
+```
+
+### MacOS
+Ensure that **brew** is installed.
+
+First, update brew.
+```bash
+brew update
+```
+
+Run the following command
+```bash
+brew install ffmpeg
+```
+
+## Testing Installation
+Run the following python script to that you installed it correctly
+```bash
+python3 testInstallation.py
+```
 
 ---
 ## Running the App
