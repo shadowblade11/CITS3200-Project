@@ -97,7 +97,7 @@ Drag the **ffmpeg.exe** file into the project folder (the **ffmpeg.exe** should 
 
 Below is an image of where ffmpeg.exe should be located.
 
-![image depicting where ffmpeg.exe should be located](Capture.PNG)
+![image depicting where ffmpeg.exe should be located](readmeImages\Capture.PNG)
 
 
 ### Linux
