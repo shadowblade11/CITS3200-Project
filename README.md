@@ -8,6 +8,7 @@
 - [Setting up the Workspace](#setting-up-the-workspace)
   - [Windows](#windows)
   - [Linux/MacOS](#linuxmacos)
+- [Extra Software](#Extra-Required-software-(FFmpeg))
 - [Running the App](#running-the-app)
 - [Relevant links:](#relevant-links)
 
@@ -94,12 +95,36 @@ Extract the content from the zip file using your choice of software.
 
 Drag the **FFmpeg.exe** file into the project folder (the **FFmpeg.exe** should be located in ffmpeg-X.X-full_build/bin).
 
+
+### Linux
+Update the package list first
+```bash
+sudo apt update
+```
+
+Run the following command
+```bash
+sudo apt install ffmpeg
+```
+
+### MacOS
+Ensure that **brew** is installed.
+
+First, update brew.
+```bash
+brew update
+```
+
+Run the following command
+```bash
+brew install ffmpeg
+```
+
+## Testing Installation
 Run the following python script to that you installed it correctly
 ```bash
 python3 testInstallation.py
 ```
-
-
 
 ---
 ## Running the App
