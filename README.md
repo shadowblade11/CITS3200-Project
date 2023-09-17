@@ -74,11 +74,11 @@ python -m pip install -r requirements.txt
 **Setting up the database**
 
 Initialize the database with
-'''bash
+```bash
 flask db init
 flask db migrate
 flask db upgrade
-'''
+```
 
 ---
 ## Running the App
