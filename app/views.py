@@ -5,12 +5,20 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
 from app import app, db, verification
-from app.compare import convert_to_wav_working_format
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import User
 
 import datetime
 
+
+from app.compare import convert_to_wav_working_format
+
+from app.produceImage import generate_soundwave_image
+
+import os
+
+
+from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
 
 
@@ -126,6 +134,7 @@ def verify():
         elif session['v_code'] == form.v_code.data:
             user = User(id=session['id'])
             user.set_passwd(session['passwd'])
+            print(user)
             session.pop('id')  # Clear the session variable
             db.session.add(user)
             db.session.commit()
@@ -181,11 +190,11 @@ def save_audio():
     week = request.form['week']
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
-    name_of_clip = name_of_clip.replace(" ", "_")
+    name_of_clip = name_of_clip.replace(" ","_")
     PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
     print("saving clip")
 
-    os.makedirs(PATH_TO_FOLDER, exist_ok=True)
+    os.makedirs(PATH_TO_FOLDER,exist_ok=True)
 
     try:
         blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav")
@@ -194,34 +203,35 @@ def save_audio():
     except Exception as e:
         print("save failed")
         return str(e), 400
+    
 
-
-@app.route("/send-image", methods=["POST"])
+@app.route("/send-image",methods=["POST"])
 def send_image():
     data = request.json
     name_of_clip = data['name']
-    name_of_clip = name_of_clip.replace(" ", "_")
+    name_of_clip = name_of_clip.replace(" ","_")
     user = data['user']
     week = data['week']
     attempt = data['attempt']
     PATH_TO_AUDIO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-raw.wav"
     OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
-    state = convert_to_wav_working_format(PATH_TO_AUDIO_FOLDER, OUTPUT_PATH)
+    state = convert_to_wav_working_format(PATH_TO_AUDIO_FOLDER,OUTPUT_PATH)
     if state == 0:
         os.remove(PATH_TO_AUDIO_FOLDER)
     else:
         print('something went wrong')
 
+
     PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{week}"
 
-    os.makedirs(PATH_TO_IMAGE_FOLDER, exist_ok=True)
+    os.makedirs(PATH_TO_IMAGE_FOLDER,exist_ok=True)
 
-    image_check = generate_soundwave_image(OUTPUT_PATH, PATH_TO_IMAGE_FOLDER, name_of_clip)
+    image_check = generate_soundwave_image(OUTPUT_PATH,PATH_TO_IMAGE_FOLDER,name_of_clip)
 
     if image_check == 0:
-        return "valid", 200
+        return "valid",200
 
-    return "invalid", 404
+    return "invalid",404
 
 
 @login_required
