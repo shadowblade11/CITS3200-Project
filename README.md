@@ -95,6 +95,10 @@ Extract the content from the zip file using your choice of software (Suggested: 
 
 Drag the **ffmpeg.exe** file into the project folder (the **ffmpeg.exe** should be located in ffmpeg-X.X-full_build/bin unless using the suggested website to download the exe file individually).
 
+Below is an image of where ffmpeg.exe should be located.
+
+![image depicting where ffmpeg.exe should be located](Capture.PNG)
+
 
 ### Linux
 Update the package list first
