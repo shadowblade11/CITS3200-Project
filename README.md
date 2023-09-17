@@ -8,7 +8,7 @@
 - [Setting up the Workspace](#setting-up-the-workspace)
   - [Windows](#windows)
   - [Linux/MacOS](#linuxmacos)
-- [Extra Software](#Extra-Required-software-(FFmpeg))
+- [Extra Software](#extra-required-software)
 - [Running the App](#running-the-app)
 - [Relevant links:](#relevant-links)
 
@@ -82,18 +82,18 @@ flask db upgrade
 ```
 
 ---
-## Extra Required software (FFmpeg)
+## Extra Required software
 **FFmpeg** is a powerful multimedia framework that can be used to record, convert, and stream audio and video. It's an essential tool for handling multimedia files in various applications and is required for this project to work.
 
 ## Installation
 
 
 ### Windows
-Head to [FFmpeg](https://www.gyan.dev/ffmpeg/builds/) and download the latest **fullbuild** zip file.
+Head to [FFmpeg](https://www.gyan.dev/ffmpeg/builds/) and download the latest **fullbuild** 7zip file.
 
-Extract the content from the zip file using your choice of software.
+Extract the content from the zip file using your choice of software (Suggested: [ezy7zip](https://www.ezyzip.com/unzip-7z-files.html) as you can just download the file you need).
 
-Drag the **FFmpeg.exe** file into the project folder (the **FFmpeg.exe** should be located in ffmpeg-X.X-full_build/bin).
+Drag the **ffmpeg.exe** file into the project folder (the **ffmpeg.exe** should be located in ffmpeg-X.X-full_build/bin unless using the suggested website to download the exe file individually).
 
 
 ### Linux
