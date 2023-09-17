@@ -5,12 +5,12 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
 from app import app, db, verification
-from app.compare import convert_to_wav_working_format
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
 import datetime
 
+from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
 
 
