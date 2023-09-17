@@ -17,4 +17,3 @@ class TestClass(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-    generate_soundwave_image("./test/9 non c'e' male.wav","./test","9 non c'e' male.png")
