@@ -94,9 +94,9 @@ Extract the content from the zip file using your choice of software.
 
 Drag the **FFmpeg.exe** file into the project folder (the **FFmpeg.exe** should be located in ffmpeg-X.X-full_build/bin).
 
-Run the following python script
+Run the following python script to that you installed it correctly
 ```bash
-python3 move.py
+python3 testInstallation.py
 ```
 
 
