@@ -246,7 +246,8 @@ def start():
 
 @app.route('/get-user')
 def get_user():
-    user = request.args.get('studentID')
+    user = request.get_json()
+    print(user)
     path = f"./app/static/audio/{user}"
     wk = os.listdir(path)
     print(wk)
