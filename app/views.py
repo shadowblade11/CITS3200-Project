@@ -244,7 +244,12 @@ def Account():
 def start():
     return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
 
-
+@app.route('/get-user')
+def get_user():
+    user = request.args.get('studentID')
+    path = f"./app/static/audio/{user}"
+    wk = os.listdir(path)
+    print(wk)
 # @app.route('/test')
 # def testPage():
 #     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
