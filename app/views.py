@@ -5,7 +5,7 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
 from app import app, db, verification
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
 import datetime
@@ -114,7 +114,7 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if User.query.filter_by(id=int(form.id.data)).first() is not None:
+        if User.query.filter_by(id=form.id.data).first() is not None:
             message = "ID already exists."
             return render_template('register.html', form=form, title='Register', message=message)
         session['id'] = form.id.data
