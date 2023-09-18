@@ -78,10 +78,7 @@
     <div class="dropdown">
         <button class="dropbtn" id="week">Week Recording</button>
 
-     <div class="dropdown-content">
-      <a href="#" id="option1">Week 1</a>
-      <a href="#" id="option2">Week 2</a>
-      <a href="#" id="option3">Week 3</a>
+     <div id = "WkRecording" class="dropdown-content">
      </div>
     </div>
 
@@ -100,7 +97,7 @@
   </div>
   <script>
     const submitButton = document.getElementById("search-button");
-
+    const WkRecording = document.getElementById("WkRecording");
     submitButton.onclick = () => {
       // console.log("hello");
       let textvalue = document.getElementById("search-bar").value;
@@ -119,6 +116,11 @@
           if(xml.status==200){
             let weeks = JSON.parse(xml.responseText).weeks;
             console.log(weeks);
+            for (value of weeks){
+              let new_element = document.createElement('a');
+              new_element.innerHTML = value;
+              WkRecording.appendChild(new_element);
+            }
           }
           else{
             console.log("error");
