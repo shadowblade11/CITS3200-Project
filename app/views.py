@@ -252,7 +252,7 @@ def get_user():
     path = f"./app/static/audio/users/{user}"
     if os.path.exists(path) and os.path.isdir(path):
         wk = os.listdir(path)
-        return jsonify({"user": user, "weeks": wk})
+        return jsonify({"weeks": wk})
     else:
         return jsonify({"error": "User not found or no audio files"}), 404
 # @app.route('/test')
