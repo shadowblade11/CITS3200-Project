@@ -112,7 +112,7 @@
 
     function GettingUser(userID){
       const xml = new XMLHttpRequest();
-      xml.open('GET',"/get-user",true);
+      xml.open('POST',"/get-user",true);
       xml.setRequestHeader("Content-Type", "application/json");
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
@@ -124,7 +124,7 @@
           }
         }
       }
-      xml.send(JSON.stringify({ userID }));
+      xml.send(JSON.stringify({ "userID": userID }));
     }
   </script>
 {% endblock %}

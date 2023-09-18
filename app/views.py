@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, redirect, url_for, flash, request, session
+from flask import render_template, redirect, url_for, flash, request, session, jsonify
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
@@ -244,13 +244,17 @@ def Account():
 def start():
     return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
 
-@app.route('/get-user')
+@app.route('/get-user', methods=['POST'])
 def get_user():
-    user = request.get_json()
-    print(user)
-    path = f"./app/static/audio/{user}"
-    wk = os.listdir(path)
-    print(wk)
+    data = request.get_json()
+    user = data.get('userID')
+    # print(user)
+    path = f"./app/static/audio/users/{user}"
+    if os.path.exists(path) and os.path.isdir(path):
+        wk = os.listdir(path)
+        return jsonify({"user": user, "weeks": wk})
+    else:
+        return jsonify({"error": "User not found or no audio files"}), 404
 # @app.route('/test')
 # def testPage():
 #     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
