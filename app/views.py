@@ -255,6 +255,23 @@ def get_user():
         return jsonify({"weeks": wk})
     else:
         return jsonify({"error": "User not found or no audio files"}), 404
+    
+
+@app.route('/get-audio', methods=["POST"])
+def get_audio():
+    data = request.get_json()
+    user = data.get('userID')
+    week = data.get('value')
+    print(user)
+    print(week)
+    path = f"./app/static/audio/users/{user}/{week}"
+    print(path)
+    if os.path.exists(path) and os.path.isdir(path):
+        clips = os.listdir(path)
+        clips = [path+name for name in clips]
+        print(clips)
+        return jsonify({"clips":clips})
+    return jsonify({"error":"No audio files"}),404
 # @app.route('/test')
 # def testPage():
 #     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
