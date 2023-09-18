@@ -76,7 +76,7 @@
       <br>
 
     <div class="dropdown">
-        <button class="dropbtn" id="week" style="display: none;">Week Recording</button>
+        <button class="dropbtn" id="week">Week Recording</button>
 
      <div class="dropdown-content">
       <a href="#" id="option1">Week 1</a>
@@ -88,19 +88,21 @@
      <div class="student-image" id="student-info">
   <!-- Student image will be displayed here -->
         <img id="student-image" alt="" width="100">
-        <button id="give-feedback-button" style="display: none;">Give Feedback</button>
+        <button id="give-feedback-button">Give Feedback</button>
     <!-- Feedback text box (initially hidden) -->
-        <div id="feedback-box" style="display: none;">
+        <div id="feedback-box">
             <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
             <button id="submit-feedback">Submit</button>
         </div>
      </div>
       <br>
       <br>
-      <div class="image-container">
-        <img  id="student-picture" class="student-image" src="" alt="" width="400">
-        <img  id="student-picture2" class="student-image" src="" alt="" width="400">
-      </div>
   </div>
+  <script>
+    const submitButton = document.getElementById("search-button");
 
+    submitButton.onclick = () => {
+      console.log("hello");
+    }
+  </script>
 {% endblock %}
