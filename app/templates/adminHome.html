@@ -68,10 +68,10 @@
 </script> -->
 
   <div class="content">
-    <form class="search-form">
+    <!-- <form class="search-form"> -->
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
-    </form>
+    <!-- </form> -->
       <br>
       <br>
 
@@ -102,7 +102,11 @@
     const submitButton = document.getElementById("search-button");
 
     submitButton.onclick = () => {
-      console.log("hello");
+      // console.log("hello");
+      let textvalue = document.getElementById("search-bar").value;
+      if (textvalue != ""){
+        console.log(textvalue);
+      }
     }
   </script>
 {% endblock %}
