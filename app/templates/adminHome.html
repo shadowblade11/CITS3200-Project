@@ -117,7 +117,8 @@
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
           if(xml.status==200){
-            console.log(xml.responseText);
+            let weeks = JSON.parse(xml.responseText).weeks;
+            console.log(weeks);
           }
           else{
             console.log("error");
