@@ -62,6 +62,7 @@ class Test(DB_Queries):
 class Question(DB_Queries):
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer)
+    difficulty = db.Column(db.Integer)
     self_evaluation = db.Column(db.Integer)
     teacher_evaluation = db.Column(db.Integer)
     program_evaluation = db.Column(db.Integer)
@@ -72,11 +73,12 @@ class Question(DB_Queries):
         return ('<Question {} (User ID: {}, Test ID: {})>'
                 .format(self.question_id, self.user_id, self.test_id))
 
-    def __init__(self, question_id, user_id, test_id):
+    def __init__(self, question_id, user_id, test_id, difficulty):
         self.program_evaluation, self.self_evaluation, self.teacher_evaluation = 0, 0, 0
         self.question_id = question_id
         self.user_id = user_id
         self.test_id = test_id
+        self.difficulty = 6
 
 # Use questions = Question.query.filter_by(test_id=2, user_id='123').all()
 # to find the questions associated with user 123's 2nd test

@@ -6,7 +6,7 @@ This module contains a collection of functions designed to interact with a datab
 These functions have clear and meaningful names and accept specific arguments for various database operations.
 
 The module includes functions for activating tests, writing feedback, retrieving user data, fetching tests, questions,
- and feedback, as well as setting scores for questions.
+ and feedback, as well as setting scores for questions etc.
 
 Usage:
     To use any of these functions, simply import them into your application and call them with the appropriate arguments.
@@ -145,6 +145,13 @@ def set_score(user_id, question_id, week, score, mode):
         # Use setattr to set the attribute value dynamically
         question = get_question(user_id, question_id, week)
         setattr(question, attribute_name, score)
+        Question.write_to(question)
+
+
+def set_difficulty(week, question_id, difficulty):
+    questions = Question.get_all(question_id=question_id, test_id=week)
+    for question in questions:
+        question.difficulty = difficulty
         Question.write_to(question)
 
 
