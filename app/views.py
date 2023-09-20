@@ -4,20 +4,17 @@ from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
-from app import app, db, verification, interact_database
+from app import app, db, verification
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
 import datetime
 
-from app.compare import convert_to_wav_working_format
-
-from app.produceImage import generate_soundwave_image
-
-import os
 
 from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
+
+
 
 
 @app.route('/')
@@ -253,6 +250,37 @@ def start():
     return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
 
 
+@app.route('/get-user', methods=['POST'])
+def get_user():
+    data = request.get_json()
+    user = data.get('userID')
+    # print(user)
+    path = f"./app/static/audio/users/{user}"
+    if os.path.exists(path) and os.path.isdir(path):
+        wk = os.listdir(path)
+        return jsonify({"weeks": wk})
+    else:
+        return jsonify({"error": "User not found or no audio files"}), 404
+
+
+@app.route('/get-audio', methods=["POST"])
+def get_audio():
+    data = request.get_json()
+    user = data.get('userID')
+    week = data.get('value')
+    print(user)
+    print(week)
+    path = f"./app/static/audio/users/{user}/{week}"
+    print(path)
+    if os.path.exists(path) and os.path.isdir(path):
+        clips = os.listdir(path)
+        clips = [path+name for name in clips]
+        print(clips)
+        return jsonify({"clips":clips})
+    return jsonify({"error":"No audio files"}),404
+# @app.route('/test')
+# def testPage():
+#     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
 @app.route('/test')
 def testPage():
     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
