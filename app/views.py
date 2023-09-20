@@ -4,12 +4,11 @@ from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
-from app import app, db, verification
+from app import app, db, verification, interact_database
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
 import datetime
-
 
 from app.compare import convert_to_wav_working_format
 
@@ -17,11 +16,8 @@ from app.produceImage import generate_soundwave_image
 
 import os
 
-
 from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
-
-
 
 
 @app.route('/')
@@ -56,6 +52,7 @@ def adminHome():
 @app.route('/grades')
 def grades():
     return render_template("gradesPage.html", css='./static/gradesPage.css')
+
 
 @app.route('/contact')
 def contact():
@@ -179,7 +176,8 @@ def test(username):
     # print(current_user)
     # TODO also once figured out a way to get current user id,
     #  use os commands to check if their folder exists, if not, then create it
-    return render_template('testPage.html', css=url_for('static', filename='testPage.css'), audio_clips=audio_clips, week=week, user=username)
+    return render_template('testPage.html', css=url_for('static', filename='testPage.css'), audio_clips=audio_clips,
+                           week=week, user=username)
 
 
 @app.route('/audio-test')
@@ -225,7 +223,6 @@ def send_image():
     else:
         print('something went wrong')
 
-
     PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{week}"
 
     os.makedirs(PATH_TO_IMAGE_FOLDER, exist_ok=True)
@@ -241,6 +238,8 @@ def send_image():
 @login_required
 @app.route('/addtest', methods=['GET', 'POST'])
 def addtest():
+    if not current_user.is_admin:
+        return redirect(url_for('page_not_found'))
     return render_template('adminAddtest.html', css=url_for('static', filename='adminAddtest.css'))
 
 
@@ -254,6 +253,6 @@ def start():
     return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
 
 
-# @app.route('/test')
-# def testPage():
-#     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
+@app.route('/test')
+def testPage():
+    return render_template("testPage.html", css=url_for('static', filename='testPage.css'))

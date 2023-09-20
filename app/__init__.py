@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 db = SQLAlchemy(app)
-migrate = Migrate(app,db)
+migrate = Migrate(app, db)
 
 app.debug = True
 login = LoginManager(app)
@@ -16,4 +16,4 @@ login.login_view = 'login'
 
 app.app_context().push()
 
-from app import views,models
+from app import views, models
