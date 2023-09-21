@@ -1,7 +1,6 @@
 import speech_recognition as sr
 from ipapy.ipastring import IPAString
 import epitran
-import numpy as np
 
 def checkPronounciation(sourcePhone, submittedPhone):
     matchedPhone = 0 

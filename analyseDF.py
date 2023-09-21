@@ -1,32 +1,4 @@
-import pandas
-import allosaurus.app
-import panphon
-
-def timestampOutput(output):
-    records = []
-    lines = output.split('\n')
-    for line in lines:
-        tmp = line.split(' ')
-        start = float(tmp[0])
-        duration = float(tmp[1])
-        end = start + duration
-        label = tmp[2]
-        records.append(dict(start=start, duration=duration, end=end,label=label))
-    df = pandas.DataFrame.from_records(records)
-    return df
-
-def isConsonant(ipa):
-    ft = panphon.FeatureTable()
-    cons = ft.word_fts(ipa)[0] >= {'cons': 1}
-    return cons
-
-def recognizePhones(path, emit=1.2, lang='eng'):
-    model = allosaurus.app.read_recognizer()
-    out = model.recognize(path, lang, timestamp=True, emit=emit)
-    
-    phones = timestampOutput(out)
-    phones['consonant'] = phones['label'].apply(isConsonant)
-    return phones
+from obtainDF import recognizePhones
 
 ##finding the ratio of vowels and consonants
 def getRatio(phones):
@@ -52,25 +24,32 @@ def compareRatio(submitted, source): # keep ratio within +-0.3
     else: 
         return 100 * (source - submitted)
 
-def getCandV(sourceFile, submittedFile):
+## finding duration of each audio files for comparison
+def getDuration(phone):
+    start = phone['start'][0]
+    end = phone['end'][len(phone)-1]
+
+    duration = end - start
+    
+    return duration
+
+def compareDuration(sourcePhones, submittedPhones):
+    source = getDuration(sourcePhones)
+    submitted = getDuration(submittedPhones)
+    
+    if source == submitted:
+        return 100
+    elif submitted > source:
+        return 100 - (100 * (submitted/source - 1))
+    else:
+        return 100 - (100 * (submitted/source))
+    
+def getScores(sourceFile, submittedFile):
     submittedPhones = recognizePhones(submittedFile)
     sourcePhones = recognizePhones(sourceFile)
     
-    score = compareRatio(getRatio(submittedPhones), getRatio(sourcePhones))
-    return score 
+    ratioScore = compareRatio(getRatio(submittedPhones), getRatio(sourcePhones))
+    durationScore = compareDuration(sourcePhones, submittedPhones)
+    return ratioScore,durationScore
 
-def getDuration(sourcePhone, submittedPhone):
-    sourceStart = sourcePhone['start'][0]
-    submittedStart = submittedPhone['start'][0]
-
-    print(sourceStart)
-    print(submittedStart)
-
-        
-
-def compareTimestamps(sourceFile, submittedFile):
-    submittedPhones = recognizePhones(submittedFile)
-    sourcePhones = recognizePhones(sourceFile)
-
-    score = getDuration(sourcePhones, submittedPhones)
 
