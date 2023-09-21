@@ -62,7 +62,8 @@ def login():
         return redirect(url_for('home', username=current_user.id))  # Provide the username
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.get_user(id=form.id.data)
+        user = db.get_user(user_id=form.id.data)
+        print(user)
         if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
             return redirect(url_for('login'))
