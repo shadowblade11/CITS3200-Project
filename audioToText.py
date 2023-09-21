@@ -1,6 +1,7 @@
 import speech_recognition as sr
 from ipapy.ipastring import IPAString
 import epitran
+import numpy as np
 
 def checkPronounciation(sourcePhone, submittedPhone):
     matchedPhone = 0 
@@ -12,7 +13,7 @@ def checkPronounciation(sourcePhone, submittedPhone):
         longString = submittedPhone
         shortString = sourcePhone
     
-    for i in range(len(longString)): ## iterating through characters to find match then give a score but still unsure of the correct way to do this assessment
+    for i in range(len(longString)): ## iterating through characters to find match then give a score
         if (i < len(shortString)):
             if (sourcePhone[i] == submittedPhone[i]):
                 matchedPhone += 1

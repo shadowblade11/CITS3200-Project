@@ -7,11 +7,11 @@ def timestampOutput(output):
     lines = output.split('\n')
     for line in lines:
         tmp = line.split(' ')
-        #start = float(tmp[0])
-        #duration = float(tmp[1])
-        #end = start + duration
+        start = float(tmp[0])
+        duration = float(tmp[1])
+        end = start + duration
         label = tmp[2]
-        records.append(dict(label=label))
+        records.append(dict(start=start, duration=duration, end=end,label=label))
     df = pandas.DataFrame.from_records(records)
     return df
 
@@ -52,13 +52,25 @@ def compareRatio(submitted, source): # keep ratio within +-0.3
     else: 
         return 100 * (source - submitted)
 
-
 def getCandV(sourceFile, submittedFile):
-    submittedAudio = submittedFile
-    submittedPhones = recognizePhones(submittedAudio)
-
-    source = sourceFile
-    sourcePhones = recognizePhones(source)
+    submittedPhones = recognizePhones(submittedFile)
+    sourcePhones = recognizePhones(sourceFile)
     
     score = compareRatio(getRatio(submittedPhones), getRatio(sourcePhones))
     return score 
+
+def getDuration(sourcePhone, submittedPhone):
+    sourceStart = sourcePhone['start'][0]
+    submittedStart = submittedPhone['start'][0]
+
+    print(sourceStart)
+    print(submittedStart)
+
+        
+
+def compareTimestamps(sourceFile, submittedFile):
+    submittedPhones = recognizePhones(submittedFile)
+    sourcePhones = recognizePhones(sourceFile)
+
+    score = getDuration(sourcePhones, submittedPhones)
+
