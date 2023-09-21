@@ -1,5 +1,5 @@
 from app.models import User, Question, Test
-
+from app import app
 
 '''
 This module contains a collection of functions designed to interact with a database. 
@@ -20,15 +20,6 @@ Example:
 '''
 
 
-def activate_test(obj, week):  # Week is test_id
-    students = User.get_all(is_admin=False)  # Get all the students
-    if type(obj) == Test:
-        for student in students:
-            pass
-    if type(obj) == Question:
-        pass
-
-
 def write_feedback(user_id, feedback, week):
     """
         Writes feedback for a specific test.
@@ -41,7 +32,7 @@ def write_feedback(user_id, feedback, week):
         Usage:
             write_feedback('123', 'Good job!', 1)
         """
-    test = Test.get_all(test_id=week, user_id=user_id)  # Return a list for all the test object
+    test = Test.get(test_id=week, user_id=user_id)  # Return a list for the test object at specific week
     test.feedback = feedback
     Test.write_to(test)
 
@@ -59,8 +50,7 @@ def get_user(user_id):
         Usage:
             user = get_user('123')  # Retrieves user data for user ID '123'.
         """
-    user = User.get(user_id)
-    return user
+    return User.get(id=user_id)
 
 
 def get_test(user_id, week):
@@ -77,8 +67,7 @@ def get_test(user_id, week):
         Usage:
             test = get_test('123', 1)  # Retrieves test for user '123' and week 1.
         """
-    test = Test.get(user_id=user_id, test_id=week)
-    return test
+    return Test.get(user_id=user_id, test_id=week)
 
 
 def get_question(user_id, question_num, week):
@@ -96,7 +85,7 @@ def get_question(user_id, question_num, week):
         Usage:
             question = get_question('123', 1, 1)  # Retrieves question 1 for user '123' in week 1.
         """
-    return Question.get(user_id=user_id,test_id=week, question_id=question_num)
+    return Question.get(user_id=user_id, test_id=week, question_id=question_num)
 
 
 def get_feedback(user_id, test_id):
@@ -153,6 +142,25 @@ def set_difficulty(week, question_id, difficulty):
     for question in questions:
         question.difficulty = difficulty
         Question.write_to(question)
+
+
+def initialize_test(week, user_id):
+    test = Test(test_id=week, user_id=user_id)
+    Test.write_to(test)
+
+
+def admin_activate_tests(week):
+    users = User.get_all()
+    for user in users:
+        initialize_test(week=week, user_id=user.id)
+
+
+def activate_questions(question_num, week):
+    tests = Test.get_all(test_id=week)
+    for test in tests:
+        for i in range(question_num):
+            question = Question(question_id=i, test_id=week, user_id=test.user_id)
+            Question.write_to(question)
 
 
 if __name__ == "__main__":

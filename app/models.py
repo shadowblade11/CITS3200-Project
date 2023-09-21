@@ -1,6 +1,13 @@
 from flask_login import UserMixin
-from app import db
+from app import db, login
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy.exc import SQLAlchemyError
+
+
+class DatabaseException(Exception):
+    def __init__(self, message="A database-related error occurred."):
+        self.message = message
+        super().__init__(self.message)
 
 
 class DB_Queries(db.Model):
@@ -8,20 +15,37 @@ class DB_Queries(db.Model):
 
     @classmethod
     def get(cls, **kwargs):  # Return a single object
-        return cls.query.filter_by(**kwargs).first()
+        try:
+            return cls.query.filter_by(**kwargs).first()
+        except SQLAlchemyError as e:
+            # Handle the exception (e.g., log it, raise a custom exception, etc.)
+            raise DatabaseException("Error while retrieving data from the database.") from e
 
     @classmethod
-    def get_all(cls, **kwargs):  # Return a list of object
-        return cls.query.filter_by(**kwargs).all()
+    def get_all(cls, **kwargs):  # Return a list of objects
+        try:
+            return cls.query.filter_by(**kwargs).all()
+        except SQLAlchemyError as e:
+            # Handle the exception
+            raise DatabaseException("Error while retrieving data from the database.") from e
 
     @classmethod
     def view_all(cls):
-        return cls.query.all()
+        try:
+            return cls.query.all()
+        except SQLAlchemyError as e:
+            # Handle the exception
+            raise DatabaseException("Error while retrieving data from the database.") from e
 
     @classmethod
     def write_to(cls, obj):
-        db.session.add(obj)
-        db.session.commit()
+        try:
+            db.session.add(obj)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            # Handle the exception
+            db.session.rollback()  # Rollback the transaction in case of an error
+            raise DatabaseException("Error while writing data to the database.") from e
 
 
 class User(UserMixin, DB_Queries):
@@ -44,27 +68,33 @@ class User(UserMixin, DB_Queries):
         self.id = id
 
 
+@login.user_loader
+def load_user(id):
+    return User.query.get(id)
+
+
 class Test(DB_Queries):
     id = db.Column(db.Integer, primary_key=True)
     test_id = db.Column(db.Integer)
     user_id = db.Column(db.String, db.ForeignKey('user.id'),
-                        name='fk_test_user_id')  # Provide a name for the foreign key
+                        name='fk_test_user_id')
     questions = db.relationship('Question', backref='test', lazy='dynamic')
     feedback = db.Column(db.String(512))
 
     def __repr__(self):
         return f'<Test {self.test_id} (User ID: {self.user_id}),Feedback:{self.feedback}>'
 
+    def __init__(self, test_id, user_id):
+        self.test_id = test_id
+        self.user_id = user_id
+        self.feedback = None
 
-# Use "test_1 = Test(test_id=1, user_id='123')" to create a week 1 test for user 123
-# Use "tests = Test.query.filter_by(user_id="userID", test_id= 1).all()" to get the test 1 associated to the user
 
 class Question(DB_Queries):
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer)
     difficulty = db.Column(db.Integer)
     self_evaluation = db.Column(db.Integer)
-    teacher_evaluation = db.Column(db.Integer)
     program_evaluation = db.Column(db.Integer)
     user_id = db.Column(db.String, db.ForeignKey('user.id'))
     test_id = db.Column(db.Integer, db.ForeignKey('test.test_id'))
@@ -80,7 +110,3 @@ class Question(DB_Queries):
         self.test_id = test_id
         self.difficulty = 6
 
-# Use questions = Question.query.filter_by(test_id=2, user_id='123').all()
-# to find the questions associated with user 123's 2nd test
-
-# Use question = Question(question_id=2, test_id=2, user_id='123') to create a question for user 123 in test 2

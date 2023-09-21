@@ -1,10 +1,11 @@
 import os
 
-from flask import render_template, redirect, url_for, flash, request, session
+from flask import render_template, redirect, url_for, flash, request, session, jsonify
 from flask_login import current_user, logout_user, login_required, login_user
-from werkzeug.urls import url_parse
+from werkzeug.urls import urlsplit
 
-from app import app, db, verification
+from app import app, verification
+from app import interact_database as db
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
@@ -13,8 +14,6 @@ import datetime
 
 from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
-
-
 
 
 @app.route('/')
@@ -63,14 +62,14 @@ def login():
         return redirect(url_for('home', username=current_user.id))  # Provide the username
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(id=form.id.data).first()
+        user = User.get_user(id=form.id.data)
         if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
             return redirect(url_for('login'))
         login_user(user)
         next_page = request.args.get('next')
         session['uid'] = form.id.data
-        if not next_page or url_parse(next_page).netloc != '':
+        if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('home', username=user.id)
         return redirect(next_page)
     return render_template('loginPage.html', form=form, css=url_for('static', filename='loginPage.css'))
@@ -79,12 +78,13 @@ def login():
 @app.route('/administratorLogin', methods=['GET', 'POST'])
 def administratorLogin():
     if (current_user.is_authenticated and
-            User.query.filter_by(id=session.get('uid')).first().is_admin):
+            db.get_user(user_id=current_user.id).is_admin):
+        print("id=======", current_user.id)
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
         print(form.username.data)
-        user = User.query.filter_by(id=form.username.data).first()
+        user = User.get(form.username.data)
         if user is None:
             return redirect(url_for('administratorLogin'))
         if not user.is_admin or not user.check_passwd(form.passwd.data):
@@ -92,7 +92,7 @@ def administratorLogin():
         login_user(user)
         next_page = request.args.get('next')
         session['uid'] = form.username.data
-        if not next_page or url_parse(next_page).netloc != '':
+        if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('adminHome')
         return redirect(next_page)
     return render_template('adminLogin.html', css=url_for('static', filename='adminLogin.css'), form=form)
@@ -108,7 +108,7 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if User.query.filter_by(id=form.id.data).first() is not None:
+        if User.get(id=form.id.data) is not None:
             message = "ID already exists."
             return render_template('register.html', form=form, title='Register', message=message)
         session['id'] = form.id.data
@@ -135,8 +135,7 @@ def verify():
             user = User(id=session['id'])
             user.set_passwd(session['passwd'])
             session.pop('id')  # Clear the session variable
-            db.session.add(user)
-            db.session.commit()
+            User.write_to(user)
             return redirect(url_for('login'))
 
         if request.referrer is None:
@@ -278,9 +277,3 @@ def get_audio():
         print(clips)
         return jsonify({"clips":clips})
     return jsonify({"error":"No audio files"}),404
-# @app.route('/test')
-# def testPage():
-#     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
-@app.route('/test')
-def testPage():
-    return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
