@@ -7,8 +7,8 @@ if __name__ == "__main__":
     submittedFile = 'audiofiles_wav/molto_bene_grazie.wav'
 
     print("\nAssessing now.... Please wait...\n")
-    score1 = convertAudio(sourceFile, submittedFile)
-    score2, score3 = getScores(sourceFile, submittedFile)
+    audio_to_text_score = convertAudio(sourceFile, submittedFile)
+    ratio_score, duration_score = getScores(sourceFile, submittedFile)
 
-    OverallScore = round((score1 * 1/3) + (score2 * 1/3) + (score3 * 1/3))
+    OverallScore = round((audio_to_text_score * 0.45) + (ratio_score * 0.25) + (duration_score * 0.30))
     print("Your score is:", OverallScore, "\n")

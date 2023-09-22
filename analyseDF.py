@@ -1,7 +1,7 @@
 from obtainDF import recognizePhones
 
-##finding the ratio of vowels and consonants
-def getRatio(phones):
+#finding the ratio of vowels and consonants
+def getRatio(df):
     vowel = 0
     consonant = 0
     for x in phones['consonant'].values:
@@ -12,44 +12,70 @@ def getRatio(phones):
 
     return(vowel/consonant) 
 
-def compareRatio(submitted, source): # keep ratio within +-0.3
-    if submitted == source :
-        return 100
-    if submitted - source <= 0.3 and submitted - source > 0:
-        return 100 - (100 * (submitted - source))
-    if source - submitted <= 0.3 and source - submitted > 0:
-        return 100 - (100 * (source - submitted))
-    elif submitted > source:
-        return 100 * (submitted - source)
-    else: 
-        return 100 * (source - submitted)
+def compareRatio(sourceDF, submittedDF): # keep ratio within +-0.2 (lower is more sensitive)
+    source = getRatio(sourceDF)
+    submitted = getRatio(submittedDF)
 
-## finding duration of each audio files for comparison
-def getDuration(phone):
-    start = phone['start'][0]
-    end = phone['end'][len(phone)-1]
+    if submitted == source : # if ratio is equal then full marks
+        score = 100
+        return score
+    if submitted > source: # if the ratio in submitted audio is more 
+        if submitted - source <= 0.2: # if kept within this threshold then we will count it as perfect
+            score = 100
+        else:
+            diff = submitted - source - 0.2
+            scoreToSubtract = 100 * diff
+            score = 100 - scoreToSubtract
 
+            return score
+    else:
+        if source - submitted <= 0.2: # if kept within this threshold then we will count it as perfect
+            score = 100
+        else:
+            diff = source - submitted - 0.2
+            scoreToSubtract = 100 * diff
+            score = 100 - scoreToSubtract
+
+            return score
+
+
+# finding duration of each audio files for comparison
+def getDuration(df):
+    start = df['start'][0]
+    end = df['end'][len(df)-1]
     duration = end - start
     
     return duration
 
-def compareDuration(sourcePhones, submittedPhones):
-    source = getDuration(sourcePhones)
-    submitted = getDuration(submittedPhones)
+def compareDuration(sourceDF, submittedDF):
+    source = getDuration(sourceDF)
+    submitted = getDuration(submittedDF)
     
-    if source == submitted:
-        return 100
-    elif submitted > source:
-        return 100 - (100 * (submitted/source - 1))
-    else:
-        return 100 - (100 * (submitted/source))
+    if source == submitted: # if duration is the same then full marks
+        score = 100
+        return score
+    
+    elif submitted > source: # if submitted duration is more than source then marks will be subtracted based on how much longer it is
+        diff = submitted/source - 1
+        scoreToSubtract = 100 * diff
+        score = 100 - scoreToSubtract
+        
+        return score
+    
+    else: # if submitted duration is less than source then marks will be subtracted based on how much shorter it is
+        diff = 1 - submitted/source
+        scoreToSubtract = 100 * diff
+        score = 100 - scoreToSubtract
+    
+        return score
     
 def getScores(sourceFile, submittedFile):
-    submittedPhones = recognizePhones(submittedFile)
-    sourcePhones = recognizePhones(sourceFile)
+    submittedDF = recognizePhones(submittedFile)
+    sourceDF = recognizePhones(sourceFile)
     
-    ratioScore = compareRatio(getRatio(submittedPhones), getRatio(sourcePhones))
-    durationScore = compareDuration(sourcePhones, submittedPhones)
+    ratioScore = compareRatio(sourceDF, submittedDF)
+    durationScore = compareDuration(sourceDF, submittedDF)
+    
     return ratioScore,durationScore
 
 
