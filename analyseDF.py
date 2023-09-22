@@ -4,7 +4,7 @@ from obtainDF import recognizePhones
 def getRatio(df):
     vowel = 0
     consonant = 0
-    for x in phones['consonant'].values:
+    for x in df['consonant'].values:
         if x == True:
             consonant += 1
         else:
@@ -12,27 +12,29 @@ def getRatio(df):
 
     return(vowel/consonant) 
 
-def compareRatio(sourceDF, submittedDF): # keep ratio within +-0.2 (lower is more sensitive)
+def compareRatio(sourceDF, submittedDF): # keep ratio within +-0.05 (lower is more sensitive)
     source = getRatio(sourceDF)
     submitted = getRatio(submittedDF)
 
     if submitted == source : # if ratio is equal then full marks
         score = 100
         return score
-    if submitted > source: # if the ratio in submitted audio is more 
-        if submitted - source <= 0.2: # if kept within this threshold then we will count it as perfect
+    elif submitted > source: # if the ratio in submitted audio is more 
+        if submitted - source < 0.05: # if kept within this threshold then we will count it as perfect
             score = 100
+            return score
         else:
-            diff = submitted - source - 0.2
+            diff = submitted - source - 0.05
             scoreToSubtract = 100 * diff
             score = 100 - scoreToSubtract
 
             return score
     else:
-        if source - submitted <= 0.2: # if kept within this threshold then we will count it as perfect
+        if source - submitted < 0.05: # if kept within this threshold then we will count it as perfect
             score = 100
+            return score   
         else:
-            diff = source - submitted - 0.2
+            diff = source - submitted - 0.05
             scoreToSubtract = 100 * diff
             score = 100 - scoreToSubtract
 
