@@ -5,20 +5,18 @@ import epitran
 def checkPronounciation(sourcePhone, submittedPhone):
     matchedPhone = 0 
 
-    if len(sourcePhone) >= len(submittedPhone): # checking length so array dont go out of bounds
-        longString = sourcePhone
-        shortString = submittedPhone
+    for x,y in zip(sourcePhone, submittedPhone): # will iterate through the list in parallel and will be limited to the shortest list
+        if x == y:
+            matchedPhone += 1 
+    
+    #finding the shortest list to calculate the score since the count is limited by the shortest list
+    if len(sourcePhone) == len(submittedPhone):
+        score = (matchedPhone / len(sourcePhone)) * 100 
+    elif len(sourcePhone) < len(submittedPhone):
+        score = (matchedPhone / len(sourcePhone)) * 100
     else:
-        longString = submittedPhone
-        shortString = sourcePhone
+        score = (matchedPhone / len(submittedPhone)) * 100
     
-    for i in range(len(longString)): # iterating through characters to find match then give a score
-        if (i < len(shortString)):
-            if (sourcePhone[i] == submittedPhone[i]):
-                matchedPhone += 1
-    
-    
-    score = matchedPhone / len(longString) * 100  # score out of 100%
     return score
 
 def getPhone(audioFile): 

@@ -70,6 +70,33 @@ def compareDuration(sourceDF, submittedDF):
         score = 100 - scoreToSubtract
     
         return score
+
+def getLabels(df):
+    phones = []
+    for x in df['label'].values:
+        phones.append(x) #storing the labels from the df into arrays and returning the array
+
+    return phones
+
+def compareLabels(sourceDF, submittedDF):
+    source = getLabels(sourceDF) 
+    submitted = getLabels(submittedDF)
+
+    count = 0
+        
+    for x,y in zip(source,submitted): # iterating through the lists in parallel and it is limited to the shorter list
+        if x == y:
+            count += 1
+    
+    #finding the length of the shorter list to calculate the score since the iteration is limited by the shorter list
+    if len(source) == len(submitted):
+        score = (count / len(source)) * 100
+    elif len(source) < len(submitted):
+        score = (count / len(source)) * 100
+    else:
+        score = (count / len(submitted)) * 100
+    
+    return score
     
 def getScores(sourceFile, submittedFile):
     submittedDF = recognizePhones(submittedFile)
@@ -77,7 +104,8 @@ def getScores(sourceFile, submittedFile):
     
     ratioScore = compareRatio(sourceDF, submittedDF)
     durationScore = compareDuration(sourceDF, submittedDF)
+    phoneScore = compareLabels(sourceDF, submittedDF)
     
-    return ratioScore,durationScore
+    return ratioScore,durationScore, phoneScore
 
 
