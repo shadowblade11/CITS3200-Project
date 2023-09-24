@@ -154,15 +154,23 @@
             console.log(arr_length);
             let container = document.getElementById("res");
             let audio_path = `/static/audio/users/${userID}/${value}`;
+            let image_path = `/static/images/users/${userID}/${value}`;
             for (let idx = 0; idx < arr_length; idx++){
+              let small_container = document.createElement("div");
               let aud_clip = document.createElement("audio");
 
               aud_clip.controls = true;
-
               aud_clip.type = "audio/wav";
               aud_clip.src = `${audio_path}/${clips[idx]}`;
-            
-              container.appendChild(aud_clip);
+
+              let img = document.createElement("img");
+              let image_name = clips[idx].replace(".wav",".png");
+              img.src = `${image_path}/${image_name}`;
+              img.width = "400";
+              img.height = "160";
+              small_container.appendChild(aud_clip);
+              small_container.appendChild(img);
+              container.appendChild(small_container);
             }
           }
           else{
