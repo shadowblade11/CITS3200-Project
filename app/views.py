@@ -298,14 +298,15 @@ def send_feedback():
 
     #FAKE DATA
     data = {
-    123: {
+    "123": {
         'week1': 'This is a random sentence for week 1.',
         'week2': 'Here is a different sentence for week 2.',
         'week3': 'Week 3 has its own unique sentence as well.'
     }
-}
+    }
     try:
         string = data[user][week]
+        print(string)
         return string,200
     except:
         return "",404
