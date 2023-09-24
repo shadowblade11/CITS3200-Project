@@ -102,7 +102,6 @@
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
         GettingUser(textvalue);
-        console.log(textvalue);
       }
     }
 
@@ -139,7 +138,7 @@
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
-    function gettingAudioClips(userID,value){
+    function gettingAudioClips(userID,week){
       const xml = new XMLHttpRequest();
       xml.open('POST',"/get-audio",true);
       xml.setRequestHeader("Content-Type", "application/json");
@@ -153,11 +152,12 @@
             sys_scores = json_data.sys_scores;
 
             let arr_length = clips.length;
-            console.log(arr_length);
+
             let container = document.getElementById("res");
             container.innerHTML = "";
-            let audio_path = `/static/audio/users/${userID}/${value}`;
-            let image_path = `/static/images/users/${userID}/${value}`;
+
+            let audio_path = `/static/audio/users/${userID}/${week}`;
+            let image_path = `/static/images/users/${userID}/${week}`;
             for (let idx = 0; idx < arr_length; idx++){
               let small_container = document.createElement("div");
               let aud_clip = document.createElement("audio");
@@ -191,14 +191,13 @@
             
             let feedback_box = document.getElementById("feedback-box");
             feedback_box.style.display= "block";
-
           }
           else{
             console.log("error");
           }
         }
       }
-      xml.send(JSON.stringify({ "userID": userID, "value":value }));
+      xml.send(JSON.stringify({ "userID": userID, "week":week}));
     }
   </script>
 {% endblock %}
