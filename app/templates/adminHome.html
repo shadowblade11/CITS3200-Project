@@ -38,6 +38,7 @@
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
         GettingUser(textvalue);
+        document.getElementById("search-bar").value = "";
       }
     }
 
@@ -64,7 +65,6 @@
             let container = document.getElementById("res");
             container.innerHTML = "";
 
-            // let feedback_box = document.getElementById("feedback-box");
             feedback_box.style.display="none";
           }
         }
@@ -73,7 +73,6 @@
     }
 
     function gettingAudioClips(userID,week){
-      // let prior_feedback = gettingFeedback(userID,week);
       const xml = new XMLHttpRequest();
       xml.open('POST',"/get-audio",true);
       xml.setRequestHeader("Content-Type", "application/json");
