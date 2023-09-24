@@ -143,8 +143,14 @@
             console.log('success');
             // console.log(xml.responseText);
             let json_data = JSON.parse(xml.responseText);
-            console.log(json_data);
-
+            // console.log(json_data.clips);
+            clips = json_data.clips;
+            // console.log(json_data.user_scores);
+            user_scores = json_data.clips;
+            // console.log(json_data.sys_scores);
+            sys_scores = json_data.sys_scores;
+            let arr_length = clips.length;
+            console.log(arr_length);
           }
           else{
             console.log("error");

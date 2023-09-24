@@ -262,15 +262,19 @@ def get_audio():
     data = request.get_json()
     user = data.get('userID')
     week = data.get('value')
-    print(user)
-    print(week)
+    # print(user)
+    # print(week)
     path = f"./app/static/audio/users/{user}/{week}"
     print(path)
     if os.path.exists(path) and os.path.isdir(path):
         clips = os.listdir(path)
-        clips = [path+name for name in clips]
+        clips = [name for name in clips]
         # print(clips)
-        return jsonify({"clips":clips})
+        # THIS IS JUST AN EXAMPLE DATA, REPLACE THIS ONCE DB IS IMPLEMENTED
+        EXAMPLE_DATA_USER = [5 for i in clips]
+        EXAMPLE_DATA_SYS = [8 for i in clips]
+        # print(EXAMPLE_DATA_USER)
+        return jsonify({"clips":clips,"user_scores":EXAMPLE_DATA_USER,"sys_scores": EXAMPLE_DATA_SYS})
     return jsonify({"error":"No audio files"}),404
 # @app.route('/test')
 # def testPage():
