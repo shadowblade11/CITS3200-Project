@@ -82,9 +82,10 @@
      </div>
     </div>
 
-     <div class="student-image" id="student-info">
-  <!-- Student image will be displayed here -->
-        <img id="student-image" alt="" width="100">
+    <div id = "res">
+
+    </div>
+    <br>
         <button id="give-feedback-button">Give Feedback</button>
     <!-- Feedback text box (initially hidden) -->
         <div id="feedback-box">
@@ -151,6 +152,18 @@
             sys_scores = json_data.sys_scores;
             let arr_length = clips.length;
             console.log(arr_length);
+            let container = document.getElementById("res");
+            for (let idx = 0; idx < arr_length; idx++){
+              let aud_clip = document.createElement("audio");
+
+              aud_clip.controls = true;
+
+
+
+
+
+              container.appendChild(aud_clip);
+            }
           }
           else{
             console.log("error");
