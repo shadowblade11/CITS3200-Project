@@ -165,7 +165,21 @@
       sendingFeedback();
     }
 
-    function gettingFeedback(user,week)
-
+    function gettingFeedback(user,week){
+      const xml = new XMLHttpRequest();
+      xml.open('GET',"/get-feedback",true);
+      xml.setRequestHeader("Content-Type", "application/json");
+      xml.onreadystatechange = function(){
+        if(xml.readyState == 4){
+          if(xml.status==200){
+            console.log("success");
+          }else{
+            console.log('err');
+          }
+        }
+      }
+      xml.send(JSON.stringify({"user":user,"week":week}));
+    }
+    gettingFeedback(123,"wek");
   </script>
 {% endblock %}

@@ -291,6 +291,9 @@ def save_feedback():
 
 @app.route('/get-feedback',methods=["GET"])
 def send_feedback():
+    user = request.args.get('user')
+    week = request.args.get('week')
+    print(f"User: {user}, Week: {week}")
     return "s",200
 
 
