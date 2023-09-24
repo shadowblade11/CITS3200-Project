@@ -306,7 +306,6 @@ def send_feedback():
     }
     try:
         string = data[user][week]
-        print(string)
         return string,200
     except:
         return "",404
