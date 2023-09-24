@@ -272,6 +272,23 @@ def get_audio():
         # print(EXAMPLE_DATA_USER)
         return jsonify({"clips":clips,"user_scores":EXAMPLE_DATA_USER,"sys_scores": EXAMPLE_DATA_SYS})
     return jsonify({"error":"No audio files"}),404
+
+@app.route('/save-feedback',methods=["POST"])
+def save_feedback():
+    data = request.get_json()
+    print(data)
+
+
+
+
+
+
+
+
+
+
+
+
 # @app.route('/test')
 # def testPage():
 #     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
