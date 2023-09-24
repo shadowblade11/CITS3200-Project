@@ -293,8 +293,22 @@ def save_feedback():
 def send_feedback():
     user = request.args.get('user')
     week = request.args.get('week')
-    print(f"User: {user}, Week: {week}")
-    return "s",200
+    # print(f"User: {user}, Week: {week}")
+    # THIS IS WHERE WE RETRIVE FEEDBACK FROM THE DATABASE
+
+    #FAKE DATA
+    data = {
+    123: {
+        'week1': 'This is a random sentence for week 1.',
+        'week2': 'Here is a different sentence for week 2.',
+        'week3': 'Week 3 has its own unique sentence as well.'
+    }
+}
+    try:
+        string = data[user][week]
+        return string,200
+    except:
+        return "",404
 
 
 
