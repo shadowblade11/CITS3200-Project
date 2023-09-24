@@ -153,16 +153,15 @@
             let arr_length = clips.length;
             console.log(arr_length);
             let container = document.getElementById("res");
-            let audio_path = `./app/static/audio/users/${userID}/${value}`;
+            let audio_path = `/static/audio/users/${userID}/${value}`;
             for (let idx = 0; idx < arr_length; idx++){
               let aud_clip = document.createElement("audio");
 
               aud_clip.controls = true;
 
+              aud_clip.type = "audio/wav";
               aud_clip.src = `${audio_path}/${clips[idx]}`;
-
-
-
+            
               container.appendChild(aud_clip);
             }
           }
