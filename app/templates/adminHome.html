@@ -86,9 +86,7 @@
 
     </div>
     <br>
-        <button id="give-feedback-button">Give Feedback</button>
-    <!-- Feedback text box (initially hidden) -->
-        <div id="feedback-box">
+        <div id="feedback-box"style="display: none;">
             <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
             <button id="submit-feedback">Submit</button>
         </div>
@@ -127,7 +125,14 @@
             }
           }
           else{
-            console.log("error");
+            alert("User does not exist");
+            let container = document.getElementById("res");
+            container.innerHTML = "";
+
+            WkRecording.innerHTML = "";
+
+            let feedback_box = document.getElementById("feedback-box");
+            feedback_box.style.display="none";
           }
         }
       }
@@ -141,18 +146,16 @@
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
           if(xml.status==200){
-            console.log('success');
-            // console.log(xml.responseText);
             let json_data = JSON.parse(xml.responseText);
-            // console.log(json_data.clips);
+
             clips = json_data.clips;
-            // console.log(json_data.user_scores);
             user_scores = json_data.user_scores;
-            // console.log(json_data.sys_scores);
             sys_scores = json_data.sys_scores;
+
             let arr_length = clips.length;
             console.log(arr_length);
             let container = document.getElementById("res");
+            container.innerHTML = "";
             let audio_path = `/static/audio/users/${userID}/${value}`;
             let image_path = `/static/images/users/${userID}/${value}`;
             for (let idx = 0; idx < arr_length; idx++){
@@ -185,6 +188,10 @@
               small_container.appendChild(sys_sc);
               container.appendChild(small_container);
             }
+            
+            let feedback_box = document.getElementById("feedback-box");
+            feedback_box.style.display= "block";
+
           }
           else{
             console.log("error");
