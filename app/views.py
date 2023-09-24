@@ -276,7 +276,16 @@ def get_audio():
 @app.route('/save-feedback',methods=["POST"])
 def save_feedback():
     data = request.get_json()
-    print(data)
+    text = data.get('txt')
+    week = data.get('week')
+    user = data.get('user')
+    #THIS IS WHERE WE CAN STORE THE FEEDBACK
+    try:
+        # REPLACE THIS WITH THE TABLE ASSIGNMENT
+        print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
+        return "passed",200
+    except:
+        return "failed",404
 
 
 
