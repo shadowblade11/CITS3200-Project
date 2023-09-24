@@ -141,6 +141,10 @@
         if(xml.readyState == 4){
           if(xml.status==200){
             console.log('success');
+            // console.log(xml.responseText);
+            let json_data = JSON.parse(xml.responseText);
+            console.log(json_data);
+
           }
           else{
             console.log("error");

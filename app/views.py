@@ -269,7 +269,7 @@ def get_audio():
     if os.path.exists(path) and os.path.isdir(path):
         clips = os.listdir(path)
         clips = [path+name for name in clips]
-        print(clips)
+        # print(clips)
         return jsonify({"clips":clips})
     return jsonify({"error":"No audio files"}),404
 # @app.route('/test')
