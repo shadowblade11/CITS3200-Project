@@ -1,72 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const option1 = document.getElementById("option1");
-    const studentImage = document.getElementById("student-image");
-
-    option1.addEventListener("click", function () {
-      // Replace this with code to set the image source based on the student
-      // You can set the image source to the URL of the student's image
-      studentImage.src = "{{url_for('static',filename="Images/soundwave.png")}}";
-    });
-  });
-
-
-  document.addEventListener("DOMContentLoaded", function () {
-    // Find the search button and student picture elements
-    const searchButton = document.getElementById("search-button");
-    const studentPicture = document.getElementById("student-picture");
-    const studentPicture2 = document.getElementById("student-picture2");
-    // Add a click event listener to the search button
-    searchButton.addEventListener("click", function (event) {
-      event.preventDefault(); // Prevent the form submission (if it's within a form)
-
-      // Replace the src attribute with the URL of the student's picture
-      studentPicture.src = "{{url_for('static', filename='Images/studentdata.png')}}";
-      studentPicture2.src = "{{url_for('static', filename='Images/studentdata2.png')}}";
-
-      // You can set the image source based on the student or your logic here
-      // For now, it's set to a placeholder URL
-    });
-  });
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-    const searchButton = document.getElementById("search-button");
-    const week1Button = document.getElementById("option1");
-    const giveFeedbackButton = document.getElementById("give-feedback-button");
-    const feedbackBox = document.getElementById("feedback-box");
-    const feedbackInput = document.getElementById("feedback-input");
-    const submitButton = document.getElementById("submit-feedback");
-    const week = document.getElementById("week");
-    searchButton.addEventListener("click", function () {
-      week.style.display = "block";
-
-    });
-    // Show the "Give Feedback" button when the "Week 1" button is clicked
-    week1Button.addEventListener("click", function () {
-      week1Button.style.display = "none";
-      giveFeedbackButton.style.display = "block";
-    });
-
-    // Show the feedback box when the "Give Feedback" button is clicked
-    giveFeedbackButton.addEventListener("click", function () {
-      giveFeedbackButton.style.display = "none";
-      feedbackBox.style.display = "block";
-    });
-
-    // Optional: Add functionality to submit feedback
-    submitButton.addEventListener("click", function () {
-      const feedbackText = feedbackInput.value;
-      // You can process and send the feedback to your server here
-      alert("Feedback submitted: " + feedbackText);
-      feedbackBox.style.display = "none"; // Hide the feedback box after submission
-    });
-  });
-</script> -->
-
   <div class="content">
     <!-- <form class="search-form"> -->
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
@@ -98,7 +32,6 @@
     const submitButton = document.getElementById("search-button");
     const WkRecording = document.getElementById("WkRecording");
     submitButton.onclick = () => {
-      // console.log("hello");
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
         GettingUser(textvalue);
@@ -113,7 +46,6 @@
         if(xml.readyState == 4){
           if(xml.status==200){
             let weeks = JSON.parse(xml.responseText).weeks;
-            console.log(weeks);
             for (let value of weeks){
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
