@@ -31,6 +31,7 @@
   <script>
     const submitButton = document.getElementById("search-button");
     const WkRecording = document.getElementById("WkRecording");
+    const feedback_box = document.querySelector("textarea");
     submitButton.onclick = () => {
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
@@ -61,8 +62,7 @@
             container.innerHTML = "";
 
             WkRecording.innerHTML = "";
-
-            let feedback_box = document.getElementById("feedback-box");
+            // let feedback_box = document.getElementById("feedback-box");
             feedback_box.style.display="none";
           }
         }
@@ -123,7 +123,7 @@
               container.appendChild(small_container);
             }
             
-            let feedback_box = document.getElementById("feedback-box");
+            // let feedback_box = document.getElementById("feedback-box");
             feedback_box.style.display= "block";
           }
           else{
@@ -132,6 +132,11 @@
         }
       }
       xml.send(JSON.stringify({ "userID": userID, "week":week}));
+    }
+
+
+    function sendingFeedback(){
+
     }
   </script>
 {% endblock %}
