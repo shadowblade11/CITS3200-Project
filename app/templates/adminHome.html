@@ -31,7 +31,7 @@
   <script>
     const submitButton = document.getElementById("search-button");
     const WkRecording = document.getElementById("WkRecording");
-    const feedback_box = document.querySelector("textarea");
+    const feedback_box = document.getElementById("feedback-box");
     submitButton.onclick = () => {
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
@@ -62,6 +62,7 @@
             container.innerHTML = "";
 
             WkRecording.innerHTML = "";
+
             // let feedback_box = document.getElementById("feedback-box");
             feedback_box.style.display="none";
           }
@@ -136,7 +137,7 @@
 
 
     function sendingFeedback(){
-
+      let feedback = feedback_box.value;
     }
   </script>
 {% endblock %}
