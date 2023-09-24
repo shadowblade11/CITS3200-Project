@@ -147,7 +147,7 @@
             // console.log(json_data.clips);
             clips = json_data.clips;
             // console.log(json_data.user_scores);
-            user_scores = json_data.clips;
+            user_scores = json_data.user_scores;
             // console.log(json_data.sys_scores);
             sys_scores = json_data.sys_scores;
             let arr_length = clips.length;
@@ -168,8 +168,21 @@
               img.src = `${image_path}/${image_name}`;
               img.width = "400";
               img.height = "160";
+
+              let user_sc = document.createElement("p");
+              user_sc.textContent = user_scores[idx];
+
+              let sys_sc = document.createElement("p");
+              sys_sc.textContent = sys_scores[idx];
+
+              let name = document.createElement("p");
+              name.textContent = clips[idx];
+
+              small_container.appendChild(name);
               small_container.appendChild(aud_clip);
               small_container.appendChild(img);
+              small_container.appendChild(user_sc);
+              small_container.appendChild(sys_sc);
               container.appendChild(small_container);
             }
           }
