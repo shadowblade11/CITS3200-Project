@@ -32,6 +32,7 @@
     const submitButton = document.getElementById("search-button");
     const WkRecording = document.getElementById("WkRecording");
     const feedback_box = document.getElementById("feedback-box");
+    const textarea_box = document.getElementById("feedback-input");
     const submitFeedbackButton = document.getElementById("submit-feedback");
     submitButton.onclick = () => {
       let textvalue = document.getElementById("search-bar").value;
@@ -127,6 +128,7 @@
             
             // let feedback_box = document.getElementById("feedback-box");
             feedback_box.style.display= "block";
+            textarea_box.dataset.week = week;
           }
           else{
             console.log("error");
@@ -138,8 +140,9 @@
 
 
     function sendingFeedback(){
-      let feedback = document.getElementById("feedback-input");
-      console.log(feedback.value);
+      let feedback = textarea_box.value;
+      console.log(feedback);
+      console.log(textarea_box.dataset.week);
     }
 
     submitFeedbackButton.onclick = function(){
