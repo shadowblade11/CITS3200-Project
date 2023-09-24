@@ -289,6 +289,11 @@ def save_feedback():
 
 
 
+@app.route('/get-feedback',methods=["GET"])
+def send_feedback():
+    return "s",200
+
+
 
 
 
