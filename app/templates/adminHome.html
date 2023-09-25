@@ -7,9 +7,9 @@
       <br>
       <br>
 
+      <!--Empty div used to dynamically hold the list of weeks-->
     <div class="dropdown">
         <button class="dropbtn" id="week">Week Recording</button>
-
      <div id = "WkRecording" class="dropdown-content">
      </div>
     </div>
@@ -18,7 +18,7 @@
 
     </div>
     <br>
-        <div id="feedback-box"style="display: none;">
+        <div id="feedback-box"style="display: none;"> <!--Display has to be none initially-->
             <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
             <button id="submit-feedback">Submit</button>
         </div>
@@ -27,11 +27,15 @@
       <br>
   </div>
   <script>
+    // global variables
     const submitButton = document.getElementById("search-button");
     const WkRecording = document.getElementById("WkRecording");
     const feedback_box = document.getElementById("feedback-box");
     const textarea_box = document.getElementById("feedback-input");
     const submitFeedbackButton = document.getElementById("submit-feedback");
+    const container = document.getElementById("res");
+
+    // on click, search for user
     submitButton.onclick = () => {
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
@@ -40,6 +44,7 @@
       }
     }
 
+    // searching for user, dynamically creates list if user exists
     function GettingUser(userID){
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
@@ -60,9 +65,7 @@
           }
           else{
             alert("User does not exist");
-            let container = document.getElementById("res");
             container.innerHTML = "";
-
             feedback_box.style.display="none";
           }
         }
@@ -70,6 +73,7 @@
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
+    // Gets audio clips after admin clicks a specific week
     function gettingAudioClips(userID,week){
       const xml = new XMLHttpRequest();
       xml.open('POST',"/get-audio",true);
@@ -77,42 +81,43 @@
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
           if(xml.status==200){
-            let json_data = JSON.parse(xml.responseText);
 
-            clips = json_data.clips;
-            user_scores = json_data.user_scores;
-            sys_scores = json_data.sys_scores;
+            // get json data from request
+            let json_data = JSON.parse(xml.responseText);
+            let clips = json_data.clips;
+            let user_scores = json_data.user_scores;
+            let sys_scores = json_data.sys_scores;
 
             let arr_length = clips.length;
-
-            let container = document.getElementById("res");
             container.innerHTML = "";
 
             let audio_path = `/static/audio/users/${userID}/${week}`;
             let image_path = `/static/images/users/${userID}/${week}`;
             for (let idx = 0; idx < arr_length; idx++){
               let small_container = document.createElement("div");
-              let aud_clip = document.createElement("audio");
 
+              // create audio element
+              let aud_clip = document.createElement("audio");
               aud_clip.controls = true;
               aud_clip.type = "audio/wav";
               aud_clip.src = `${audio_path}/${clips[idx]}`;
 
+              // create image element
               let img = document.createElement("img");
               let image_name = clips[idx].replace(".wav",".png");
               img.src = `${image_path}/${image_name}`;
               img.width = "400";
               img.height = "160";
 
+              // create p element to hold scores and name
               let user_sc = document.createElement("p");
               user_sc.textContent = user_scores[idx];
-
               let sys_sc = document.createElement("p");
               sys_sc.textContent = sys_scores[idx];
-
               let name = document.createElement("p");
               name.textContent = clips[idx];
 
+              // adds all the element to the container
               small_container.appendChild(name);
               small_container.appendChild(aud_clip);
               small_container.appendChild(img);
@@ -126,7 +131,7 @@
             feedback_box.style.display= "block";
             textarea_box.dataset.week = week;
             textarea_box.dataset.user = userID;
-            let prior_feedback = gettingFeedback(userID,week,function(response){
+            gettingFeedback(userID,week,function(response){
               textarea_box.value = response;
             });
 
@@ -139,7 +144,7 @@
       xml.send(JSON.stringify({ "userID": userID, "week":week}));
     }
 
-
+    // sending feedback to get saved
     function sendingFeedback(){
       let feedback = textarea_box.value;
       textarea_box.value = "";
@@ -163,7 +168,7 @@
     submitFeedbackButton.onclick = function(){
       sendingFeedback();
     }
-
+    // getting feedback from the DB
     function gettingFeedback(user,week,callback){
       const xml = new XMLHttpRequest();
       const url = `/get-feedback?user=${user}&week=${week}`;
