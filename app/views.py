@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, redirect, url_for, flash, request, session
+from flask import render_template, redirect, url_for, flash, request, session, jsonify
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import url_parse
 
@@ -243,6 +243,81 @@ def Account():
 @app.route('/start')
 def start():
     return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
+
+@app.route('/get-user', methods=['POST'])
+def get_user():
+    data = request.get_json()
+    user = data.get('userID')
+    # print(user)
+    path = f"./app/static/audio/users/{user}"
+    if os.path.exists(path) and os.path.isdir(path):
+        wk = os.listdir(path)
+        return jsonify({"weeks": wk})
+    else:
+        return jsonify({"error": "User not found or no audio files"}), 404
+    
+
+@app.route('/get-audio', methods=["POST"])
+def get_audio():
+    data = request.get_json()
+    user = data.get('userID')
+    week = data.get('week')
+    path = f"./app/static/audio/users/{user}/{week}"
+    print(path)
+    if os.path.exists(path) and os.path.isdir(path):
+        clips = os.listdir(path)
+        # THIS IS JUST AN EXAMPLE DATA, REPLACE THIS ONCE DB IS IMPLEMENTED
+        EXAMPLE_DATA_USER = [5 for i in clips]
+        EXAMPLE_DATA_SYS = [8 for i in clips]
+        # print(EXAMPLE_DATA_USER)
+        return jsonify({"clips":clips,"user_scores":EXAMPLE_DATA_USER,"sys_scores": EXAMPLE_DATA_SYS})
+    return jsonify({"error":"No audio files"}),404
+
+@app.route('/save-feedback',methods=["POST"])
+def save_feedback():
+    data = request.get_json()
+    text = data.get('txt')
+    week = data.get('week')
+    user = data.get('user')
+    #THIS IS WHERE WE CAN STORE THE FEEDBACK
+    try:
+        # REPLACE THIS WITH THE TABLE ASSIGNMENT
+        print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
+        return "passed",200
+    except:
+        return "failed",404
+
+
+
+@app.route('/get-feedback',methods=["GET"])
+def send_feedback():
+    user = request.args.get('user')
+    week = request.args.get('week')
+    # print(f"User: {user}, Week: {week}")
+    # THIS IS WHERE WE RETRIVE FEEDBACK FROM THE DATABASE
+
+    #FAKE DATA
+    data = {
+    "123": {
+        'week1': 'This is a random sentence for week 1.',
+        'week2': 'Here is a different sentence for week 2.',
+        'week3': 'Week 3 has its own unique sentence as well.'
+    }
+    }
+    try:
+        string = data[user][week]
+        return string,200
+    except:
+        return "",404
+
+
+
+
+
+
+
+
+
 
 
 # @app.route('/test')
