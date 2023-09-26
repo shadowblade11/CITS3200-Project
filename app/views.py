@@ -89,7 +89,9 @@ def administratorLogin():
     if form.validate_on_submit():
         print(form.username.data)
         # user = User.get(form.username.data)
-        user = User.query.filter_by(id=form.username.data).first()
+        user = User.get(id= form.username.data)
+        # user = User.query.filter_by(id=form.username.data).first()
+        print(user)
         if user is None:
             return redirect(url_for('administratorLogin'))
         if not user.is_admin or not user.check_passwd(form.passwd.data):
@@ -289,6 +291,10 @@ def save_feedback():
     text = data.get('txt')
     week = data.get('week')
     user = data.get('user')
+    print(user)
+    print(text)
+    # print(week)
+    week = int(week[-1])
     #THIS IS WHERE WE CAN STORE THE FEEDBACK
     try:
         # REPLACE THIS WITH THE TABLE ASSIGNMENT
@@ -304,6 +310,7 @@ def save_feedback():
 def send_feedback():
     user = request.args.get('user')
     week = request.args.get('week')
+    week = int(week[-1])
     # print(f"User: {user}, Week: {week}")
     # THIS IS WHERE WE RETRIVE FEEDBACK FROM THE DATABASE
 
