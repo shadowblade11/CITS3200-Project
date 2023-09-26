@@ -27,7 +27,8 @@
         </div>
         <div class="self-assessment">
           <label for="score-{{loop.index}}">Similarity Score:</label>
-          <input type="range" id="score-{{loop.index}}" name="score-{{loop.index}}" min="0" max="10" step="0.5"/>
+          <input type="range" min="0" max="10" value="5" class="slider" id="simRange">
+          <p>Value: <span id="startingscore"></span></p>
         </div>
       </div>
     </div>
@@ -206,6 +207,14 @@
         }
 
       }
+
+      // Slider Value
+        var slider = document.getElementById("simRange");
+        var output = document.getElementById("startingscore");
+        output.innerHTML = slider.value;
+        slider.oninput = function() {
+          output.innerHTML = this.value;
+        }
 
     })
   </script>
