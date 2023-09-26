@@ -40,3 +40,9 @@
   .task-container .task .count-container {
     display: flex;
   }
+
+.question-container
+audio::-webkit-media-controls-speed-backward,
+audio::-webkit-media-controls-speed-forward {
+  display: none;
+}
