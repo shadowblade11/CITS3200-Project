@@ -1,93 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const option1 = document.getElementById("option1");
-    const studentImage = document.getElementById("student-image");
-
-    option1.addEventListener("click", function () {
-      // Replace this with code to set the image source based on the student
-      // You can set the image source to the URL of the student's image
-      studentImage.src = "{{url_for('static',filename="Images/soundwave.png")}}";
-    });
-  });
-
-
-  document.addEventListener("DOMContentLoaded", function () {
-    // Find the search button and student picture elements
-    const searchButton = document.getElementById("search-button");
-    const studentPicture = document.getElementById("student-picture");
-    const studentPicture2 = document.getElementById("student-picture2");
-    // Add a click event listener to the search button
-    searchButton.addEventListener("click", function (event) {
-      event.preventDefault(); // Prevent the form submission (if it's within a form)
-
-      // Replace the src attribute with the URL of the student's picture
-      studentPicture.src = "{{url_for('static', filename='Images/studentdata.png')}}";
-      studentPicture2.src = "{{url_for('static', filename='Images/studentdata2.png')}}";
-
-      // You can set the image source based on the student or your logic here
-      // For now, it's set to a placeholder URL
-    });
-  });
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-    const searchButton = document.getElementById("search-button");
-    const week1Button = document.getElementById("option1");
-    const giveFeedbackButton = document.getElementById("give-feedback-button");
-    const feedbackBox = document.getElementById("feedback-box");
-    const feedbackInput = document.getElementById("feedback-input");
-    const submitButton = document.getElementById("submit-feedback");
-    const week = document.getElementById("week");
-    searchButton.addEventListener("click", function () {
-      week.style.display = "block";
-
-    });
-    // Show the "Give Feedback" button when the "Week 1" button is clicked
-    week1Button.addEventListener("click", function () {
-      week1Button.style.display = "none";
-      giveFeedbackButton.style.display = "block";
-    });
-
-    // Show the feedback box when the "Give Feedback" button is clicked
-    giveFeedbackButton.addEventListener("click", function () {
-      giveFeedbackButton.style.display = "none";
-      feedbackBox.style.display = "block";
-    });
-
-    // Optional: Add functionality to submit feedback
-    submitButton.addEventListener("click", function () {
-      const feedbackText = feedbackInput.value;
-      // You can process and send the feedback to your server here
-      alert("Feedback submitted: " + feedbackText);
-      feedbackBox.style.display = "none"; // Hide the feedback box after submission
-    });
-  });
-</script> -->
-
   <div class="content">
-    <!-- <form class="search-form"> -->
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
-    <!-- </form> -->
       <br>
       <br>
 
+      <!--Empty div used to dynamically hold the list of weeks-->
     <div class="dropdown">
         <button class="dropbtn" id="week">Week Recording</button>
-
      <div id = "WkRecording" class="dropdown-content">
      </div>
     </div>
 
-     <div class="student-image" id="student-info">
-  <!-- Student image will be displayed here -->
-        <img id="student-image" alt="" width="100">
-        <button id="give-feedback-button">Give Feedback</button>
-    <!-- Feedback text box (initially hidden) -->
-        <div id="feedback-box">
+    <div id = "res">
+
+    </div>
+    <br>
+        <div id="feedback-box"style="display: none;"> <!--Display has to be none initially-->
             <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
             <button id="submit-feedback">Submit</button>
         </div>
@@ -96,26 +27,33 @@
       <br>
   </div>
   <script>
+    // global variables
     const submitButton = document.getElementById("search-button");
     const WkRecording = document.getElementById("WkRecording");
+    const feedback_box = document.getElementById("feedback-box");
+    const textarea_box = document.getElementById("feedback-input");
+    const submitFeedbackButton = document.getElementById("submit-feedback");
+    const container = document.getElementById("res");
+
+    // on click, search for user
     submitButton.onclick = () => {
-      // console.log("hello");
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
         GettingUser(textvalue);
-        console.log(textvalue);
+        document.getElementById("search-bar").value = "";
       }
     }
 
+    // searching for user, dynamically creates list if user exists
     function GettingUser(userID){
       const xml = new XMLHttpRequest();
+      WkRecording.innerHTML = "";
       xml.open('POST',"/get-user",true);
       xml.setRequestHeader("Content-Type", "application/json");
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
           if(xml.status==200){
             let weeks = JSON.parse(xml.responseText).weeks;
-            console.log(weeks);
             for (let value of weeks){
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
@@ -126,28 +64,126 @@
             }
           }
           else{
-            console.log("error");
+            alert("User does not exist");
+            container.innerHTML = "";
+            feedback_box.style.display="none";
           }
         }
       }
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
-    function gettingAudioClips(userID,value){
+    // Gets audio clips after admin clicks a specific week
+    function gettingAudioClips(userID,week){
       const xml = new XMLHttpRequest();
       xml.open('POST',"/get-audio",true);
       xml.setRequestHeader("Content-Type", "application/json");
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
           if(xml.status==200){
-            console.log('success');
+
+            // get json data from request
+            let json_data = JSON.parse(xml.responseText);
+            let clips = json_data.clips;
+            let user_scores = json_data.user_scores;
+            let sys_scores = json_data.sys_scores;
+
+            let arr_length = clips.length;
+            container.innerHTML = "";
+
+            let audio_path = `/static/audio/users/${userID}/${week}`;
+            let image_path = `/static/images/users/${userID}/${week}`;
+            for (let idx = 0; idx < arr_length; idx++){
+              let small_container = document.createElement("div");
+
+              // create audio element
+              let aud_clip = document.createElement("audio");
+              aud_clip.controls = true;
+              aud_clip.type = "audio/wav";
+              aud_clip.src = `${audio_path}/${clips[idx]}`;
+
+              // create image element
+              let img = document.createElement("img");
+              let image_name = clips[idx].replace(".wav",".png");
+              img.src = `${image_path}/${image_name}`;
+              img.width = "400";
+              img.height = "160";
+
+              // create p element to hold scores and name
+              let user_sc = document.createElement("p");
+              user_sc.textContent = user_scores[idx];
+              let sys_sc = document.createElement("p");
+              sys_sc.textContent = sys_scores[idx];
+              let name = document.createElement("p");
+              name.textContent = clips[idx];
+
+              // adds all the element to the container
+              small_container.appendChild(name);
+              small_container.appendChild(aud_clip);
+              small_container.appendChild(img);
+              small_container.appendChild(user_sc);
+              small_container.appendChild(sys_sc);
+
+              small_container.style.border = "1px solid black";
+              container.appendChild(small_container);
+            }
+
+            feedback_box.style.display= "block";
+            textarea_box.dataset.week = week;
+            textarea_box.dataset.user = userID;
+            gettingFeedback(userID,week,function(response){
+              textarea_box.value = response;
+            });
+
           }
           else{
             console.log("error");
           }
         }
       }
-      xml.send(JSON.stringify({ "userID": userID, "value":value }));
+      xml.send(JSON.stringify({ "userID": userID, "week":week}));
+    }
+
+    // sending feedback to get saved
+    function sendingFeedback(){
+      let feedback = textarea_box.value;
+      textarea_box.value = "";
+
+      const xml = new XMLHttpRequest();
+      xml.open('POST',"/save-feedback",true);
+      xml.setRequestHeader("Content-Type", "application/json");
+      xml.onreadystatechange = function(){
+        if(xml.readyState == 4){
+          if(xml.status==200){
+            alert(`Feedback for user:${textarea_box.dataset.user} was saved!`);
+          }else{
+            alert("Feedback was not saved");
+          }
+        }
+      }
+      xml.send(JSON.stringify({"txt":feedback,"week":textarea_box.dataset.week,"user":textarea_box.dataset.user}))
+      
+    }
+
+    submitFeedbackButton.onclick = function(){
+      sendingFeedback();
+    }
+    // getting feedback from the DB
+    function gettingFeedback(user,week,callback){
+      const xml = new XMLHttpRequest();
+      const url = `/get-feedback?user=${user}&week=${week}`;
+      xml.open('GET', url, true);
+      xml.setRequestHeader("Content-Type", "application/json");
+      xml.onreadystatechange = function(){
+        if(xml.readyState == 4){
+          if(xml.status==200){
+            callback(xml.responseText);
+          }else{
+            console.log('err');
+          }
+        }
+      }
+      xml.send();
     }
   </script>
 {% endblock %}
