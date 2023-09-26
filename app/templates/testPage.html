@@ -14,7 +14,7 @@
     <div class="task">
       <div class="question-container">
         <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="400" height="160"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
-        <audio class = "supplied_clip" id="{{clip}}" controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
+        <audio class = "supplied_clip" id="{{clip}}" controls controlslist="nofullscreen nodownload noremoteplayback noplaybackrate foobar" src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
       </div>
       <div class="response-container">
         <div class="button-container">
