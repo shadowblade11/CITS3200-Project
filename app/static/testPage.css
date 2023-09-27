@@ -17,6 +17,8 @@
 
 .task-container {
   border: solid 2px black;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
   .task-container .task {
