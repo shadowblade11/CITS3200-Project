@@ -2,15 +2,7 @@
 {% block content %}
 
   <div class="content">
-    <h1>Home Page</h1>
-    <h2>Assessed Test</h2>
-    <label for="Assessed Test">Assessed Test</label> 
-    <select name="TEST" id="Test"> 
-        <option value="Test1">Test1</option> 
-        <option value="Test2">Test2</option> 
-        <option value="Test3">Test3</option> 
-        <option value="Test4">Test4</option> 
-    </select>
+    <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{user}}</span>!</h1>
     <h2>Unassessed Test</h2>
     <label for="Assessed Test">Unassessed Test</label> 
     <select name="UnTEST" id="UnTest"> 
@@ -20,6 +12,14 @@
         <option value="Test4">Test4</option> 
     </select>
     <a href = "{{url_for('test' ,username=username, data='week1')}}">test 1</a>
+    <h2>Assessed Test</h2>
+    <label for="Assessed Test">Assessed Test</label> 
+    <select name="TEST" id="Test"> 
+        <option value="Test1">Test1</option> 
+        <option value="Test2">Test2</option> 
+        <option value="Test3">Test3</option> 
+        <option value="Test4">Test4</option> 
+    </select>
   </div>
 
 {% endblock %}
