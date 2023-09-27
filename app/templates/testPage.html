@@ -9,8 +9,8 @@
     <h1 class="flex">This Is Test:&nbsp;<span id="week">{{week}}</span></h1>
   </div>
   {% for clip in audio_clips%}
-  <div class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
-    <h1 class="task-header">Task: {{loop.index}}</h1>
+  <details class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
+    <summary class="task-header"> <h1>Task: {{loop.index}}</h1></summary>
     <div class="task">
       <div class="question-container">
         <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="400" height="160"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
@@ -24,21 +24,39 @@
           <p class = "count">3</p>
         </div>
         <div class="recordings">
-      
+          <div class="recording attempt-3">
+            <h3 class="task-header">Attempt: 1</h3>
+            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+          </div>
+          <div class="recording attempt-2">
+            <h3 class="task-header">Attempt: 2</h3>
+            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+          </div>
+          <div class="recording attempt-1">
+            <h3 class="task-header">Attempt: 3</h3>
+            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+          </div>
+        </div>
+      </div>
+
+      <div class="assessment-container">
+        <div class="test-scores">
+          <div class="self-assessment-scores">
+            <h3>Self Assessment</h3>
+            <label for="score-{{loop.index}}">Similarity Score:</label>
+            <input type="range" min="0" max="10" value="5" class="slider self-assessment-range" name="score-{{loop.index}}">
+            <p>Value: <span class="self-assessment-value"></span></p>
+          </div>
+          <div class="computed-scores">
+            <h3>Similarity Function</h3>
+            <p>Value: <span class="computed-score-value"></span></p>
+          </div>
         </div>
 
-
-
-
-      </div>
-      <div class="self-assessment">
-        <label for="score-{{loop.index}}">Similarity Score:</label>
-        <input type="range" min="0" max="10" value="5" class="slider" id="simRange">
-        <p>Value: <span id="startingscore"></span></p>
         <button class="submit">Submit</button> <!-- perhaps add a img-->
       </div>
     </div>
-  </div>
+  </details>
   {% endfor %}
 
   <script>
@@ -60,6 +78,7 @@
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('div.task-container');
     const submitButtons = document.querySelectorAll('button.submit');
+    const scoreContainers = document.querySelectorAll('.test-scores');
     const submissionAttempts = document.querySelectorAll('p.count');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
     const userID = document.getElementById("user").innerHTML;
@@ -74,6 +93,12 @@
 
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
+
+        let countContainer = listOfDivs[index].querySelector(".count");
+        let count = Number(countContainer.innerHTML);
+
+        if (count <= 0) return; 
+
         // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
         if (RECORDING == 0) {
           RECORDING = 1;
@@ -98,24 +123,84 @@
               blobList[index] = blob;
               // clear the recordedchunk
               recordedChunksList[index] = [];
-            
               
               //indicate that new audio clip has been made
               newRecording[index] = 1;
+              
+              let currentRecordingContainer = listOfDivs[index].querySelector(`.recordings .attempt-${count}`);
+
+              //decrease count
+              countContainer.innerHTML = count - 1;
 
               // check if audioplayer exist and change src to audioclip
-              const existingAudioPlayer = document.getElementById("audioplayer" + index);
-              if (existingAudioPlayer){
+              const existingAudioPlayer = document.getElementById("audioplayer" + index + count);
+              if (existingAudioPlayer) {
                 existingAudioPlayer.src = URL.createObjectURL(blob);
 
-              }else{ //create new audioplayer if it doesn't exist
+              } else { //create new audioplayer if it doesn't exist
                 var audioPlayer = document.createElement("audio");
                 audioPlayer.controls = true;
-                audioPlayer.id = "audioplayer" + index;
+                audioPlayer.id = "audioplayer" + index + count;
                 audioPlayer.src = URL.createObjectURL(blob);
-                listOfDivs[index].querySelector(".recordings").appendChild(audioPlayer);
+
+                let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
+                currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
+                radioSelector.removeAttribute("disabled");
+              }
+
+              // This is an old pointer whose value has decremented to 0, so disable the button
+              if (count === 1) {
+                listOfDivs[index].querySelector(".record").classList.add("disabled");
               }
               
+              /*
+              // on success, request for image creation
+              
+              // get needed information
+              const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
+              let name_of_clip = audioplayer.id;
+
+              const json = JSON.stringify(
+                {
+                  "user":userID,
+                  "name":name_of_clip,
+                  "week":weekID,
+                  "attempt":count
+                }
+              );
+              
+              xmlhttpImage = new XMLHttpRequest();
+              xmlhttpImage.open("POST","/send-image",true);
+              xmlhttpImage.setRequestHeader('Content-Type','application/json');
+              xmlhttpImage.send(json);
+
+              xmlhttpImage.onreadystatechange = function() {
+                if(xmlhttpImage.readyState==4) {
+                  if(xmlhttpImage.status==200) {
+                    name_of_clip = name_of_clip.replaceAll(' ','_');
+                    
+                    //path for image
+                    let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + count + '.png';
+
+                    // check if img exist and update src
+                    var img = document.getElementById("recorded_image" + index + count);
+                    if(img){
+                      img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
+                    }else{ // create new img
+                      var create_image = document.createElement("img");
+                      create_image.src = filename;
+                      create_image.width = "400";
+                      create_image.height = "160";
+                      create_image.id = "recorded_image" + index + count;
+                      listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index + count));
+                    }
+                  }
+                  else{
+                    console.log("error");
+                  }
+                }
+              }
+              */
             }
             
           }).catch((err)=>{
@@ -160,9 +245,6 @@
             }
           )
 
-          //decrease count
-          count.innerHTML = Number(count.innerHTML) - 1;
-
           // send audio to be saved
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.open("POST", "/save-audio",true);
@@ -173,7 +255,7 @@
                         xmlhttpImage = new XMLHttpRequest();
                         xmlhttpImage.open("POST","/send-image",true);
                         xmlhttpImage.setRequestHeader('Content-Type','application/json');
-                        xmlhttpImage.send(json)
+                        xmlhttpImage.send(json);
 
                         xmlhttpImage.onreadystatechange = function() {
                           if(xmlhttpImage.readyState==4){
@@ -184,7 +266,7 @@
                               let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
 
                               // check if img exist and update src
-                              var img = document.getElementById("recorded_image" + index);
+                              var img = document.getElementById("recorded_image" + index + count);
                               if(img){
                                 img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
                               }else{ // create new img
@@ -192,8 +274,8 @@
                                 create_image.src = filename;
                                 create_image.width = "400";
                                 create_image.height = "160";
-                                create_image.id = "recorded_image" + index;
-                                listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index));
+                                create_image.id = "recorded_image" + index + count;
+                                listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index + count));
                               }
                             }
                             else{
@@ -214,14 +296,16 @@
 
       }
 
-      // Slider Value
-        var slider = document.getElementById("simRange");
-        var output = document.getElementById("startingscore");
-        output.innerHTML = slider.value;
-        slider.oninput = function() {
-          output.innerHTML = this.value;
-        }
+    });
 
-    })
+    scoreContainers.forEach((scoreContainer,index) => {
+      const selfAssessmentRange = scoreContainer.querySelector('.self-assessment-range');
+      const selfAssessmentValue = scoreContainer.querySelector('.self-assessment-value');
+      selfAssessmentValue.innerHTML = selfAssessmentRange.value;
+
+      selfAssessmentRange.oninput = () => {
+        selfAssessmentValue.innerHTML = selfAssessmentRange.value;
+      }
+    });
   </script>
 {% endblock %}
