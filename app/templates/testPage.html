@@ -17,19 +17,25 @@
         <audio class = "supplied_clip" id="{{clip}}" controls controlslist="nofullscreen nodownload noremoteplayback noplaybackrate foobar" src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
       </div>
       <div class="response-container">
-        <div class="button-container">
-          <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
-          <button class="submit">Submit</button> <!-- perhaps add a img-->
-        </div>
+
+        <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
         <div class="count-container">
           <p class = "count-text">Submissions:&nbsp;</p>
           <p class = "count">3</p>
         </div>
-        <div class="self-assessment">
-          <label for="score-{{loop.index}}">Similarity Score:</label>
-          <input type="range" min="0" max="10" value="5" class="slider" id="simRange">
-          <p>Value: <span id="startingscore"></span></p>
+        <div class="recordings">
+      
         </div>
+
+
+
+
+      </div>
+      <div class="self-assessment">
+        <label for="score-{{loop.index}}">Similarity Score:</label>
+        <input type="range" min="0" max="10" value="5" class="slider" id="simRange">
+        <p>Value: <span id="startingscore"></span></p>
+        <button class="submit">Submit</button> <!-- perhaps add a img-->
       </div>
     </div>
   </div>
@@ -107,7 +113,7 @@
                 audioPlayer.controls = true;
                 audioPlayer.id = "audioplayer" + index;
                 audioPlayer.src = URL.createObjectURL(blob);
-                listOfDivs[index].querySelector(".response-container").insertBefore(audioPlayer, listOfDivs[index].querySelector(".button-container"));
+                listOfDivs[index].querySelector(".recordings").appendChild(audioPlayer);
               }
               
             }

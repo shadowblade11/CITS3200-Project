@@ -19,33 +19,37 @@
   border: solid 2px black;
   margin-left: 10%;
   margin-right: 10%;
+  display: flex;
+  flex-direction: column;
 }
 
   .task-container .task {
     display: flex;
-  }
-
-  .task-container .task .question-container,
-  .task-container .task .response-container {
-    flex: 1;
-    display: flex;
     flex-direction: column;
-    align-items: center;
   }
 
-  .task-container .task .button-container {
-    display: flex;
-    width: 50%;
-    justify-content: space-around;
-    margin-top: 1.5em;
-  }
+    .task-container .task .question-container,
+    .task-container .task .response-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-  .task-container .task .count-container {
-    display: flex;
-  }
+    .task-container .task .button-container {
+      display: flex;
+      width: 50%;
+      justify-content: space-around;
+      margin-top: 1.5em;
+    }
 
-.response-container .button-container .record,
-.response-container .button-container .submit {
+    .task-container .task .response-container .count-container {
+      display: flex;
+
+    }
+
+.response-container .record,
+.self-assessment .submit {
   text-decoration: none;
   color: white;
   font-weight: bold;
@@ -57,9 +61,8 @@
   border-radius: 40px;
 }
 
-.self-assessment-container {
+.self-assessment {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
