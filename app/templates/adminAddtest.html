@@ -3,42 +3,47 @@
 <body>
     <h1>Create Test</h1>
   <div class="content">
-    <form id="test-form" enctype="multipart/form-data">
+    <form id="test-form" enctype="multipart/form-data" method="POST" action={{ url_for('upload_file') }}>
         <label for="test-name">Test Name:</label>
         <input type="text" id="test-name" name="testName" required>
         
          
         <label for="file-upload">Upload File:</label>
-        <input type="file" id="file-upload" name="testFile" accept=".pdf, .docx, .txt" required>
-         
+        <input type="file" id="file-upload" name="testFile" accept=".pdf" required>
+
         <button type="submit">Upload Test</button>
       </form>
       <script>
-        document.querySelector("#test-form").addEventListener("submit", function (event) {
-          event.preventDefault();
-      
-          const testName = document.querySelector("#test-name").value;
-          const fileInput = document.querySelector("#file-upload");
-          const selectedFile = fileInput.files[0];
-      
-          if (!selectedFile) {
-            alert("Please select a file to upload.");
-            return;
-          }
-      
-          // Display uploaded test details
-          const uploadedTestSection = document.querySelector(".uploaded-test");
-          const uploadedTestInfo = document.createElement("div");
-          uploadedTestInfo.innerHTML = `
-            <p>Test Name: ${testName}</p>
-            <p>Uploaded File: ${selectedFile.name}</p>
-          `;
-          uploadedTestSection.appendChild(uploadedTestInfo);
-      
-          // Clear form fields
-          document.querySelector("#test-form").reset();
-      
-          // Implement file upload logic here
+        document.addEventListener("DOMContentLoaded", function() {
+            const uploadButton = document.getElementById("upload-button");
+
+            uploadButton.addEventListener("click", function () {
+                const testName = document.getElementById("test-name").value;
+                const fileInput = document.getElementById("file-upload");
+                const selectedFile = fileInput.files[0];
+
+                if (!selectedFile) {
+                    alert("Please select a file to upload.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("testName", testName);
+                formData.append("testFile", selectedFile);
+
+                fetch("/", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("upload-status").textContent = data;
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("An error occurred while uploading the file.");
+                });
+            });
         });
       </script>
       
