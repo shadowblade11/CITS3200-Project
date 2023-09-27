@@ -20,7 +20,7 @@
         <li><a href="{{url_for('administratorLogin')}}">Admin</a></li>
       {% else %}
         <li><a href="{{url_for('logout')}}">Logout</a></li>
-        <li><a href="{{url_for('test', username=username)}}">Tests</a></li>
+        <li><a href="{{url_for('home', username=current_user.id)}}">Tests</a></li>
         <li><a href="{{url_for('grades')}}">Grades</a></li>
       {% endif %}
 
