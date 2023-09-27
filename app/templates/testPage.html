@@ -8,6 +8,14 @@
     <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{user}}</span>!</h1>
     <h1 class="flex">This Is Test:&nbsp;<span id="week">{{week}}</span></h1>
   </div>
+
+  <details class="task-container" open>
+    <summary class="instructions-header"><h1>Instructions</h1></summary>
+    <div class="instructions-content">
+      <p>For each task, you will be given a short audio clip to listen to. You will then be asked to record yourself saying the same thing. You will be given three attempts to record yourself. After each attempt, you will be able to listen to your recording and decide whether you want to keep it or not. You will then be asked to rate how similar your recording is to the original audio clip. You will be able to listen to the original audio clip as many times as you want. Once you are happy with your recording, you can submit it. You will then be given a new audio clip to record.</p>
+    </div>
+  </details>
+
   {% for clip in audio_clips%}
   <details class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
     <summary class="task-header"> <h1>Task: {{loop.index}}</h1></summary>
