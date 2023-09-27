@@ -9,7 +9,7 @@
     <h1 class="flex">This Is Test:&nbsp;<span id="week">{{week}}</span></h1>
   </div>
 
-  <details class="task-container" open>
+  <details class="instructions-container" open>
     <summary class="instructions-header"><h1>Instructions</h1></summary>
     <div class="instructions-content">
       <p>The aim of these tests are to assess your Italian pronounciation and fluency.</p>
@@ -105,7 +105,7 @@
     */
 
     const recordButtons = document.querySelectorAll('button.record');
-    const listOfDivs = document.querySelectorAll('div.task-container');
+    const listOfDivs = document.querySelectorAll('details.task-container');
     const submitButtons = document.querySelectorAll('button.submit');
     const scoreContainers = document.querySelectorAll('.test-scores');
     const submissionAttempts = document.querySelectorAll('p.count');
