@@ -52,10 +52,11 @@ html {
   }
   
   .column {
-    width: 25%;
+    width: 20%;
     padding: 0 0.5rem;
     display: inline-block; 
-    vertical-align: top; 
+    vertical-align: top;
+    margin-left: 5%;
   }
   
   /* Card Styles */
@@ -91,10 +92,6 @@ html {
     padding-top: 5%
   }
   
-  .column {
-    width: 25%; /* Set to 50% to allow two cards side by side */
-  }
-  
   .team-container p:nth-child(3) {
     line-height: 2.5ex;
     height: 7.5ex;
@@ -113,8 +110,9 @@ html {
   }
   
   .image-container img {
-    width: 18em;
-    height: 18em;
+    width: 27em;
+    height: 25em;
+    border: 3px solid black;
   }
   
   /* Button Styles */
