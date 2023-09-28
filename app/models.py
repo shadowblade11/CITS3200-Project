@@ -42,6 +42,7 @@ class DB_Queries(db.Model):
 
 class User(UserMixin, DB_Queries):
     id = db.Column(db.String, primary_key=True)
+    username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
     # completed_tests = db.relationship('Test', secondary='complete', backref='completed_by')
