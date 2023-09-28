@@ -45,7 +45,8 @@ class User(UserMixin, DB_Queries):
     username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
-    # completed_tests = db.relationship('Test', secondary='complete', backref='completed_by')
+    completed_tests = db.relationship('Complete', backref='user')
+    feedback = db.relationship('Feedback', backref='user')
 
     def set_passwd(self, passwd):
         self.password_hash = generate_password_hash(passwd)
@@ -69,7 +70,7 @@ class Complete(DB_Queries):
     completed_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
-    user = db.relationship('User', backref='complete')
+    # user = db.relationship('User', backref='complete')
     completed = db.Column(db.Boolean)
 
     def __init__(self, user):
@@ -82,7 +83,7 @@ class Feedback(DB_Queries):
     feedback = db.Column(db.String(512))
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref='feedback')
+    # user = db.relationship('User', backref='feedback')
 
     def __init__(self, user):
         self.feedback = None
@@ -108,7 +109,7 @@ class Test(DB_Queries):
     test_name = db.Column(db.String(128))
     due_date = db.Column(db.String(128))  # dd/mm/yy
     number_of_questions = db.Column(db.Integer)
-    # user = db.relationship('User', secondary='complete', backref=db.backref('tests', lazy='dynamic'))
+    questions = db.relationship('Question', backref='test')
 
     def __init__(self, week_no, test_name, due_date, no_of_qs):
         self.test_name = test_name
