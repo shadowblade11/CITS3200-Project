@@ -3,11 +3,26 @@
 
   <div class="content">
     <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{username}}</span>!</h1>
-    <div class="intro">
-      <p>Here you can find all the tests you have been assigned.</p>
-      <p>Unassessed tests are due 1 week from the date they are issued.</p>
-      <p>Assessed tests can be reviewed from the drop down below.</p>
+
+    <div class="student-home">
+      <h2>Here you can find all the tests you have been assigned.</h2>
+      <p>Please review the instructions below, before selecting a test.</p>
     </div>
+    <details class="instructions-container" open>
+      <summary class="instructions-header"><h1>Instructions</h1></summary>
+      <div class="instructions-content">
+        <p>This page features the assessed and unassessed tests.</p>
+    
+        <h3>Starting a Test</h3>
+        <p>To start a test, select an available test from the unassessed test drop down. The provided link will take you to the selected test.</p>
+        <h3>Reviewing Previous Tests</h3>
+        <p>You can review past tests by selecting a test from the assessed test drop down.</p> 
+        <h3>Any Issues</h3>
+        <p>If you have any issues, please contact the teaching team or Dr. Marinella Caruso.</p>
+        
+      </div>
+    </details>
+
     <h2>Unassessed Tests</h2>
     <label for="Assessed Test">Unassessed Tests</label> 
     <select name="UnTEST" id="UnTest"> 
