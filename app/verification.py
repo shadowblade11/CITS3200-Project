@@ -4,7 +4,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def generate_v_code(length = 6):  #generate 6 digits verification codes
+
+def generate_v_code(length = 6):  # generate 6 digits verification codes
     chars = string.ascii_letters + string.digits
     return ''.join(random.choice(chars) for _ in range(length))
 

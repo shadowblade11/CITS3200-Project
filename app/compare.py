@@ -73,3 +73,5 @@ list_of_audio_2 = ["1 come ti chiami.wav", "2 come stai.wav", "3 questo e Matteo
 # actual functions to run
 # convert_to_wav_working_format(src,filename)
 # generate_soundwave_image(dst,filename)
+def convert_to_wav_working_format():
+    return None
