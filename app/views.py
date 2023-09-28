@@ -40,7 +40,7 @@ def about():
 @login_required
 def home(username):
     user = User.query.filter_by(id=username).first_or_404()
-    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), user=username)
+    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username)
 
 
 @app.route('/adminHome', methods=["GET", "POST"])
