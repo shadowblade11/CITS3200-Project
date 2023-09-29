@@ -45,8 +45,10 @@ class User(UserMixin, DB_Queries):
     username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
+    
+    #relationships
     completed_tests = db.relationship('Complete', backref='user', lazy='dynamic')
-    # feedback = db.relationship('Feedback', backref='user')
+    feedback = db.relationship('Feedback', backref='user',lazy='dynamic')
 
     def set_passwd(self, passwd):
         self.password_hash = generate_password_hash(passwd)
@@ -55,11 +57,7 @@ class User(UserMixin, DB_Queries):
         return check_password_hash(self.password_hash, passwd)
 
     def __repr__(self):
-        # return f'<id {self.id}, username {self.username}, password_hash {self.password_hash}, is_admin {self.is_admin}, completed tests {self.completed_tests}, feedback {self.feedback}>'
         return f'<id {self.id}, username {self.username}, password_hash {self.password_hash}, is_admin {self.is_admin}>'
-
-    # def __init__(self, id):
-    #     self.id = id
 
 
 @login.user_loader
@@ -72,8 +70,12 @@ class Test(DB_Queries):
     test_name = db.Column(db.String(128))
     due_date = db.Column(db.String(128))  # dd/mm/yy
     number_of_questions = db.Column(db.Integer)
+
+    #relationships
     questions = db.relationship('Question', backref='test',lazy='dynamic')
     completed = db.relationship('Complete', backref='test',lazy='dynamic')
+    feedback = db.relationship('Feedback', backref='test',lazy='dynamic')
+
     def __repr__(self):
         return f'<id {self.id}, wk {self.week_number}, testname {self.test_name}>'
 
@@ -85,10 +87,7 @@ class Question(DB_Queries):
 
     def __repr__(self):
         return f'<id {self.id}, question_name {self.question_name}, difficulty {self.difficulty}, test_id {self.test_id}>'
-#     # def __init__(self, question_name, test_id, difficulty):
-#     #     self.question_name = question_name
-#     #     self.test_id = test_id
-#     #     self.difficulty = difficulty
+
 
 
 class Complete(DB_Queries):
@@ -100,17 +99,14 @@ class Complete(DB_Queries):
         return f'<id {self.id}, user_id {self.user_id}, test_id {self.test_id}, completed {self.completed}>'
 
 
-# class Feedback(DB_Queries):
-#     feedback_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-#     feedback = db.Column(db.String(512))
-#     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
-#     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-#     # user = db.relationship('User', backref='feedback')
-#     def __repr__(self):
-#         return f'<id {self.feedback_id}, feedback {self.feedback}, test_id {self.test_id}, user_id {self.user_id}>'
-#     # def __init__(self, user):
-#     #     self.feedback = None
-#     #     self.user_id = user
+class Feedback(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    feedback = db.Column(db.String(512))
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
+    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+    def __repr__(self):
+        return f'<id {self.id}, feedback {self.feedback}, test_id {self.test_id}, user_id {self.user_id}>'
+
 
 
 # class Score(DB_Queries):
