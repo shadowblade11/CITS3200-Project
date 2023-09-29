@@ -2,17 +2,29 @@
 {% block content %}
 
   <div class="content">
-    <h1>Home Page</h1>
-    <h2>Assessed Test</h2>
-    <label for="Assessed Test">Assessed Test</label> 
-    <select name="TEST" id="Test"> 
-        <option value="Test1">Test1</option> 
-        <option value="Test2">Test2</option> 
-        <option value="Test3">Test3</option> 
-        <option value="Test4">Test4</option> 
-    </select>
-    <h2>Unassessed Test</h2>
-    <label for="Assessed Test">Unassessed Test</label> 
+    <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{username}}</span>!</h1>
+
+    <div class="student-home">
+      <h2>Here you can find all the tests you have been assigned.</h2>
+      <p>Please review the instructions below, before selecting a test.</p>
+    </div>
+    <details class="instructions-container" open>
+      <summary class="instructions-header"><h1>Instructions</h1></summary>
+      <div class="instructions-content">
+        <p>This page features the assessed and unassessed tests.</p>
+    
+        <h3>Starting a Test</h3>
+        <p>Under unassessed tests, click on the drop down to select a test. The provided link will take you to the test page.</p>
+        <h3>Reviewing Previous Tests</h3>
+        <p>You can review past tests through the assessed test drop down.</p> 
+        <h3>Any Issues</h3>
+        <p>If you have any issues, please contact the teaching team or Dr. Marinella Caruso.</p>
+        
+      </div>
+    </details>
+
+    <h2>Unassessed Tests</h2>
+    <label for="Assessed Test">Unassessed Tests</label> 
     <select name="UnTEST" id="UnTest"> 
         <option value="Test1">Test1</option> 
         <option value="Test2">Test2</option> 
@@ -20,6 +32,14 @@
         <option value="Test4">Test4</option> 
     </select>
     <a href = "{{url_for('test' ,username=username, data='week1')}}">test 1</a>
+    <h2>Assessed Tests</h2>
+    <label for="Assessed Test">Assessed Tests</label> 
+    <select name="TEST" id="Test"> 
+        <option value="Test1">Test1</option> 
+        <option value="Test2">Test2</option> 
+        <option value="Test3">Test3</option> 
+        <option value="Test4">Test4</option> 
+    </select>
   </div>
 
 {% endblock %}

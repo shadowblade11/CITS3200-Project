@@ -2,16 +2,20 @@ import os
 
 from flask import render_template, redirect, url_for, flash, request, session, jsonify
 from flask_login import current_user, logout_user, login_required, login_user
-from werkzeug.urls import url_parse
+from werkzeug.urls import urlsplit
 
-from app import app, db, verification
+from app import app, verification
+from app import interact_database as db
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
 import datetime
 
+
 from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
+
+from app.interact_database import *
 
 
 
@@ -49,6 +53,7 @@ def adminHome():
 def grades():
     return render_template("gradesPage.html", css='./static/gradesPage.css')
 
+
 @app.route('/contact')
 def contact():
     form = ContactForm()
@@ -61,14 +66,14 @@ def login():
         return redirect(url_for('home', username=current_user.id))  # Provide the username
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(id=form.id.data).first()
+        user = db.get_user(user_id=form.id.data)
         if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
             return redirect(url_for('login'))
         login_user(user)
         next_page = request.args.get('next')
         session['uid'] = form.id.data
-        if not next_page or url_parse(next_page).netloc != '':
+        if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('home', username=user.id)
         return redirect(next_page)
     return render_template('loginPage.html', form=form, css=url_for('static', filename='loginPage.css'))
@@ -77,12 +82,16 @@ def login():
 @app.route('/administratorLogin', methods=['GET', 'POST'])
 def administratorLogin():
     if (current_user.is_authenticated and
-            User.query.filter_by(id=session.get('uid')).first().is_admin):
+            db.get_user(user_id=current_user.id).is_admin):
+        print("id=======", current_user.id)
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
         print(form.username.data)
-        user = User.query.filter_by(id=form.username.data).first()
+        # user = User.get(form.username.data)
+        user = User.get(id= form.username.data)
+        # user = User.query.filter_by(id=form.username.data).first()
+        print(user)
         if user is None:
             return redirect(url_for('administratorLogin'))
         if not user.is_admin or not user.check_passwd(form.passwd.data):
@@ -90,7 +99,7 @@ def administratorLogin():
         login_user(user)
         next_page = request.args.get('next')
         session['uid'] = form.username.data
-        if not next_page or url_parse(next_page).netloc != '':
+        if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('adminHome')
         return redirect(next_page)
     return render_template('adminLogin.html', css=url_for('static', filename='adminLogin.css'), form=form)
@@ -106,7 +115,7 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if User.query.filter_by(id=int(form.id.data)).first() is not None:
+        if User.get(id=form.id.data) is not None:
             message = "ID already exists."
             return render_template('register.html', form=form, title='Register', message=message)
         session['id'] = form.id.data
@@ -133,8 +142,7 @@ def verify():
             user = User(id=session['id'])
             user.set_passwd(session['passwd'])
             session.pop('id')  # Clear the session variable
-            db.session.add(user)
-            db.session.commit()
+            User.write_to(user)
             return redirect(url_for('login'))
 
         if request.referrer is None:
@@ -171,7 +179,8 @@ def test(username):
     # print(current_user)
     # TODO also once figured out a way to get current user id,
     #  use os commands to check if their folder exists, if not, then create it
-    return render_template('testPage.html', css=url_for('static', filename='testPage.css'), audio_clips=audio_clips, week=week, user=username)
+    return render_template('testPage.html', css=url_for('static', filename='testPage.css'), audio_clips=audio_clips,
+                           week=week, user=username)
 
 
 @app.route('/audio-test')
@@ -232,6 +241,8 @@ def send_image():
 @login_required
 @app.route('/addtest', methods=['GET', 'POST'])
 def addtest():
+    if not current_user.is_admin:
+        return redirect(url_for('page_not_found'))
     return render_template('adminAddtest.html', css=url_for('static', filename='adminAddtest.css'))
 
 
@@ -244,6 +255,7 @@ def Account():
 def start():
     return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
 
+
 @app.route('/get-user', methods=['POST'])
 def get_user():
     data = request.get_json()
@@ -255,7 +267,7 @@ def get_user():
         return jsonify({"weeks": wk})
     else:
         return jsonify({"error": "User not found or no audio files"}), 404
-    
+
 
 @app.route('/get-audio', methods=["POST"])
 def get_audio():
@@ -279,10 +291,15 @@ def save_feedback():
     text = data.get('txt')
     week = data.get('week')
     user = data.get('user')
+    print(user)
+    print(text)
+    # print(week)
+    week = int(week[-1])
     #THIS IS WHERE WE CAN STORE THE FEEDBACK
     try:
         # REPLACE THIS WITH THE TABLE ASSIGNMENT
-        print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
+        write_feedback(user,text,week)
+        # print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
         return "passed",200
     except:
         return "failed",404
@@ -293,25 +310,43 @@ def save_feedback():
 def send_feedback():
     user = request.args.get('user')
     week = request.args.get('week')
+    week = int(week[-1])
     # print(f"User: {user}, Week: {week}")
     # THIS IS WHERE WE RETRIVE FEEDBACK FROM THE DATABASE
 
     #FAKE DATA
-    data = {
-    "123": {
-        'week1': 'This is a random sentence for week 1.',
-        'week2': 'Here is a different sentence for week 2.',
-        'week3': 'Week 3 has its own unique sentence as well.'
-    }
-    }
+    # data = {
+    # "123": {
+    #     'week1': 'This is a random sentence for week 1.',
+    #     'week2': 'Here is a different sentence for week 2.',
+    #     'week3': 'Week 3 has its own unique sentence as well.'
+    # }
+    # }
     try:
-        string = data[user][week]
-        return string,200
+        txt = get_feedback(user,week)
+        # string = data[user][week]
+        return txt,200
     except:
         return "",404
 
 
+@app.route("/upload_file", methods=["POST"])
+def upload_file():
+    print(3242423)
+    if request.method == "POST":
+        test_name = request.form["testName"]
+        test_file = request.files["testFile"]
 
+        if test_file:
+            file_name = test_file.filename
+            parent_dir = os.path.dirname(os.path.dirname(__file__))
+            save_path = os.path.join(parent_dir, "test", file_name)
+
+            test_file.save(save_path)
+
+            return "File uploaded successfully."
+
+    return render_template("adminAddtest.html")
 
 
 

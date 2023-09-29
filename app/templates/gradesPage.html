@@ -2,14 +2,36 @@
 
 {% block content %}
 
+
 <div class="intro-container">
-	
-  <div class="text-container">
-    <h1>Italiano In Pratica</h1>
-    <form action="{{url_for('login')}}">
-      <button class="button button1">Start Practicing</button>
-    </form>
-  </div>
-  
+  <h1>Student Grades</h1>
+</div>
+
+
+<div class="grades-container">
+    <table>
+        <tr>
+            <th>Test Name</th>
+            <th>Task Number</th>
+            <th>Audio File</th>
+            <th>Self Assessment Score</th>
+            <th>Audio Similarity Score</th>
+        </tr>
+        <tr>
+            <td>Test 1</td>
+            <td>Task 1</td>
+            <td><a href="audio1.mp3" download>Download Audio</a></td>
+            <td>85</td>
+            <td>92</td>
+        </tr>
+        <tr>
+            <td>Test 1</td>
+            <td>Task 2</td>
+            <td><a href="audio2.mp3" download>Download Audio</a></td>
+            <td>78</td>
+            <td>85</td>
+        </tr>
+        
+    </table>
 </div>
 {% endblock %}

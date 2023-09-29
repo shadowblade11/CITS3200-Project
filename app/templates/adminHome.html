@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<div class="admin-home">
+  <h1>Welcome Admin Team</h1>
+  <h2>Please review instructions below to view student scores.</h2>
+</div>
+<details class="instructions-container" open>
+  <summary class="instructions-header"><h1>Instructions</h1></summary>
+  <div class="instructions-content">
+    <p>This page allows admin users to view student scores and provide feedback on their weekly tests.</p>
+
+    <h3>Step One</h3>
+    <p>Enter the student ID into the search bar.</p>
+    <h3>Step Two</h3>
+    <p>Select the test you would like to review.</p>
+    <h3>Step Three</h3>
+    <p>Review the student's scores and provide feedback in the text box below.</p>
+    
+  </div>
+</details>
+
   <div class="content">
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
-      <br>
-      <br>
 
       <!--Empty div used to dynamically hold the list of weeks-->
     <div class="dropdown">
@@ -180,6 +198,7 @@
             callback(xml.responseText);
           }else{
             console.log('err');
+            callback("");
           }
         }
       }
