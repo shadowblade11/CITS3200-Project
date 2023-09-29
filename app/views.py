@@ -5,7 +5,7 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import urlsplit
 
 from app import app, verification
-# import app.interact_database as db
+import app.interact_database as db
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
@@ -15,7 +15,6 @@ import datetime
 from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
 
-# from app.interact_database import *
 
 
 @app.route('/')
@@ -295,7 +294,7 @@ def save_feedback():
     #THIS IS WHERE WE CAN STORE THE FEEDBACK
     try:
         # REPLACE THIS WITH THE TABLE ASSIGNMENT
-        write_feedback(user,text,week)
+        db.write_feedback(user,text,week)
         # print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
         return "passed",200
     except:
@@ -320,7 +319,7 @@ def send_feedback():
     # }
     # }
     try:
-        txt = get_feedback(user,week)
+        txt = db.get_feedback(user,week)
         # string = data[user][week]
         return txt,200
     except:

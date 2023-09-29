@@ -1,4 +1,4 @@
-from app.models import User, Question, Test
+from app.models import User, Question, Test, Complete, Feedback, Score
 from app import app
 
 '''
