@@ -66,6 +66,13 @@ class User(UserMixin, DB_Queries):
 def load_user(id):
     return User.query.get(id)
 
+class Test(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    week_number = db.Column(db.Integer)
+    test_name = db.Column(db.String(128))
+    due_date = db.Column(db.String(128))  # dd/mm/yy
+    number_of_questions = db.Column(db.Integer)
+    # questions = db.relationship('Question', backref='test')
 
 # class Complete(DB_Queries):
 #     completed_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -107,15 +114,6 @@ def load_user(id):
 #     # def __init__(self, user):
 #     #     self.sys_score, self.user_score, self.attempt_chosen = 0, 0, 0
 #     #     self.user_id = user
-
-
-# class Test(DB_Queries):
-#     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-#     week_number = db.Column(db.Integer)
-#     test_name = db.Column(db.String(128))
-#     due_date = db.Column(db.String(128))  # dd/mm/yy
-#     number_of_questions = db.Column(db.Integer)
-#     questions = db.relationship('Question', backref='test')
 
 #     def __repr__(self):
 #         return f'<id {self.id}, wk {self.week_number}, testname {self.test_name}, questions {self.questions}>'
