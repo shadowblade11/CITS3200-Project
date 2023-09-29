@@ -45,7 +45,7 @@ class User(UserMixin, DB_Queries):
     username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
-    # completed_tests = db.relationship('Complete', backref='user')
+    completed_tests = db.relationship('Complete', backref='user', lazy='dynamic')
     # feedback = db.relationship('Feedback', backref='user')
 
     def set_passwd(self, passwd):
@@ -73,6 +73,7 @@ class Test(DB_Queries):
     due_date = db.Column(db.String(128))  # dd/mm/yy
     number_of_questions = db.Column(db.Integer)
     questions = db.relationship('Question', backref='test',lazy='dynamic')
+    completed = db.relationship('Complete', backref='test',lazy='dynamic')
     def __repr__(self):
         return f'<id {self.id}, wk {self.week_number}, testname {self.test_name}>'
 
@@ -90,18 +91,13 @@ class Question(DB_Queries):
 #     #     self.difficulty = difficulty
 
 
-# class Complete(DB_Queries):
-#     completed_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-#     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-#     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
-#     # user = db.relationship('User', backref='complete')
-#     completed = db.Column(db.Boolean)
-
-#     # def __init__(self, user):
-#     #     self.user_id = user
-#     #     self.completed = False
-#     def __repr__(self):
-#         return f'<id {self.completed_id}, user_id {self.user_id}, test_id {self.test_id}, completed {self.completed}>'
+class Complete(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
+    completed = db.Column(db.Boolean)
+    def __repr__(self):
+        return f'<id {self.id}, user_id {self.user_id}, test_id {self.test_id}, completed {self.completed}>'
 
 
 # class Feedback(DB_Queries):
