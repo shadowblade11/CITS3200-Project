@@ -73,6 +73,8 @@ class Test(DB_Queries):
     due_date = db.Column(db.String(128))  # dd/mm/yy
     number_of_questions = db.Column(db.Integer)
     # questions = db.relationship('Question', backref='test')
+    def __repr__(self):
+        return f'<id {self.id}, wk {self.week_number}, testname {self.test_name}>'
 
 # class Complete(DB_Queries):
 #     completed_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -115,8 +117,6 @@ class Test(DB_Queries):
 #     #     self.sys_score, self.user_score, self.attempt_chosen = 0, 0, 0
 #     #     self.user_id = user
 
-#     def __repr__(self):
-#         return f'<id {self.id}, wk {self.week_number}, testname {self.test_name}, questions {self.questions}>'
 #     # def __init__(self, week_no, test_name, due_date, no_of_qs):
 #     #     self.test_name = test_name
 #     #     self.due_date = due_date
