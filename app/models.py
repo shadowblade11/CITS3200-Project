@@ -72,9 +72,23 @@ class Test(DB_Queries):
     test_name = db.Column(db.String(128))
     due_date = db.Column(db.String(128))  # dd/mm/yy
     number_of_questions = db.Column(db.Integer)
-    # questions = db.relationship('Question', backref='test')
+    questions = db.relationship('Question', backref='test',lazy='dynamic')
     def __repr__(self):
         return f'<id {self.id}, wk {self.week_number}, testname {self.test_name}>'
+
+class Question(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    question_name = db.Column(db.String(128))
+    difficulty = db.Column(db.Integer)
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
+
+    def __repr__(self):
+        return f'<id {self.id}, question_name {self.question_name}, difficulty {self.difficulty}, test_id {self.test_id}>'
+#     # def __init__(self, question_name, test_id, difficulty):
+#     #     self.question_name = question_name
+#     #     self.test_id = test_id
+#     #     self.difficulty = difficulty
+
 
 # class Complete(DB_Queries):
 #     completed_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -124,15 +138,3 @@ class Test(DB_Queries):
 #     #     self.week_number = week_no
 
 
-# class Question(DB_Queries):
-#     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-#     question_name = db.Column(db.String(128))
-#     difficulty = db.Column(db.Integer)
-#     test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
-
-#     def __repr__(self):
-#         return f'<id {self.id}, test_id {self.test_id}>'
-#     # def __init__(self, question_name, test_id, difficulty):
-#     #     self.question_name = question_name
-#     #     self.test_id = test_id
-#     #     self.difficulty = difficulty
