@@ -5,7 +5,7 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import urlsplit
 
 from app import app, verification
-import app.interact_database as db
+# import app.interact_database as db
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
@@ -15,7 +15,7 @@ import datetime
 from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
 
-from app.interact_database import *
+# from app.interact_database import *
 
 
 @app.route('/')

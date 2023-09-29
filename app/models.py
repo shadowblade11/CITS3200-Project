@@ -45,8 +45,8 @@ class User(UserMixin, DB_Queries):
     username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
-    completed_tests = db.relationship('Complete', backref='user')
-    feedback = db.relationship('Feedback', backref='user')
+    # completed_tests = db.relationship('Complete', backref='user')
+    # feedback = db.relationship('Feedback', backref='user')
 
     def set_passwd(self, passwd):
         self.password_hash = generate_password_hash(passwd)
@@ -55,7 +55,8 @@ class User(UserMixin, DB_Queries):
         return check_password_hash(self.password_hash, passwd)
 
     def __repr__(self):
-        return f'<id {self.id}, username {self.username}, password_hash {self.password_hash}, is_admin {self.is_admin}, completed tests {self.completed_tests}, feedback {self.feedback}>'
+        # return f'<id {self.id}, username {self.username}, password_hash {self.password_hash}, is_admin {self.is_admin}, completed tests {self.completed_tests}, feedback {self.feedback}>'
+        return f'<id {self.id}, username {self.username}, password_hash {self.password_hash}, is_admin {self.is_admin}>'
 
     # def __init__(self, id):
     #     self.id = id
