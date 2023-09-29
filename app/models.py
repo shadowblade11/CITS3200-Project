@@ -49,6 +49,7 @@ class User(UserMixin, DB_Queries):
     #relationships
     completed_tests = db.relationship('Complete', backref='user', lazy='dynamic')
     feedback = db.relationship('Feedback', backref='user',lazy='dynamic')
+    scores = db.relationship('Score', backref='user',lazy='dynamic')
 
     def set_passwd(self, passwd):
         self.password_hash = generate_password_hash(passwd)
@@ -85,6 +86,9 @@ class Question(DB_Queries):
     difficulty = db.Column(db.Integer)
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
 
+    #relationships
+    scores = db.relationship('Score',backref='question',lazy='dynamic')
+
     def __repr__(self):
         return f'<id {self.id}, question_name {self.question_name}, difficulty {self.difficulty}, test_id {self.test_id}>'
 
@@ -109,24 +113,15 @@ class Feedback(DB_Queries):
 
 
 
-# class Score(DB_Queries):
-#     score_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-#     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-#     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
-#     user_score = db.Column(db.Integer)
-#     sys_score = db.Column(db.Integer)
-#     attempt_chosen = db.Column(db.Integer)
+class Score(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    user_score = db.Column(db.Integer)
+    sys_score = db.Column(db.Integer)
+    attempt_chosen = db.Column(db.Integer)
 
-#     def __repr__(self):
-#         return f'<score_id {self.score_id}, user_id {self.user_id}, question_id {self.question_id}, user_score {self.user_score}, etc>'
-#     # def __init__(self, user):
-#     #     self.sys_score, self.user_score, self.attempt_chosen = 0, 0, 0
-#     #     self.user_id = user
-
-#     # def __init__(self, week_no, test_name, due_date, no_of_qs):
-#     #     self.test_name = test_name
-#     #     self.due_date = due_date
-#     #     self.number_of_questions = no_of_qs
-#     #     self.week_number = week_no
+    def __repr__(self):
+        return f'<score_id {self.id}, user_id {self.user_id}, question_id {self.question_id}, user_score {self.user_score}, etc>'
 
 
