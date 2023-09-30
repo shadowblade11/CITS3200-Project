@@ -161,75 +161,22 @@
               //decrease count
               countContainer.innerHTML = count - 1;
 
-              // check if audioplayer exist and change src to audioclip
-              const existingAudioPlayer = document.getElementById("audioplayer" + index + count);
-              if (existingAudioPlayer) {
-                existingAudioPlayer.src = URL.createObjectURL(blob);
+              var audioPlayer = document.createElement("audio");
+              audioPlayer.controls = true;
+              audioPlayer.id = "audioplayer" + index + count;
+              audioPlayer.src = URL.createObjectURL(blob);
 
-              } else { //create new audioplayer if it doesn't exist
-                var audioPlayer = document.createElement("audio");
-                audioPlayer.controls = true;
-                audioPlayer.id = "audioplayer" + index + count;
-                audioPlayer.src = URL.createObjectURL(blob);
-
-                let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
-                currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
-                radioSelector.removeAttribute("disabled");
-              }
+              let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
+              currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
+              radioSelector.removeAttribute("disabled");
 
               // This is an old pointer whose value has decremented to 0, so disable the button
               if (count === 1) {
                 listOfDivs[index].querySelector(".record").classList.add("disabled");
               }
               
-              /*
-              // on success, request for image creation
+              console.log(listOfDivs[index].querySelector('.supplied_clip').id);
               
-              // get needed information
-              const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-              let name_of_clip = audioplayer.id;
-
-              const json = JSON.stringify(
-                {
-                  "user":userID,
-                  "name":name_of_clip,
-                  "week":weekID,
-                  "attempt":count
-                }
-              );
-              
-              xmlhttpImage = new XMLHttpRequest();
-              xmlhttpImage.open("POST","/send-image",true);
-              xmlhttpImage.setRequestHeader('Content-Type','application/json');
-              xmlhttpImage.send(json);
-
-              xmlhttpImage.onreadystatechange = function() {
-                if(xmlhttpImage.readyState==4) {
-                  if(xmlhttpImage.status==200) {
-                    name_of_clip = name_of_clip.replaceAll(' ','_');
-                    
-                    //path for image
-                    let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + count + '.png';
-
-                    // check if img exist and update src
-                    var img = document.getElementById("recorded_image" + index + count);
-                    if(img){
-                      img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
-                    }else{ // create new img
-                      var create_image = document.createElement("img");
-                      create_image.src = filename;
-                      create_image.width = "400";
-                      create_image.height = "160";
-                      create_image.id = "recorded_image" + index + count;
-                      listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index + count));
-                    }
-                  }
-                  else{
-                    console.log("error");
-                  }
-                }
-              }
-              */
             }
             
           }).catch((err)=>{
