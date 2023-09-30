@@ -3,6 +3,7 @@
 
 __pycache__/
 
+users/
 audio/
 
 ffmpeg.exe
