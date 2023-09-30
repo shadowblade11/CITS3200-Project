@@ -190,20 +190,28 @@ def audio_test():
 
 @app.route("/save-audio", methods=['POST'])
 def save_audio():
+    print("ping")
     blob = request.files['blob']
     user = request.form['user']
-    week = request.form['week']
+    test_name = request.form['test_name']
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
-    name_of_clip = name_of_clip.replace(" ", "_")
-    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
+    # name_of_clip = name_of_clip.replace(" ", "_")
+    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{test_name}"
     print("saving clip")
 
     os.makedirs(PATH_TO_FOLDER, exist_ok=True)
 
     try:
-        blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav")
+        raw_file = f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav"
+        clean_file = f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav"
+        blob.save(raw_file)
         print("save successful")
+
+        convert_to_wav_working_format(raw_file,clean_file)
+
+        os.remove(raw_file)
+        
         return 'Upload successful', 200
     except Exception as e:
         print("save failed")

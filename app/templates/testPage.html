@@ -171,7 +171,7 @@
               radioSelector.removeAttribute("disabled");
               
               let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id
-              save_audio(blob,name_of_clip,count, userID, weekID);
+              save_audio(blob,name_of_clip,4-count, userID, weekID);
 
 
 
@@ -299,6 +299,27 @@
       console.log(attempt);
       console.log(user);
       console.log(test_name);
+
+      const formData = new FormData();
+          formData.append('blob',blob);
+          formData.append('user', user);
+          formData.append('test_name', test_name);
+          formData.append('name', name_of_clip);
+          formData.append('attempt', attempt);
+
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "/save-audio",true);
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+          if (xmlhttp.status == 200) {
+            console.log("success");
+          } else {
+            // Request failed
+              console.error("Request failed with status: " + xmlhttp.status);
+            }
+        }
+      };
+      xmlhttp.send(formData);
     }
 
   </script>
