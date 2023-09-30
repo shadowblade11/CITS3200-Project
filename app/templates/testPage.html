@@ -173,6 +173,12 @@
               let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id
               save_audio(blob,name_of_clip,4-count, userID, weekID);
 
+              var img = document.createElement("img");
+              img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${(4-count)}.png`;
+              img.width = "400";
+              img.height = "160";
+              currentRecordingContainer.insertBefore(img,audioPlayer); 
+
 
 
 
@@ -294,12 +300,6 @@
 
 
     function save_audio(blob, name_of_clip, attempt, user, test_name){
-      console.log(blob);
-      console.log(name_of_clip);
-      console.log(attempt);
-      console.log(user);
-      console.log(test_name);
-
       const formData = new FormData();
           formData.append('blob',blob);
           formData.append('user', user);
