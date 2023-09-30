@@ -55,15 +55,15 @@
         <div class="recordings">
           <div class="recording attempt-3">
             <h3 class="task-header">Attempt: 1</h3>
-            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+            <input type="radio" class="select-attempt" data-attempt="1" name= "select-attempt-{{loop.index}}" disabled />
           </div>
           <div class="recording attempt-2">
             <h3 class="task-header">Attempt: 2</h3>
-            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+            <input type="radio" class="select-attempt" data-attempt="2" name= "select-attempt-{{loop.index}}" disabled />
           </div>
           <div class="recording attempt-1">
             <h3 class="task-header">Attempt: 3</h3>
-            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+            <input type="radio" class="select-attempt" data-attempt="3" name= "select-attempt-{{loop.index}}" disabled />
           </div>
         </div>
       </div>
@@ -156,7 +156,7 @@
               radioSelector.removeAttribute("disabled");
               
               let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id
-              
+
               save_audio(blob, name_of_clip, 4 - count, userID, weekID, function () {
                 var img = document.createElement("img");
                 img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${4 - count}.png`;
@@ -197,11 +197,14 @@
       submitButton.onclick = () =>{
         let countContainer = listOfDivs[index].querySelector(".count");
         let count = Number(countContainer.innerHTML);
-        console.log(count);
         if (count === 0){
-          console.log("submit");
           let selectedRadioButton = listOfDivs[index].querySelector('.select-attempt:checked');
-          console.log(selectedRadioButton.value);
+          if (selectedRadioButton){
+            console.log(selectedRadioButton.dataset.attempt);
+          }
+          else{
+            alert("Pick an attempt");
+          }
         }
         else{
           alert("Do all submissions first");
