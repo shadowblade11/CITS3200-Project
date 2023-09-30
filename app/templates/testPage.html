@@ -169,13 +169,20 @@
               let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
               currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
               radioSelector.removeAttribute("disabled");
+              
+              let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id
+              save_audio(blob,name_of_clip,count, userID, weekID);
+
+
+
+
+
 
               // This is an old pointer whose value has decremented to 0, so disable the button
               if (count === 1) {
                 listOfDivs[index].querySelector(".record").classList.add("disabled");
               }
               
-              console.log(listOfDivs[index].querySelector('.supplied_clip').id);
               
             }
             
@@ -284,5 +291,15 @@
         selfAssessmentValue.innerHTML = selfAssessmentRange.value;
       }
     });
+
+
+    function save_audio(blob, name_of_clip, attempt, user, test_name){
+      console.log(blob);
+      console.log(name_of_clip);
+      console.log(attempt);
+      console.log(user);
+      console.log(test_name);
+    }
+
   </script>
 {% endblock %}
