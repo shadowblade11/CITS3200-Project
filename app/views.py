@@ -190,7 +190,6 @@ def audio_test():
 
 @app.route("/save-audio", methods=['POST'])
 def save_audio():
-    print("ping")
     blob = request.files['blob']
     user = request.form['user']
     test_name = request.form['test_name']
@@ -198,9 +197,11 @@ def save_audio():
     attempt = request.form['attempt']
     # name_of_clip = name_of_clip.replace(" ", "_")
     PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{test_name}"
+    PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{test_name}"
     print("saving clip")
 
     os.makedirs(PATH_TO_FOLDER, exist_ok=True)
+    os.makedirs(PATH_TO_IMAGE_FOLDER, exist_ok=True)
 
     try:
         raw_file = f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav"
@@ -212,6 +213,10 @@ def save_audio():
 
         os.remove(raw_file)
         
+        print("saving image")
+        generate_soundwave_image(clean_file, PATH_TO_IMAGE_FOLDER, f'{name_of_clip}-{attempt}')
+        print("save successful")
+
         return 'Upload successful', 200
     except Exception as e:
         print("save failed")
