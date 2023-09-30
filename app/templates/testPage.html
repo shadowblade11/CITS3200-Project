@@ -249,6 +249,7 @@
 
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
+        console.log("clicked");
         // make sure audioclip exists, submission is allowed, and its a new clip
         var blob = blobList[index];
         var count = submissionAttempts[index];
