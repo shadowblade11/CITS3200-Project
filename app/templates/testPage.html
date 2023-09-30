@@ -89,21 +89,6 @@
   {% endfor %}
 
   <script>
-    /*
-    const saveButton = document.querySelector('.save-button');
-
-    saveButton.addEventListener('click', function() {
-      const pageTitle = document.title;
-      const pageContent = document.querySelector('.content').innerHTML;
-      
-      // Store data in local storage
-      localStorage.setItem('pageTitle', pageTitle);
-      localStorage.setItem('pageContent', pageContent);
-
-    //   alert('Page information saved.');
-    });
-    */
-
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('details.task-container');
     const submitButtons = document.querySelectorAll('button.submit');
@@ -171,13 +156,14 @@
               radioSelector.removeAttribute("disabled");
               
               let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id
-              save_audio(blob,name_of_clip,4-count, userID, weekID);
-
-              var img = document.createElement("img");
-              img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${(4-count)}.png`;
-              img.width = "400";
-              img.height = "160";
-              currentRecordingContainer.insertBefore(img,audioPlayer); 
+              
+              save_audio(blob, name_of_clip, 4 - count, userID, weekID, function () {
+                var img = document.createElement("img");
+                img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${4 - count}.png`;
+                img.width = "400";
+                img.height = "160";
+                currentRecordingContainer.insertBefore(img, audioPlayer);
+              });
 
 
 
@@ -214,6 +200,8 @@
         console.log(count);
         if (count === 0){
           console.log("submit");
+          let selectedRadioButton = listOfDivs[index].querySelector('.select-attempt:checked');
+          console.log(selectedRadioButton.value);
         }
         else{
           alert("Do all submissions first");
@@ -234,7 +222,7 @@
     });
 
 
-    function save_audio(blob, name_of_clip, attempt, user, test_name){
+    function save_audio(blob, name_of_clip, attempt, user, test_name, callback){
       const formData = new FormData();
           formData.append('blob',blob);
           formData.append('user', user);
@@ -248,6 +236,9 @@
         if (xmlhttp.readyState == 4) {
           if (xmlhttp.status == 200) {
             console.log("success");
+            if (callback && typeof callback === 'function') {
+              callback();
+            }
           } else {
             // Request failed
               console.error("Request failed with status: " + xmlhttp.status);
