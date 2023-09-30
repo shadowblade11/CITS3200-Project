@@ -209,82 +209,17 @@
 
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
-        console.log("clicked");
-        // make sure audioclip exists, submission is allowed, and its a new clip
-        var blob = blobList[index];
-        var count = submissionAttempts[index];
-        var new_clip = newRecording[index];
-        if (blob && count.innerHTML != 0 && new_clip == 1){
-        // get needed information
-          const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-          let name_of_clip = audioplayer.id;
-
-          //create form and json
-          const formData = new FormData();
-          formData.append('blob',blob);
-          formData.append('user', userID);
-          formData.append('week', weekID);
-          formData.append('name', name_of_clip);
-          formData.append('attempt', count.innerHTML);
-          const json = JSON.stringify(
-            {
-              "user":userID,
-              "name":name_of_clip,
-              "week":weekID,
-              "attempt":count.innerHTML
-            }
-          )
-
-          // send audio to be saved
-          var xmlhttp = new XMLHttpRequest();
-          xmlhttp.open("POST", "/save-audio",true);
-          xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4) {
-                    if (xmlhttp.status == 200) {
-                        // on success, request for image creation
-                        xmlhttpImage = new XMLHttpRequest();
-                        xmlhttpImage.open("POST","/send-image",true);
-                        xmlhttpImage.setRequestHeader('Content-Type','application/json');
-                        xmlhttpImage.send(json);
-
-                        xmlhttpImage.onreadystatechange = function() {
-                          if(xmlhttpImage.readyState==4){
-                            if(xmlhttpImage.status==200){
-                              name_of_clip = name_of_clip.replaceAll(' ','_');
-                              
-                              //path for image
-                              let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
-
-                              // check if img exist and update src
-                              var img = document.getElementById("recorded_image" + index + count);
-                              if(img){
-                                img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
-                              }else{ // create new img
-                                var create_image = document.createElement("img");
-                                create_image.src = filename;
-                                create_image.width = "400";
-                                create_image.height = "160";
-                                create_image.id = "recorded_image" + index + count;
-                                listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index + count));
-                              }
-                            }
-                            else{
-                              console.log("error");
-                            }
-                          }
-                        }
-
-                    } else {
-                        // Request failed
-                        console.error("Request failed with status: " + xmlhttp.status);
-                    }
-                }
-            };
-          xmlhttp.send(formData);
-          newRecording[index] = 0;
+        let countContainer = listOfDivs[index].querySelector(".count");
+        let count = Number(countContainer.innerHTML);
+        console.log(count);
+        if (count === 0){
+          console.log("submit");
+        }
+        else{
+          alert("Do all submissions first");
         }
 
-      }
+        }
 
     });
 
