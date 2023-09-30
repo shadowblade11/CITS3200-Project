@@ -223,7 +223,9 @@ def save_audio():
         return str(e), 400
 
 
-
+@app.route('/calculate-score', methods=['POST'])
+def calculate_score():
+    pass
 
 @login_required
 @app.route('/addtest', methods=['GET', 'POST'])
