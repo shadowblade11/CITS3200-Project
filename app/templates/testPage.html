@@ -155,7 +155,7 @@
               currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
               radioSelector.removeAttribute("disabled");
               
-              let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id
+              let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
 
               save_audio(blob, name_of_clip, 4 - count, userID, weekID, function () {
                 var img = document.createElement("img");
@@ -200,7 +200,14 @@
         if (count === 0){
           let selectedRadioButton = listOfDivs[index].querySelector('.select-attempt:checked');
           if (selectedRadioButton){
-            console.log(selectedRadioButton.dataset.attempt);
+            let attempt = selectedRadioButton.dataset.attempt;
+
+            let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
+
+            let user_score = listOfDivs[index].querySelector('.self-assessment-value').innerHTML;
+            console.log(attempt);
+            console.log(name_of_clip);
+            console.log(user_score);
           }
           else{
             alert("Pick an attempt");
