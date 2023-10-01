@@ -90,7 +90,7 @@
   border-radius: 40px;
 }
 
-.response-container .record.disabled {
+.response-container .record.disabled, .submit.disabled{
   background-color: grey;
   border-color: grey;
   color: black;
