@@ -231,6 +231,9 @@
 
 
             xmlhttp.send(formData);
+            submitButton.disabled = true;
+            submitButton.classList.add("disabled")
+            listOfDivs[index].style.background = "lightgreen";
           }
           else{
             alert("Pick an attempt");
