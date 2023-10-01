@@ -219,6 +219,17 @@
             var xmlhttp = new XMLHttpRequest();
 
             xmlhttp.open('POST','/calculate-score',true);
+            xmlhttp.onreadystatechange = function () {
+              if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                  let score = listOfDivs[index].querySelector(".computed-score-value");
+                  score.innerHTML = xmlhttp.responseText;
+                  console.log(xmlhttp.responseText);
+                }
+              }
+            }
+
+
             xmlhttp.send(formData);
           }
           else{

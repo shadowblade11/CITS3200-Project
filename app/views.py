@@ -230,11 +230,17 @@ def calculate_score():
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
 
-    print(user)
-    print(test_name)
-    print(name_of_clip)
-    print(attempt)
-    return "",200
+    PATH_TO_USER_ATTEMPT = f"./app/static/audio/users/{user}/{test_name}/{name_of_clip}-{attempt}.wav"
+    PATH_TO_SOURCE = f"./app/static/audio/{test_name}/{name_of_clip}.wav"
+
+    print(PATH_TO_USER_ATTEMPT)
+    print(PATH_TO_SOURCE)
+
+    # score = similarity_function(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
+    import time
+
+    time.sleep(5)
+    return "5",200
 
 @login_required
 @app.route('/addtest', methods=['GET', 'POST'])
