@@ -215,7 +215,7 @@
             formData.append('test_name', weekID);
             formData.append('attempt',attempt);
             formData.append('name',name_of_clip);
-
+            formData.append('user_score',user_score);
             var xmlhttp = new XMLHttpRequest();
 
             xmlhttp.open('POST','/calculate-score',true);

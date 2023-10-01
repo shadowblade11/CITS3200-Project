@@ -229,6 +229,7 @@ def calculate_score():
     test_name = request.form['test_name']
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
+    user_score = request.form['user_score']
 
     PATH_TO_USER_ATTEMPT = f"./app/static/audio/users/{user}/{test_name}/{name_of_clip}-{attempt}.wav"
     PATH_TO_SOURCE = f"./app/static/audio/{test_name}/{name_of_clip}.wav"
@@ -240,7 +241,12 @@ def calculate_score():
     import time
 
     time.sleep(5)
-    return "5",200
+    score = 5
+    print(f"User Score = {user_score}, Actual Score = {score}")
+    #GET TEST OBJECT
+    #GET USER OBJECT
+    #MAKE SCORE OBJECT WITH user_score and score
+    return str(score),200
 
 @login_required
 @app.route('/addtest', methods=['GET', 'POST'])
