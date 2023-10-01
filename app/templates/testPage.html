@@ -208,6 +208,18 @@
             console.log(attempt);
             console.log(name_of_clip);
             console.log(user_score);
+
+            const formData = new FormData();
+
+            formData.append('user',userID);
+            formData.append('test_name', weekID);
+            formData.append('attempt',attempt);
+            formData.append('name',name_of_clip);
+
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.open('POST','/calculate-score',true);
+            xmlhttp.send(formData);
           }
           else{
             alert("Pick an attempt");

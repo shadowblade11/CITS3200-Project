@@ -225,7 +225,16 @@ def save_audio():
 
 @app.route('/calculate-score', methods=['POST'])
 def calculate_score():
-    pass
+    user = request.form['user']
+    test_name = request.form['test_name']
+    name_of_clip = request.form['name']
+    attempt = request.form['attempt']
+
+    print(user)
+    print(test_name)
+    print(name_of_clip)
+    print(attempt)
+    return "",200
 
 @login_required
 @app.route('/addtest', methods=['GET', 'POST'])
