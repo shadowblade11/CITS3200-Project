@@ -30,6 +30,7 @@
             
             <label for="file-upload">Upload File:</label>
             <input type="file" id="file-upload" name="testFiles" accept=".mp3,.m4a,.wav" multiple required>
+            <div id="audio-container"></div>
 
             <div class="test-factors">
                 <label for="difficulty">Difficulty:</label>
@@ -43,7 +44,7 @@
             </div>
 
             <button type="submit">Upload Test</button>
-        </form>
+
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         const uploadButton = document.getElementById("upload-button");
@@ -52,6 +53,8 @@
             const testName = document.getElementById("test-name").value;
             const fileInput = document.getElementById("file-upload");
             const selectedFile = fileInput.files[0];
+            const difficulty = document.getElementById("difficulty").value
+            const dueDate = document.getElementById("due-date").value
 
             if (!selectedFile) {
                 alert("Please select a file to upload.");
@@ -61,6 +64,8 @@
             const formData = new FormData();
             formData.append("testName", testName);
             formData.append("testFile", selectedFile);
+            formData.append("difficulty", difficulty)
+            formData.append("dueDate", dueDate)
 
             fetch("/", {
                 method: "POST",
@@ -76,7 +81,27 @@
             });
         });
     });
-    </script>
+
+   //display select audio file
+    function displaySelectedAudioFiles() {
+        const fileInput = document.querySelector("#file-upload");
+        const audioContainer = document.querySelector("#audio-container");
+        audioContainer.innerHTML = "";
+        for (const file of fileInput.files) {
+            const fileDiv = document.createElement("div");
+            const audioElement = document.createElement("audio");
+            audioElement.controls = true;
+            audioElement.src = URL.createObjectURL(file);
+            const fileNameParagraph = document.createElement("p");
+            fileNameParagraph.textContent = `File Name: ${file.name}`;
+            fileDiv.appendChild(fileNameParagraph);
+            fileDiv.appendChild(audioElement);
+            audioContainer.appendChild(fileDiv);
+        }
+    }
+    const fileInput = document.querySelector("#file-upload");
+    fileInput.addEventListener("change", displaySelectedAudioFiles);
+</script>
 </div>
 
 {% endblock %}

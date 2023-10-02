@@ -345,6 +345,11 @@ def upload_files():
     if request.method == "POST":
         test_name = request.form["testName"]
         test_files = request.files.getlist("testFiles")
+        difficulty = request.form["difficulty"]
+        due_date = request.form["dueDate"]
+        print(f"Test Name: {test_name}")
+        print(f"Difficulty: {difficulty}")
+        print(f"Due Date: {due_date}")
         if test_files:
             parent_dir = os.path.dirname(os.path.dirname(__file__))
             upload_dir = os.path.join(parent_dir, "test")
