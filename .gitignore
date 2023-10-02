@@ -4,8 +4,8 @@
 __pycache__/
 
 
-# images/
-# audio/
+images/
+audio/
 
 ffmpeg.exe
 .idea/
