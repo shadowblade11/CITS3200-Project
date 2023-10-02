@@ -17,7 +17,7 @@ from app.produceImage import generate_soundwave_image
 
 from app.interact_database import *
 
-
+from app.computeScore import compute_score
 
 
 @app.route('/')
@@ -236,6 +236,19 @@ def send_image():
         return "valid", 200
 
     return "invalid", 404
+
+@app.route("/get-similarity-score", methods=["GET"])
+def get_similarity_score():
+    user = request.args.get('user')
+    name_of_clip = request.args.get('name')
+    week = request.args.get('week')
+    attempt = request.args.get('attempt')
+
+    SUBMITTED_FILE = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
+    SOURCE_FILE = f"./app/static/audio/{week}/{name_of_clip}.wav"
+    score = compute_score(SOURCE_FILE, SUBMITTED_FILE)
+
+    return {'score': score}
 
 
 @login_required

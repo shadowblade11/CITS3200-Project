@@ -323,6 +323,30 @@
           newRecording[index] = 0;
         }
 
+        var xmlhttpScore = new XMLHttpRequest();
+        const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
+        let name_of_clip = audioplayer.id;
+        xmlhttpScore.open("GET", "/get-similarity-score?user=" + userID + "&name=" + name_of_clip + "&week=" + weekID + "&attempt=" + count.innerHTML, true);
+        xmlhttpScore.onreadystatechange = function() {
+          if (xmlhttpImage.readyState == 4) {
+            if (xmlhttpImage.status == 200) {
+              var score = xmlhttpScore.responseText;
+              var jsonResponse = JSON.parse(score);
+              console.log("Score received: " + jsonResponse['score']);
+
+              var scoreElement = listOfDivs[index].querySelector("span.computed-score-value");
+              scoreElement.innerHTML = jsonResponse['score'];
+
+            }
+            else {
+              // Request for score failed
+              console.error("Request for score failed with status: " + xmlhttpScore.status);
+            }
+          }
+        };
+        xmlhttpScore.send();  
+
+
       }
 
     });
