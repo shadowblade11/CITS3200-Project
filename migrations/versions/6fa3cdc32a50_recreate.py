@@ -1,8 +1,8 @@
-"""reconstruct db
+"""recreate
 
-Revision ID: 788f95de29a8
+Revision ID: 6fa3cdc32a50
 Revises: 
-Create Date: 2023-09-28 15:30:12.702630
+Create Date: 2023-10-02 23:21:47.199385
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '788f95de29a8'
+revision = '6fa3cdc32a50'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,7 +27,8 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
-    sa.Column('id', sa.String(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('username', sa.String(length=128), nullable=True),
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.Column('is_admin', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -56,16 +57,19 @@ def upgrade():
     sa.Column('difficulty', sa.Integer(), nullable=True),
     sa.Column('test_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['test_id'], ['test.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('question_name')
     )
     op.create_table('score',
     sa.Column('score_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.String(), nullable=False),
-    sa.Column('question_id', sa.Integer(), nullable=False),
+    sa.Column('test_id', sa.Integer(), nullable=False),
+    sa.Column('question_name', sa.String(length=128), nullable=False),
     sa.Column('user_score', sa.Integer(), nullable=True),
     sa.Column('sys_score', sa.Integer(), nullable=True),
     sa.Column('attempt_chosen', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['question_id'], ['question.id'], ),
+    sa.ForeignKeyConstraint(['question_name'], ['question.question_name'], ),
+    sa.ForeignKeyConstraint(['test_id'], ['test.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('score_id')
     )

@@ -1,5 +1,4 @@
-from app.models import User, Question, Test
-from app import app
+from app.models import *
 
 '''
 This module contains a collection of functions designed to interact with a database. 
@@ -21,147 +20,70 @@ Example:
 
 
 def write_feedback(user_id, feedback, week):
-    """
-        Writes feedback for a specific test.
+    test = Test.get(week_number=week)
+    if test is None:
+        raise ValueError(f"Test for week {week} doesn't exist!")
+    fb = Feedback.get(user=user_id, week=week)
+    fb.set_feedback(feedback)
+    Feedback.write_to(fb)
 
-        Args:
-            user_id (str): The user ID of the student.
-            feedback (str): The feedback to write.
-            week (int): The week/ID of the test.
 
-        Usage:
-            write_feedback('123', 'Good job!', 1)
-        """
-    test = Test.get(test_id=week, user_id=user_id)  # Return a list for the test object at specific week
-    test.feedback = feedback
+def initialize_test(week, name, due, quantity):  # After initialize the test the users' complete and feedback will be created
+    '''
+    Invoke to activate a test, create relevant tables for all the students.
+    :param week: week number
+    :param name: the name of the test
+    :param due: the due day of the test
+    :param quantity: the number of questions
+    :return: None
+    '''
+
+    test = Test(week_no=week, test_name=name, due_date=due, no_of_qs=quantity)
     Test.write_to(test)
 
-
-def get_user(user_id):
-    """
-        Retrieves user data by user ID.
-
-        Args:
-            user_id (str): The user ID of the user to retrieve.
-
-        Returns:
-            User object: The user object with the specified user ID.
-
-        Usage:
-            user = get_user('123')  # Retrieves user data for user ID '123'.
-        """
-    return User.get(id=user_id)
-
-
-def get_test(user_id, week):
-    """
-        Retrieves a specific test for a user.
-
-        Args:
-            user_id (str): The user ID of the student.
-            week (int): The week/ID of the test.
-
-        Returns:
-            Test object: The test object for the specified user and week.
-
-        Usage:
-            test = get_test('123', 1)  # Retrieves test for user '123' and week 1.
-        """
-    return Test.get(user_id=user_id, test_id=week)
-
-
-def get_question(user_id, question_num, week):
-    """
-        Retrieves a specific question for a user and week.
-
-        Args:
-            user_id (str): The user ID of the student.
-            question_num (int): The question number.
-            week (int): The week/ID of the test.
-
-        Returns:
-            Question object: The question object for the specified user, week, and question number.
-
-        Usage:
-            question = get_question('123', 1, 1)  # Retrieves question 1 for user '123' in week 1.
-        """
-    return Question.get(user_id=user_id, test_id=week, question_id=question_num)
-
-
-def get_feedback(user_id, test_id):
-    """
-        Retrieves feedback for a specific test.
-
-        Args:
-            user_id (str): The user ID of the student.
-            test_id (int): The ID of the test.
-
-        Returns:
-            str: The feedback for the specified user and test.
-
-        Usage:
-            feedback = get_feedback('123', 1)  # Retrieves feedback for user '123' and test 1.
-        """
-    return Test.get(user_id=user_id, test_id=test_id).feedback
-
-
-def set_score(user_id, question_id, week, score, mode):
-    """
-        Sets a score for a specific question.
-
-        Args:
-            user_id (str): The user ID of the student.
-            question_id (int): The question number.
-            week (int): The week/ID of the test.
-            score (int): The score to set.
-            mode (int): The scoring mode (0 for self-evaluation, 1 for teacher evaluation, 2 for program evaluation).
-
-        Usage:
-            set_score('123', 1, 1, 95, 1)  # Sets a teacher evaluation score of 95 for question 1 in week 1 for user '123'.
-        """
-
-    # Define a dictionary to map mode values to attribute names
-    mode_to_attribute = {
-        0: 'self_evaluation',
-        1: 'teacher_evaluation',
-        2: 'program_evaluation'
-    }
-
-    # Get the attribute name based on the mode
-    attribute_name = mode_to_attribute.get(mode)
-
-    if attribute_name is not None:
-        # Use setattr to set the attribute value dynamically
-        question = get_question(user_id, question_id, week)
-        setattr(question, attribute_name, score)
-        Question.write_to(question)
-
-
-def set_difficulty(week, question_id, difficulty):
-    questions = Question.get_all(question_id=question_id, test_id=week)
-    for question in questions:
-        question.difficulty = difficulty
-        Question.write_to(question)
-
-
-def initialize_test(week, user_id):
-    test = Test(test_id=week, user_id=user_id)
-    Test.write_to(test)
-
-
-def admin_activate_tests(week):
     users = User.get_all()
-    for user in users:
-        initialize_test(week=week, user_id=user.id)
+    for user in users:  # Initialize feedback and complete table for all users in this week
+        completed = Complete(user=user.username, week=week)
+        feedback = Feedback(user=user.username, week=week)
+        Complete.write_to(completed)
+        feedback.write_to(feedback)
 
 
-def activate_questions(question_num, week):
-    tests = Test.get_all(test_id=week)
-    for test in tests:
-        for i in range(question_num):
-            question = Question(question_name=i, test_id=week, user_id=test.user_id)
-            Question.write_to(question)
+def admin_activate_tests(week, questions):
+    """
+    Invoke whenever a test is initialized by an admin user, and admin has already uploaded the questions for this week.
+    questions is a list of tuples[('q1', 6), ('q2', 3)..., ('qn', 9)]
+    The first element in the tuple is the question name and the second element in the tuple is the difficulty.
+    """
+    test = Test.get(week_number=week)
+
+    if test is None:
+        raise ValueError(f"Test for week {week} doesn't exist!")
+
+    if len(questions) != test.number_of_questions:
+        raise ValueError("The number of provided questions doesn't match the expected number for this test.")
+    number_of_questions = test.number_of_questions
+
+    for i in range(number_of_questions):
+        q = Question(question_name=questions[i][0], difficulty=questions[i][1], test_id=test.week_number)
+        Question.write_to(q)
 
 
-if __name__ == "__main__":
-    print(1)
+def set_score(score, username, week, question_name, type):
+    test = Test.get(week_number=week)
+    question = Question.get(question_name=question_name)
+    if test is None:
+        raise ValueError(f"Test for week {week} doesn't exist!")
+    if question is None:
+        raise ValueError(f"Question {question_name} doesn't exist!")
+
+    scores = Score(user=username, week=week, question_name=question_name)
+
+    if type == 'self':
+        scores.user_score = score
+    elif type == 'program':
+        scores.sys_score = score
+    else:
+        raise ValueError("No such type of score.")
+
+    Score.write_to(scores)

@@ -41,7 +41,7 @@ class DB_Queries(db.Model):
 
 
 class User(UserMixin, DB_Queries):
-    id = db.Column(db.String, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
@@ -55,10 +55,11 @@ class User(UserMixin, DB_Queries):
         return check_password_hash(self.password_hash, passwd)
 
     def __repr__(self):
-        return f'<User {self.id}>'
+        return f'<User {self.username}>'
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, username):
+        self.username = username
+        self.is_admin = False
 
 
 @login.user_loader
@@ -72,9 +73,16 @@ class Complete(DB_Queries):
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     completed = db.Column(db.Boolean)
 
-    def __init__(self, user):
+    def __init__(self, user, week):
         self.user_id = user
+        self.test_id = week
         self.completed = False
+
+    def set_completed(self):
+        self.completed = True
+
+    def __repr__(self):
+        return f"<Complete (Username: {self.user_id}, Week: {self.test_id}, Completed: {self.completed})>"
 
 
 class Feedback(DB_Queries):
@@ -82,31 +90,37 @@ class Feedback(DB_Queries):
     feedback = db.Column(db.String(512))
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-    # user = db.relationship('User', backref='feedback')
 
-    def __init__(self, user):
+    def __init__(self, user, week):
         self.feedback = None
         self.user_id = user
+        self.test_id = week
 
     def __repr__(self):
-        return f'<Feedback {self.feedback_id}:{self.feedback} (User ID: {self.user_id}, Test ID: {self.test_id})>'
+        return f'<Feedback :{self.feedback} (User ID: {self.user_id}, Test ID: {self.test_id})>'
+
+    def set_feedback(self, feedback):
+        self.feedback = feedback
 
 
 class Score(DB_Queries):
     score_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
+    question_name = db.Column(db.String(128), db.ForeignKey('question.question_name'), nullable=False)
     user_score = db.Column(db.Integer)
     sys_score = db.Column(db.Integer)
     attempt_chosen = db.Column(db.Integer)
 
-    def __init__(self, user):
+    def __init__(self, user, week, question_name):
         self.sys_score, self.user_score, self.attempt_chosen = 0, 0, 0
         self.user_id = user
+        self.test_id = week
+        self.question_name = question_name
 
     def __repr__(self):
         return (f'<Score self eval: {self.user_score} , program eval: {self.sys_score} '
-                f'(User ID: {self.user_id}, Question ID: {self.question_id})>')
+                f'(User ID: {self.user_id}, Week:{self.test_id}, Question ID: {self.question_name})>')
 
 
 class Test(DB_Queries):
@@ -116,6 +130,7 @@ class Test(DB_Queries):
     due_date = db.Column(db.String(128))  # dd/mm/yy
     number_of_questions = db.Column(db.Integer)
     questions = db.relationship('Question', backref='test')
+    scores = db.relationship('Score', backref='test')
 
     def __init__(self, week_no, test_name, due_date, no_of_qs):
         self.test_name = test_name
@@ -124,12 +139,15 @@ class Test(DB_Queries):
         self.week_number = week_no
 
     def __repr__(self):
-        return f'<Test {self.test_name} (ID: {self.id}, Week: {self.week_number})>'
+        return f'<Test {self.test_name} (Week: {self.week_number})(Questions: {self.questions})>'
+
+    def create_test(self, week_no, test_name, due_date, no_of_qs):
+        self.__init__(week_no, test_name, due_date, no_of_qs)
 
 
 class Question(DB_Queries):
     id = db.Column(db.Integer, primary_key=True)
-    question_name = db.Column(db.String(128))
+    question_name = db.Column(db.String(128), unique=True)
     difficulty = db.Column(db.Integer)
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
 
@@ -139,4 +157,4 @@ class Question(DB_Queries):
         self.difficulty = difficulty
 
     def __repr__(self):
-        return f'<Question {self.question_name} (ID: {self.id}, Test ID: {self.test_id})>'
+        return f'<Question {self.question_name} ( Week: {self.test_id}, Difficulty: {self.difficulty})>'
