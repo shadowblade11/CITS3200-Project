@@ -20,10 +20,17 @@
         <li><a href="{{url_for('administratorLogin')}}">Admin</a></li>
       {% else %}
         <li><a href="{{url_for('logout')}}">Logout</a></li>
-        <li><a href="{{url_for('test', username=username)}}">Tests</a></li>
-        <li><a href="{{url_for('grades')}}">Grades</a></li>
+          {% if not current_user.is_admin %}
+            <li><a href="{{url_for('home', username=current_user.id)}}">Tests</a></li>
+            <li><a href="{{url_for('grades')}}">Grades</a></li>
+          {% else %}
+            <li><a href="{{url_for('adminHome')}}">Admin</a></li>
+          {% endif %}
+        
       {% endif %}
-
+    {% if current_user.is_admin %}
+        <li><a href="{{url_for('addtest')}}">Create Test</a></li>
+    {% endif %}
       <li><a href="{{url_for('about')}}">About</a></li>
       <li><a href="{{url_for('contact')}}">Contact</a></li>
     </ul>

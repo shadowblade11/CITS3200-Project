@@ -1,39 +1,32 @@
-  .top-bar {
-    background-color: #333;
-    color: rgb(255, 255, 255);
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.admin-home {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .top-bar a {
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-    padding: 10px;
-  }
+.content {
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .content {
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 
-  h2{
-    margin-top: 120px;
-  }
+.instructions-container {
+  border: solid 2px black;
+  margin-left: 10%;
+  margin-right: 10%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.67em;
+  padding-bottom: 0.67em;
+  margin-bottom: 0.67em;
+}
 
-  label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-  }
-
-.search-form {
-    margin-top: 20px;
-  }
-  
   #search-bar {
     padding: 8px;
     width: 300px;
@@ -45,6 +38,7 @@
     color: #fff;
     border: none;
     cursor: pointer;
+    margin-top: 5%;
   }
 
   .image-container {
@@ -60,6 +54,7 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  margin-top: 5%;
 }
 
 .dropbtn {
@@ -72,12 +67,8 @@
 
 .dropdown-content {
   display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  text-align: left;
+  background-color: #000000;
+  color:white
 }
 
 .dropdown-content a {
@@ -87,7 +78,7 @@
 }
 
 .dropdown-content a:hover {
-  background-color: #ddd;
+  background-color: #6495ED;
 }
 
 .dropdown:hover .dropdown-content {
@@ -96,6 +87,8 @@
 
 .dropdown:hover .dropbtn {
   background-color: #000000;
+  margin-top: 5%;
+
 }
 
   /* adminHome.css */
@@ -120,3 +113,5 @@
 #student-picture{
   background-color: #cccccc;
 }
+
+

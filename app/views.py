@@ -327,7 +327,23 @@ def send_feedback():
         return "", 404
 
 
+@app.route("/upload_file", methods=["POST"])
+def upload_file():
+    print(3242423)
+    if request.method == "POST":
+        test_name = request.form["testName"]
+        test_file = request.files["testFile"]
 
+        if test_file:
+            file_name = test_file.filename
+            parent_dir = os.path.dirname(os.path.dirname(__file__))
+            save_path = os.path.join(parent_dir, "test", file_name)
+
+            test_file.save(save_path)
+
+            return "File uploaded successfully."
+
+    return render_template("adminAddtest.html")
 
 
 

@@ -1,7 +1,6 @@
+
 .test-content {
-  padding: 1rem;
   text-align: center;
-  margin: 0.5rem;
   height: 100%;
   width: 100%;
   display: flex;
@@ -14,29 +13,86 @@
   display: flex;
 }
 
-.task-container {
+.task-container, .instructions-container {
   border: solid 2px black;
+  margin-left: 10%;
+  margin-right: 10%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.67em;
+  padding-bottom: 0.67em;
+  margin-bottom: 0.67em;
 }
 
   .task-container .task {
     display: flex;
-  }
-
-  .task-container .task .question-container,
-  .task-container .task .response-container {
-    flex: 1;
-    display: flex;
     flex-direction: column;
-    align-items: center;
   }
 
-  .task-container .task .button-container {
-    display: flex;
-    width: 50%;
-    justify-content: space-around;
-    margin-top: 1.5em;
-  }
+    .task-container .task .question-container,
+    .task-container .task .response-container,
+    .task-container .task .assessment-container {
+      margin-top: 0.67em;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-  .task-container .task .count-container {
-    display: flex;
-  }
+      .task-container .task .response-container .count-container {
+        display: flex;
+      }
+    
+      .task-container .task .response-container .recordings {
+        display: flex;
+        width: 100%;
+        align-items: center;
+      }
+
+        .task-container .task .response-container  .recordings .recording {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 160px;
+          align-items: center;
+        }
+        
+        .task-container .task .response-container .recordings .recording .select-attempt {
+          height: 1.5em;
+          width: 1.5em;
+          margin-top: 0.67em;
+        }
+      
+
+    .assessment-container .test-scores {
+      display: flex;
+      width: 50%;
+      justify-content: space-between;
+    }
+
+      .self-assessment-scores, .computed-scores {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+.response-container .record,
+.assessment-container .submit {
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s;
+  display: block;
+  padding: 10px;
+  border: 3px solid black;
+  background-color: black;
+  border-radius: 40px;
+}
+
+.response-container .record.disabled {
+  background-color: grey;
+  border-color: grey;
+  color: black;
+}
+
