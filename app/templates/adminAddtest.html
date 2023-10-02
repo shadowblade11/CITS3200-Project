@@ -24,12 +24,12 @@
     </details>
 
     <div class="addtest">
-        <form id="test-form" enctype="multipart/form-data" method="POST" action={{ url_for('upload_file') }}>
+        <form id="test-form" enctype="multipart/form-data" method="POST" action={{ url_for('upload_files') }}>
             <label for="test-name">Test Name:</label>
             <input type="text" id="test-name" name="testName" required>
             
             <label for="file-upload">Upload File:</label>
-            <input type="file" id="file-upload" name="testFile" accept=".mp3,.m4a,.wav" multiple required>
+            <input type="file" id="file-upload" name="testFiles" accept=".mp3,.m4a,.wav" multiple required>
 
             <div class="test-factors">
                 <label for="difficulty">Difficulty:</label>

@@ -341,20 +341,22 @@ def send_feedback():
 
 
 @app.route("/upload_file", methods=["POST"])
-def upload_file():
-    print(3242423)
+def upload_files():
     if request.method == "POST":
         test_name = request.form["testName"]
-        test_file = request.files["testFile"]
-
-        if test_file:
-            file_name = test_file.filename
+        test_files = request.files.getlist("testFiles")
+        if test_files:
             parent_dir = os.path.dirname(os.path.dirname(__file__))
-            save_path = os.path.join(parent_dir, "test", file_name)
+            upload_dir = os.path.join(parent_dir, "test")
 
-            test_file.save(save_path)
+            for test_file in test_files:
+                if test_file:
+                    file_name = test_file.filename
+                    save_path = os.path.join(upload_dir, file_name)
 
-            return "File uploaded successfully."
+                    test_file.save(save_path)
+
+            return "Files uploaded successfully."
 
     return render_template("adminAddtest.html")
 
