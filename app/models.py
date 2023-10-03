@@ -58,10 +58,10 @@ class User(UserMixin, DB_Queries):
         return check_password_hash(self.password_hash, passwd)
 
     def __repr__(self):
-        return f'<User {self.id}>'
+        return f'<User {self.username}>'
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, username):
+        self.username = username
 
 
 @login.user_loader

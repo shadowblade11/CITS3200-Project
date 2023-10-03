@@ -37,7 +37,7 @@ def about():
 @app.route('/home/<username>')
 @login_required
 def home(username):
-    user = User.query.filter_by(id=username).first_or_404()
+    user = User.query.filter_by(username=username).first_or_404()
     return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username)
 
 
@@ -61,10 +61,10 @@ def contact():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home', username=current_user.id))  # Provide the username
+        return redirect(url_for('home', username=current_user.username))  # Provide the username
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.get_user(user_id=form.id.data)
+        user = User.get(username=form.id.data)
         if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
             return redirect(url_for('login'))
@@ -72,7 +72,7 @@ def login():
         next_page = request.args.get('next')
         session['uid'] = form.id.data
         if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('home', username=user.id)
+            next_page = url_for('home', username=user.username)
         return redirect(next_page)
     return render_template('loginPage.html', form=form, css=url_for('static', filename='loginPage.css'))
 
@@ -80,13 +80,13 @@ def login():
 @app.route('/administratorLogin', methods=['GET', 'POST'])
 def administratorLogin():
     if (current_user.is_authenticated and
-            db.get_user(user_id=current_user.id).is_admin):
+            User.query.filter_by(username=current_user.username).is_admin):
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
         print(form.username.data)
         # user = User.get(form.username.data)
-        user = User.get(id= form.username.data)
+        user = User.get(username= form.username.data)
         # user = User.query.filter_by(id=form.username.data).first()
         print(user)
         if user is None:
@@ -112,8 +112,8 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if User.get(id=form.id.data) is not None:
-            message = "ID already exists."
+        if User.get(username=form.id.data) is not None:
+            message = "Username already exists."
             return render_template('register.html', form=form, title='Register', message=message)
         session['id'] = form.id.data
         session['passwd'] = form.passwd2.data
@@ -136,7 +136,7 @@ def verify():
             # Verification code doesn't match
             form.v_code.errors = ["Incorrect verification code"]
         elif session['v_code'] == form.v_code.data:
-            user = User(id=session['id'])
+            user = User(username=session['id'])
             user.set_passwd(session['passwd'])
             session.pop('id')  # Clear the session variable
             User.write_to(user)
