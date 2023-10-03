@@ -341,11 +341,14 @@ def send_feedback():
         return "",404
 
 
-UPLOAD_FOLDER = 'test'
+UPLOAD_FOLDER = 'test'  # Specify the folder where you want to save uploaded files
 
 @app.route('/upload_files', methods=['POST'])
 def upload_files():
     try:
+        test_name = request.form.get('testName')
+        due_date = request.form.get('dueDate')
+
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
         uploaded_files = {}
@@ -355,12 +358,17 @@ def upload_files():
             if file_key in request.files:
                 files = request.files.getlist(file_key)
                 file_paths = []
+                selected_files = []
                 for file in files:
                     if file:
                         filename = os.path.join(UPLOAD_FOLDER, file.filename)
                         file.save(filename)
                         file_paths.append(filename)
+                        selected_files.append(file.filename)
                 uploaded_files[difficulty] = file_paths
+                print(f"Test Name : {test_name}")
+                print(f"Difficulty : {difficulty}: File : {', '.join(selected_files)}")
+                print(f"Due date : {due_date}")
         return jsonify(uploaded_files), 200
     except Exception as e:
         return str(e), 500
