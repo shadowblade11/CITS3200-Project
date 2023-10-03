@@ -3,6 +3,7 @@ import os
 from flask import render_template, redirect, url_for, flash, request, session, jsonify
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import urlsplit
+from werkzeug.utils import secure_filename
 
 from app import app, verification
 from app import interact_database as db
@@ -340,34 +341,29 @@ def send_feedback():
         return "",404
 
 
-@app.route("/upload_file", methods=["POST"])
+UPLOAD_FOLDER = 'test'
+
+@app.route('/upload_files', methods=['POST'])
 def upload_files():
-    if request.method == "POST":
-        test_name = request.form["testName"]
-        test_files = request.files.getlist("testFiles")
-        difficulty = request.form["difficulty"]
-        due_date = request.form["dueDate"]
-        print(f"Test Name: {test_name}")
-        print(f"Difficulty: {difficulty}")
-        print(f"Due Date: {due_date}")
-        if test_files:
-            parent_dir = os.path.dirname(os.path.dirname(__file__))
-            upload_dir = os.path.join(parent_dir, "test")
-
-            for test_file in test_files:
-                if test_file:
-                    file_name = test_file.filename
-                    save_path = os.path.join(upload_dir, file_name)
-
-                    test_file.save(save_path)
-
-            return "Files uploaded successfully."
-
-    return render_template("adminAddtest.html")
-
-
-
-
+    try:
+        if not os.path.exists(UPLOAD_FOLDER):
+            os.makedirs(UPLOAD_FOLDER)
+        uploaded_files = {}
+        difficulty_levels = ['low', 'medium', 'high']
+        for difficulty in difficulty_levels:
+            file_key = f'{difficulty}DifficultyFile'
+            if file_key in request.files:
+                files = request.files.getlist(file_key)
+                file_paths = []
+                for file in files:
+                    if file:
+                        filename = os.path.join(UPLOAD_FOLDER, file.filename)
+                        file.save(filename)
+                        file_paths.append(filename)
+                uploaded_files[difficulty] = file_paths
+        return jsonify(uploaded_files), 200
+    except Exception as e:
+        return str(e), 500
 
 
 

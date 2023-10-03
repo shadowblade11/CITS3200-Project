@@ -22,86 +22,110 @@
             <p>Click 'Upload Test'.</p>
             </div>
     </details>
-
-    <div class="addtest">
-        <form id="test-form" enctype="multipart/form-data" method="POST" action={{ url_for('upload_files') }}>
-            <label for="test-name">Test Name:</label>
-            <input type="text" id="test-name" name="testName" required>
-            
-            <label for="file-upload">Upload File:</label>
-            <input type="file" id="file-upload" name="testFiles" accept=".mp3,.m4a,.wav" multiple required>
-            <div id="audio-container"></div>
-
-            <div class="test-factors">
-                <label for="difficulty">Difficulty:</label>
-                <select id="difficulty" name="difficulty" required>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-                <h4>Due Date:</h4>
-                <input type="date" id="due-date" name="dueDate" required>
+<div class="addtest">
+    <form id="test-form" enctype="multipart/form-data" method="POST" action={{ url_for('upload_files') }}>
+        <label for="test-name">Test Name:</label>
+        <input type="text" id="test-name" name="testName" required>
+        <div id="file-uploads">
+            <div class="file-upload" data-difficulty="low">
+                <label for="low-difficulty-file">Upload Low Difficulty File:</label>
+                <input type="file" id="low-difficulty-file" name="lowDifficultyFile" accept=".mp3,.m4a,.wav" multiple required>
+<div id="selected-files-low"></div>
             </div>
+            <!-- Add these two divs below your file upload input fields -->
 
-            <button type="submit">Upload Test</button>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const uploadButton = document.getElementById("upload-button");
+            <div class="file-upload" data-difficulty="medium">
+                <label for="medium-difficulty-file">Upload Medium Difficulty File:</label>
+                <input type="file" id="medium-difficulty-file" name="mediumDifficultyFile" accept=".mp3,.m4a,.wav" multiple required>
+<div id="selected-files-medium"></div>
+            </div>
+            <!-- Add these two divs below your file upload input fields -->
 
-        uploadButton.addEventListener("click", function () {
-            const testName = document.getElementById("test-name").value;
-            const fileInput = document.getElementById("file-upload");
-            const selectedFile = fileInput.files[0];
-            const difficulty = document.getElementById("difficulty").value
-            const dueDate = document.getElementById("due-date").value
 
-            if (!selectedFile) {
-                alert("Please select a file to upload.");
-                return;
-            }
+            <div class="file-upload" data-difficulty="high">
+                <label for="high-difficulty-file">Upload High Difficulty File:</label>
+                <input type="file" id="high-difficulty-file" name="highDifficultyFile" accept=".mp3,.m4a,.wav" multiple required>
+<div id="selected-files-high"></div>
+            </div>
+        </div>
 
-            const formData = new FormData();
-            formData.append("testName", testName);
-            formData.append("testFile", selectedFile);
-            formData.append("difficulty", difficulty)
-            formData.append("dueDate", dueDate)
+        <!-- Due Date -->
+        <h4>Due Date:</h4>
+        <input type="date" id="due-date" name="dueDate" required>
 
-            fetch("/", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("upload-status").textContent = data;
-            })
-            .catch(error => {
-                console.error(error);
-                alert("An error occurred while uploading the file.");
-            });
-        });
-    });
+        <button type="submit">Upload Test</button>
+    </form>
+</div>
+<script>
 
-   //display select audio file
-    function displaySelectedAudioFiles() {
-        const fileInput = document.querySelector("#file-upload");
-        const audioContainer = document.querySelector("#audio-container");
-        audioContainer.innerHTML = "";
+
+    // Function to display the selected files and audio players
+    function displaySelectedFiles(inputId, containerId) {
+        const fileInput = document.getElementById(inputId);
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+
         for (const file of fileInput.files) {
             const fileDiv = document.createElement("div");
-            const audioElement = document.createElement("audio");
-            audioElement.controls = true;
-            audioElement.src = URL.createObjectURL(file);
+
+            // Display the selected file name
             const fileNameParagraph = document.createElement("p");
             fileNameParagraph.textContent = `File Name: ${file.name}`;
             fileDiv.appendChild(fileNameParagraph);
-            fileDiv.appendChild(audioElement);
-            audioContainer.appendChild(fileDiv);
+
+            // Display an audio player for audio files
+            if (file.type.startsWith("audio/")) {
+                const audioElement = document.createElement("audio");
+                audioElement.controls = true;
+                audioElement.src = URL.createObjectURL(file);
+                fileDiv.appendChild(audioElement);
+            }
+
+            container.appendChild(fileDiv);
         }
     }
-    const fileInput = document.querySelector("#file-upload");
-    fileInput.addEventListener("change", displaySelectedAudioFiles);
+
+    // Attach event listeners to handle file selection and display for each difficulty level
+    document.getElementById("low-difficulty-file").addEventListener("change", function () {
+        displaySelectedFiles("low-difficulty-file", "selected-files-low");
+    });
+
+    document.getElementById("medium-difficulty-file").addEventListener("change", function () {
+        displaySelectedFiles("medium-difficulty-file", "selected-files-medium");
+    });
+
+    document.getElementById("high-difficulty-file").addEventListener("change", function () {
+        displaySelectedFiles("high-difficulty-file", "selected-files-high");
+    });
+
+
+
+document.getElementById("test-form").addEventListener("submit", function (event) {
+    event.preventDefault();  // Prevent the default form submission
+
+    const formData = new FormData(this);
+
+    fetch("/upload_files", {
+        method: "POST",
+        body: formData,
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        // Handle the response data if needed (e.g., display uploaded file paths)
+        alert("File(s) uploaded successfully!");
+        console.log(data);
+    })
+    .catch((error) => {
+        // Handle any errors that occur during the upload
+        console.error(error);
+    });
+});
+
 </script>
-</div>
+
+
+
+</body>
 
 {% endblock %}
