@@ -5,7 +5,7 @@ from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import urlsplit
 
 from app import app, verification
-from app import interact_database as db
+import app.interact_database as db
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import User
 
@@ -16,8 +16,6 @@ from app.conversion import convert_to_wav_working_format
 from app.produceImage import generate_soundwave_image
 
 from app.interact_database import *
-
-
 
 
 @app.route('/')
@@ -83,7 +81,6 @@ def login():
 def administratorLogin():
     if (current_user.is_authenticated and
             db.get_user(user_id=current_user.id).is_admin):
-        print("id=======", current_user.id)
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
@@ -337,7 +334,7 @@ def send_feedback():
         # string = data[user][week]
         return txt,200
     except:
-        return "",404
+        return "", 404
 
 
 @app.route("/upload_file", methods=["POST"])
