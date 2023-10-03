@@ -46,7 +46,7 @@ def initialize_test(week, name, due, quantity):  # After initialize the test the
         completed = Complete(user=user.username, week=week)
         feedback = Feedback(user=user.username, week=week)
         Complete.write_to(completed)
-        feedback.write_to(feedback)
+        Feedback.write_to(feedback)
 
 
 def admin_activate_tests(week, questions):
