@@ -180,11 +180,6 @@ def test(username):
                            week=week, user=username)
 
 
-@app.route('/audio-test')
-def audio_test():
-    return render_template('main.html')
-
-
 @app.route("/save-audio", methods=['POST'])
 def save_audio():
     blob = request.files['blob']
