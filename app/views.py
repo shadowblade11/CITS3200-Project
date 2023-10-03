@@ -192,51 +192,61 @@ def audio_test():
 def save_audio():
     blob = request.files['blob']
     user = request.form['user']
-    week = request.form['week']
+    test_name = request.form['test_name']
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
-    name_of_clip = name_of_clip.replace(" ", "_")
-    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{week}"
+    # name_of_clip = name_of_clip.replace(" ", "_")
+    PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{test_name}"
+    PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{test_name}"
     print("saving clip")
 
     os.makedirs(PATH_TO_FOLDER, exist_ok=True)
+    os.makedirs(PATH_TO_IMAGE_FOLDER, exist_ok=True)
 
     try:
-        blob.save(f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav")
+        raw_file = f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}-raw.wav"
+        clean_file = f"{PATH_TO_FOLDER}/{name_of_clip}-{attempt}.wav"
+        blob.save(raw_file)
         print("save successful")
+
+        convert_to_wav_working_format(raw_file,clean_file)
+
+        os.remove(raw_file)
+        
+        print("saving image")
+        generate_soundwave_image(clean_file, PATH_TO_IMAGE_FOLDER, f'{name_of_clip}-{attempt}')
+        print("save successful")
+
         return 'Upload successful', 200
     except Exception as e:
         print("save failed")
         return str(e), 400
 
 
-@app.route("/send-image", methods=["POST"])
-def send_image():
-    data = request.json
-    name_of_clip = data['name']
-    name_of_clip = name_of_clip.replace(" ", "_")
-    user = data['user']
-    week = data['week']
-    attempt = data['attempt']
-    PATH_TO_AUDIO_FOLDER = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}-raw.wav"
-    OUTPUT_PATH = f"./app/static/audio/users/{user}/{week}/{name_of_clip}-{attempt}.wav"
-    state = convert_to_wav_working_format(PATH_TO_AUDIO_FOLDER, OUTPUT_PATH)
-    if state == 0:
-        os.remove(PATH_TO_AUDIO_FOLDER)
-    else:
-        print('something went wrong')
+@app.route('/calculate-score', methods=['POST'])
+def calculate_score():
+    user = request.form['user']
+    test_name = request.form['test_name']
+    name_of_clip = request.form['name']
+    attempt = request.form['attempt']
+    user_score = request.form['user_score']
 
-    PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{week}"
+    PATH_TO_USER_ATTEMPT = f"./app/static/audio/users/{user}/{test_name}/{name_of_clip}-{attempt}.wav"
+    PATH_TO_SOURCE = f"./app/static/audio/{test_name}/{name_of_clip}.wav"
 
-    os.makedirs(PATH_TO_IMAGE_FOLDER, exist_ok=True)
+    print(PATH_TO_USER_ATTEMPT)
+    print(PATH_TO_SOURCE)
 
-    image_check = generate_soundwave_image(OUTPUT_PATH, PATH_TO_IMAGE_FOLDER, name_of_clip)
+    # score = similarity_function(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
+    import time
 
-    if image_check == 0:
-        return "valid", 200
-
-    return "invalid", 404
-
+    time.sleep(5)
+    score = 5
+    print(f"User Score = {user_score}, Actual Score = {score}")
+    #GET TEST OBJECT
+    #GET USER OBJECT
+    #MAKE SCORE OBJECT WITH user_score and score
+    return str(score),200
 
 @login_required
 @app.route('/addtest', methods=['GET', 'POST'])

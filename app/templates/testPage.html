@@ -55,15 +55,15 @@
         <div class="recordings">
           <div class="recording attempt-3">
             <h3 class="task-header">Attempt: 1</h3>
-            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+            <input type="radio" class="select-attempt" data-attempt="1" name= "select-attempt-{{loop.index}}" disabled />
           </div>
           <div class="recording attempt-2">
             <h3 class="task-header">Attempt: 2</h3>
-            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+            <input type="radio" class="select-attempt" data-attempt="2" name= "select-attempt-{{loop.index}}" disabled />
           </div>
           <div class="recording attempt-1">
             <h3 class="task-header">Attempt: 3</h3>
-            <input type="radio" class="select-attempt" name= "select-attempt-{{loop.index}}" disabled />
+            <input type="radio" class="select-attempt" data-attempt="3" name= "select-attempt-{{loop.index}}" disabled />
           </div>
         </div>
       </div>
@@ -89,21 +89,6 @@
   {% endfor %}
 
   <script>
-    /*
-    const saveButton = document.querySelector('.save-button');
-
-    saveButton.addEventListener('click', function() {
-      const pageTitle = document.title;
-      const pageContent = document.querySelector('.content').innerHTML;
-      
-      // Store data in local storage
-      localStorage.setItem('pageTitle', pageTitle);
-      localStorage.setItem('pageContent', pageContent);
-
-    //   alert('Page information saved.');
-    });
-    */
-
     const recordButtons = document.querySelectorAll('button.record');
     const listOfDivs = document.querySelectorAll('details.task-container');
     const submitButtons = document.querySelectorAll('button.submit');
@@ -161,75 +146,36 @@
               //decrease count
               countContainer.innerHTML = count - 1;
 
-              // check if audioplayer exist and change src to audioclip
-              const existingAudioPlayer = document.getElementById("audioplayer" + index + count);
-              if (existingAudioPlayer) {
-                existingAudioPlayer.src = URL.createObjectURL(blob);
+              var audioPlayer = document.createElement("audio");
+              audioPlayer.controls = true;
+              audioPlayer.id = "audioplayer" + index + count;
+              audioPlayer.src = URL.createObjectURL(blob);
 
-              } else { //create new audioplayer if it doesn't exist
-                var audioPlayer = document.createElement("audio");
-                audioPlayer.controls = true;
-                audioPlayer.id = "audioplayer" + index + count;
-                audioPlayer.src = URL.createObjectURL(blob);
+              let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
+              currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
+              radioSelector.removeAttribute("disabled");
+              
+              let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
 
-                let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
-                currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
-                radioSelector.removeAttribute("disabled");
-              }
+              save_audio(blob, name_of_clip, 4 - count, userID, weekID, function () {
+                var img = document.createElement("img");
+                img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${4 - count}.png`;
+                img.width = "400";
+                img.height = "160";
+                currentRecordingContainer.insertBefore(img, audioPlayer);
+              });
+
+
+
+
+
 
               // This is an old pointer whose value has decremented to 0, so disable the button
               if (count === 1) {
                 listOfDivs[index].querySelector(".record").classList.add("disabled");
               }
               
-              /*
-              // on success, request for image creation
               
-              // get needed information
-              const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-              let name_of_clip = audioplayer.id;
-
-              const json = JSON.stringify(
-                {
-                  "user":userID,
-                  "name":name_of_clip,
-                  "week":weekID,
-                  "attempt":count
-                }
-              );
-              
-              xmlhttpImage = new XMLHttpRequest();
-              xmlhttpImage.open("POST","/send-image",true);
-              xmlhttpImage.setRequestHeader('Content-Type','application/json');
-              xmlhttpImage.send(json);
-
-              xmlhttpImage.onreadystatechange = function() {
-                if(xmlhttpImage.readyState==4) {
-                  if(xmlhttpImage.status==200) {
-                    name_of_clip = name_of_clip.replaceAll(' ','_');
-                    
-                    //path for image
-                    let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + count + '.png';
-
-                    // check if img exist and update src
-                    var img = document.getElementById("recorded_image" + index + count);
-                    if(img){
-                      img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
-                    }else{ // create new img
-                      var create_image = document.createElement("img");
-                      create_image.src = filename;
-                      create_image.width = "400";
-                      create_image.height = "160";
-                      create_image.id = "recorded_image" + index + count;
-                      listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index + count));
-                    }
-                  }
-                  else{
-                    console.log("error");
-                  }
-                }
-              }
-              */
             }
             
           }).catch((err)=>{
@@ -249,81 +195,55 @@
 
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
-        // make sure audioclip exists, submission is allowed, and its a new clip
-        var blob = blobList[index];
-        var count = submissionAttempts[index];
-        var new_clip = newRecording[index];
-        if (blob && count.innerHTML != 0 && new_clip == 1){
-        // get needed information
-          const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-          let name_of_clip = audioplayer.id;
+        let countContainer = listOfDivs[index].querySelector(".count");
+        let count = Number(countContainer.innerHTML);
+        if (count === 0){
+          let selectedRadioButton = listOfDivs[index].querySelector('.select-attempt:checked');
+          if (selectedRadioButton){
+            let attempt = selectedRadioButton.dataset.attempt;
 
-          //create form and json
-          const formData = new FormData();
-          formData.append('blob',blob);
-          formData.append('user', userID);
-          formData.append('week', weekID);
-          formData.append('name', name_of_clip);
-          formData.append('attempt', count.innerHTML);
-          const json = JSON.stringify(
-            {
-              "user":userID,
-              "name":name_of_clip,
-              "week":weekID,
-              "attempt":count.innerHTML
-            }
-          )
+            let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
 
-          // send audio to be saved
-          var xmlhttp = new XMLHttpRequest();
-          xmlhttp.open("POST", "/save-audio",true);
-          xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4) {
-                    if (xmlhttp.status == 200) {
-                        // on success, request for image creation
-                        xmlhttpImage = new XMLHttpRequest();
-                        xmlhttpImage.open("POST","/send-image",true);
-                        xmlhttpImage.setRequestHeader('Content-Type','application/json');
-                        xmlhttpImage.send(json);
+            let user_score = listOfDivs[index].querySelector('.self-assessment-value').innerHTML;
+            console.log(attempt);
+            console.log(name_of_clip);
+            console.log(user_score);
 
-                        xmlhttpImage.onreadystatechange = function() {
-                          if(xmlhttpImage.readyState==4){
-                            if(xmlhttpImage.status==200){
-                              name_of_clip = name_of_clip.replaceAll(' ','_');
-                              
-                              //path for image
-                              let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
+            const formData = new FormData();
 
-                              // check if img exist and update src
-                              var img = document.getElementById("recorded_image" + index + count);
-                              if(img){
-                                img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
-                              }else{ // create new img
-                                var create_image = document.createElement("img");
-                                create_image.src = filename;
-                                create_image.width = "400";
-                                create_image.height = "160";
-                                create_image.id = "recorded_image" + index + count;
-                                listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index + count));
-                              }
-                            }
-                            else{
-                              console.log("error");
-                            }
-                          }
-                        }
+            formData.append('user',userID);
+            formData.append('test_name', weekID);
+            formData.append('attempt',attempt);
+            formData.append('name',name_of_clip);
+            formData.append('user_score',user_score);
+            var xmlhttp = new XMLHttpRequest();
 
-                    } else {
-                        // Request failed
-                        console.error("Request failed with status: " + xmlhttp.status);
-                    }
+            xmlhttp.open('POST','/calculate-score',true);
+            xmlhttp.onreadystatechange = function () {
+              if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                  let score = listOfDivs[index].querySelector(".computed-score-value");
+                  score.innerHTML = xmlhttp.responseText;
+                  console.log(xmlhttp.responseText);
                 }
-            };
-          xmlhttp.send(formData);
-          newRecording[index] = 0;
+              }
+            }
+
+
+            xmlhttp.send(formData);
+            submitButton.disabled = true;
+            submitButton.classList.add("disabled")
+            listOfDivs[index].style.background = "lightgreen";
+          }
+          else{
+            alert("Pick an attempt");
+          }
+        }
+        else{
+          alert("Do all submissions first");
         }
 
-      }
+        }
 
     });
 
@@ -336,5 +256,33 @@
         selfAssessmentValue.innerHTML = selfAssessmentRange.value;
       }
     });
+
+
+    function save_audio(blob, name_of_clip, attempt, user, test_name, callback){
+      const formData = new FormData();
+          formData.append('blob',blob);
+          formData.append('user', user);
+          formData.append('test_name', test_name);
+          formData.append('name', name_of_clip);
+          formData.append('attempt', attempt);
+
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "/save-audio",true);
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+          if (xmlhttp.status == 200) {
+            console.log("success");
+            if (callback && typeof callback === 'function') {
+              callback();
+            }
+          } else {
+            // Request failed
+              console.error("Request failed with status: " + xmlhttp.status);
+            }
+        }
+      };
+      xmlhttp.send(formData);
+    }
+
   </script>
 {% endblock %}
