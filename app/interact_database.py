@@ -1,23 +1,5 @@
 from app.models import *
 
-'''
-This module contains a collection of functions designed to interact with a database. 
-These functions have clear and meaningful names and accept specific arguments for various database operations.
-
-The module includes functions for activating tests, writing feedback, retrieving user data, fetching tests, questions,
- and feedback, as well as setting scores for questions etc.
-
-Usage:
-    To use any of these functions, simply import them into your application and call them with the appropriate arguments.
-
-Example:
-    To retrieve a user's data:
-    user = get_user('123')
-
-    To set a score for a specific question:
-    set_score('123', 1, 1, 95, 1)  # Sets a teacher evaluation score of 95 for question 1 in week 1 for user '123'.
-'''
-
 
 def write_feedback(user_id, feedback, week):
     test = Test.get(week_number=week)

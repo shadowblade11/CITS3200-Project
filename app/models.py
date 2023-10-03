@@ -104,7 +104,7 @@ class Feedback(DB_Queries):
 
 
 class Score(DB_Queries):
-    score_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     question_name = db.Column(db.String(128), db.ForeignKey('question.question_name'), nullable=False)
