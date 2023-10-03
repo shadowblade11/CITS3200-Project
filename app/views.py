@@ -368,7 +368,7 @@ def upload_files():
                 uploaded_files[difficulty] = file_paths
                 print(f"Test Name : {test_name}")
                 print(f"Difficulty : {difficulty} File : {', '.join(selected_files)}")
-                print(f"Due Date : {due_date}")
+                print(f"Due date : {due_date}")
         return jsonify(uploaded_files), 200
     except Exception as e:
         return str(e), 500
