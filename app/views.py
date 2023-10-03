@@ -17,7 +17,7 @@ from app.produceImage import generate_soundwave_image
 
 from app.interact_database import *
 
-
+from app.computeScore import compute_score
 
 
 @app.route('/')
@@ -237,11 +237,11 @@ def calculate_score():
     print(PATH_TO_USER_ATTEMPT)
     print(PATH_TO_SOURCE)
 
-    # score = similarity_function(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
+    score = compute_score(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
     import time
 
     time.sleep(5)
-    score = 5
+    #score = 5
     print(f"User Score = {user_score}, Actual Score = {score}")
     #GET TEST OBJECT
     #GET USER OBJECT
