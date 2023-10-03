@@ -41,12 +41,15 @@ class DB_Queries(db.Model):
 
 
 class User(UserMixin, DB_Queries):
-    id = db.Column(db.String, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
-    completed_tests = db.relationship('Complete', backref='user')
-    feedback = db.relationship('Feedback', backref='user')
+    
+    #relationships
+    completed_tests = db.relationship('Complete', backref='user', lazy='dynamic')
+    feedback = db.relationship('Feedback', backref='user',lazy='dynamic')
+    scores = db.relationship('Score', backref='user',lazy='dynamic')
 
     def set_passwd(self, passwd):
         self.password_hash = generate_password_hash(passwd)
@@ -67,10 +70,9 @@ def load_user(id):
 
 
 class Complete(DB_Queries):
-    completed_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
-    # user = db.relationship('User', backref='complete')
     completed = db.Column(db.Boolean)
 
     def __init__(self, user):
@@ -79,11 +81,10 @@ class Complete(DB_Queries):
 
 
 class Feedback(DB_Queries):
-    feedback_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     feedback = db.Column(db.String(512))
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-    # user = db.relationship('User', backref='feedback')
 
     def __init__(self, user):
         self.feedback = None
@@ -91,7 +92,7 @@ class Feedback(DB_Queries):
 
 
 class Score(DB_Queries):
-    score_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
     user_score = db.Column(db.Integer)
@@ -104,12 +105,16 @@ class Score(DB_Queries):
 
 
 class Test(DB_Queries):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     week_number = db.Column(db.Integer)
     test_name = db.Column(db.String(128))
     due_date = db.Column(db.String(128))  # dd/mm/yy
     number_of_questions = db.Column(db.Integer)
-    questions = db.relationship('Question', backref='test')
+
+    #relationships
+    questions = db.relationship('Question', backref='test',lazy='dynamic')
+    completed = db.relationship('Complete', backref='test',lazy='dynamic')
+    feedback = db.relationship('Feedback', backref='test',lazy='dynamic')
 
     def __init__(self, week_no, test_name, due_date, no_of_qs):
         self.test_name = test_name
@@ -119,7 +124,7 @@ class Test(DB_Queries):
 
 
 class Question(DB_Queries):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     question_name = db.Column(db.String(128))
     difficulty = db.Column(db.Integer)
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
