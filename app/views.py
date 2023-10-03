@@ -340,7 +340,8 @@ def upload_files():
     try:
         test_name = request.form.get('testName')
         due_date = request.form.get('dueDate')
-
+        # wk_number = request.form.get('wkNumber')
+        test = Test(week_no=int(1),test_name=test_name,due_date=str(due_date))
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
         uploaded_files = {}
