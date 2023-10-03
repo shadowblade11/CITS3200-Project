@@ -23,25 +23,25 @@
             </div>
     </details>
 <div class="addtest">
+
+
     <form id="test-form" enctype="multipart/form-data" method="POST" action={{ url_for('upload_files') }}>
         <label for="test-name">Test Name:</label>
         <input type="text" id="test-name" name="testName" required>
+        <label for="week-number">Week Number:</label>
+        <input type="number" id="week-number" name="weekNumber" required min="1">
         <div id="file-uploads">
             <div class="file-upload" data-difficulty="low">
                 <label for="low-difficulty-file">Upload Low Difficulty File:</label>
                 <input type="file" id="low-difficulty-file" name="lowDifficultyFile" accept=".mp3,.m4a,.wav" multiple>
                 <div id="selected-files-low"></div>
             </div>
-            <!-- Add these two divs below your file upload input fields -->
-
 
             <div class="file-upload" data-difficulty="medium">
                 <label for="medium-difficulty-file">Upload Medium Difficulty File:</label>
                 <input type="file" id="medium-difficulty-file" name="mediumDifficultyFile" accept=".mp3,.m4a,.wav" multiple>
                 <div id="selected-files-medium"></div>
             </div>
-            <!-- Add these two divs below your file upload input fields -->
-
 
             <div class="file-upload" data-difficulty="high">
                 <label for="high-difficulty-file">Upload High Difficulty File:</label>
@@ -57,7 +57,6 @@
 <script>
 
 
-    // Function to display the selected files and audio players
     function displaySelectedFiles(inputId, containerId) {
         const fileInput = document.getElementById(inputId);
         const container = document.getElementById(containerId);
