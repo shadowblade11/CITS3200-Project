@@ -42,8 +42,14 @@ def home(username):
 
     completed_tests = user.completed_tests.all()
     all_tests = Test.get_all()
-    print(completed_tests)
-    print(all_tests)
+    completed_tests = [i.test_id for i in completed_tests]
+    all_tests = [i.id for i in all_tests]
+
+    tests_to_do_id = list(set(all_tests)-set(completed_tests))
+    tests_to_do = []
+    for i in tests_to_do_id:
+        tests_to_do.append(Test.get(id=i).test_name)
+    print(tests_to_do)
     return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username)
 
 
