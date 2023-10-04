@@ -106,9 +106,13 @@ class Score(DB_Queries):
     sys_score = db.Column(db.Integer)
     attempt_chosen = db.Column(db.Integer)
 
-    def __init__(self, user):
-        self.sys_score, self.user_score, self.attempt_chosen = 0, 0, 0
-        self.user_id = user
+    def __init__(self, user_id, question_id,user_score,sys_score,attempt):
+        self.id = int(f'{user_id}{question_id}')
+        self.user_id = user_id
+        self.question_id = question_id
+        self.user_score = user_score
+        self.sys_score = sys_score
+        self.attempt_chosen = attempt
 
 
 class Test(DB_Queries):
