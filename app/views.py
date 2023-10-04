@@ -368,12 +368,15 @@ def upload_files():
                         # print(file.filename)
                         file.save(filename)
                         # print(filename)
-                        OUTPUT_FILE = f"{TEST_LOCATION_FOLDER}/{name}.wav"
+                        formatted_name = name.replace(' ','_')
+                        OUTPUT_FILE = f"{TEST_LOCATION_FOLDER}/{formatted_name}.wav"
                         convert_to_wav_working_format(filename,OUTPUT_FILE)
                         os.remove(filename)
-                        generate_soundwave_image(OUTPUT_FILE,f"app/static/images/{test_name}",name)
+                        generate_soundwave_image(OUTPUT_FILE,f"app/static/images/{test_name}",formatted_name)
                         file_paths.append(OUTPUT_FILE)
-                        selected_files.append(name)
+                        selected_files.append(formatted_name)
+                        question = Question(question_name=formatted_name,difficulty=difficulty,test_id=test.id)
+                        Question.write_to(question)
                 uploaded_files[difficulty] = file_paths
                 print(f"Difficulty : {difficulty} File : {', '.join(selected_files)}")
         print(f"Test Name : {test_name}")
@@ -382,6 +385,7 @@ def upload_files():
         print(f"Number of Questions : {n_of_qs}")
         return jsonify(uploaded_files), 200
     except Exception as e:
+        print(e)
         return str(e), 500
 
 

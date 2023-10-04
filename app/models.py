@@ -126,7 +126,7 @@ class Test(DB_Queries):
 class Question(DB_Queries):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     question_name = db.Column(db.String(128))
-    difficulty = db.Column(db.Integer)
+    difficulty = db.Column(db.String(10))
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
 
     def __init__(self, question_name, test_id, difficulty):
