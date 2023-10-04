@@ -341,8 +341,16 @@ def upload_files():
 
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
-        uploaded_files = {}
+        n_of_qs = 0
         difficulty_levels = ['low', 'medium', 'high']
+        for difficulty in difficulty_levels:
+            file_key = f'{difficulty}DifficultyFile'
+            if file_key in request.files:
+                files = request.files.getlist(file_key)
+                n_of_qs = n_of_qs + len(files)
+
+        uploaded_files = {}
+        # difficulty_levels = ['low', 'medium', 'high']
         for difficulty in difficulty_levels:
             file_key = f'{difficulty}DifficultyFile'
             if file_key in request.files:
@@ -360,6 +368,7 @@ def upload_files():
         print(f"Test Name : {test_name}")
         print(f"Week number : {week_number}")
         print(f"Due date : {due_date}")
+        print(f"Number of Questions : {n_of_qs}")
         return jsonify(uploaded_files), 200
     except Exception as e:
         return str(e), 500
