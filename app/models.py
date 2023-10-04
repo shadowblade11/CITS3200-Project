@@ -121,6 +121,8 @@ class Test(DB_Queries):
         self.due_date = due_date
         self.number_of_questions = no_of_qs
         self.week_number = week_no
+    def __repr__(self):
+        return f'<id: {self.id}, test_name: {self.test_name}>'
 
 
 class Question(DB_Queries):
@@ -133,3 +135,5 @@ class Question(DB_Queries):
         self.question_name = question_name
         self.test_id = test_id
         self.difficulty = difficulty
+    def __repr__(self):
+        return f'<{self.question_name}>'
