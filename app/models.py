@@ -80,6 +80,9 @@ class Complete(DB_Queries):
         self.test_id = test_id
         self.completed = status
 
+    def __repr__(self):
+        return f'<id: {self.id}, test id: {self.test_id}, user id: {self.user_id}>'
+
 
 class Feedback(DB_Queries):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
