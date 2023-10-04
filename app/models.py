@@ -71,13 +71,14 @@ def load_user(id):
 
 class Complete(DB_Queries):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
-    test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
     completed = db.Column(db.Boolean)
 
-    def __init__(self, user):
-        self.user_id = user
-        self.completed = False
+    def __init__(self, user_id, test_id, status):
+        self.user_id = user_id
+        self.test_id = test_id
+        self.completed = status
 
 
 class Feedback(DB_Queries):

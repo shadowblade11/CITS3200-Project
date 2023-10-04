@@ -39,6 +39,11 @@ def about():
 @login_required
 def home(username):
     user = User.query.filter_by(username=username).first_or_404()
+
+    completed_tests = user.completed_tests.all()
+    all_tests = Test.get_all()
+    print(completed_tests)
+    print(all_tests)
     return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username)
 
 
