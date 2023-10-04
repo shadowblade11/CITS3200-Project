@@ -53,7 +53,7 @@ def home(username):
     for i in tests_to_do_id:
         tests_to_do.append(Test.get(id=i).test_name)
     print(tests_to_do)
-    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username)
+    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username, tests_to_do=tests_to_do)
 
 
 @app.route('/adminHome', methods=["GET", "POST"])
