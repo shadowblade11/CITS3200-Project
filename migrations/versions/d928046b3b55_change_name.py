@@ -1,8 +1,8 @@
-"""recreate
+"""change name
 
-Revision ID: 3f3d0638943b
+Revision ID: d928046b3b55
 Revises: 
-Create Date: 2023-10-03 23:29:38.199170
+Create Date: 2023-10-04 15:58:49.827903
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3f3d0638943b'
+revision = 'd928046b3b55'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,22 +34,22 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('complete',
-    sa.Column('completed_id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.String(), nullable=False),
     sa.Column('test_id', sa.Integer(), nullable=False),
     sa.Column('completed', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['test_id'], ['test.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('completed_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('feedback',
-    sa.Column('feedback_id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('feedback', sa.String(length=512), nullable=True),
     sa.Column('test_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['test_id'], ['test.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('feedback_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('question',
     sa.Column('id', sa.Integer(), nullable=False),

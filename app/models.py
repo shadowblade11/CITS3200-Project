@@ -68,7 +68,7 @@ def load_user(id):
 
 
 class Complete(DB_Queries):
-    completed_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     completed = db.Column(db.Boolean)
@@ -86,7 +86,7 @@ class Complete(DB_Queries):
 
 
 class Feedback(DB_Queries):
-    feedback_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     feedback = db.Column(db.String(512))
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
