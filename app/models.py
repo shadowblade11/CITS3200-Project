@@ -76,6 +76,7 @@ class Complete(DB_Queries):
     completed = db.Column(db.Boolean)
 
     def __init__(self, user_id, test_id, status):
+        self.id = int(f'{user_id}{test_id}')
         self.user_id = user_id
         self.test_id = test_id
         self.completed = status
