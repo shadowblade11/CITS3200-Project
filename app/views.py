@@ -330,7 +330,7 @@ def send_feedback():
         return "", 404
 
 
-UPLOAD_FOLDER = 'test'
+UPLOAD_FOLDER = 'app/static/audio'
 
 @app.route('/upload_files', methods=['POST'])
 def upload_files():
@@ -339,8 +339,8 @@ def upload_files():
         due_date = request.form.get('dueDate')
         week_number = request.form.get('weekNumber')
 
-        if not os.path.exists(UPLOAD_FOLDER):
-            os.makedirs(UPLOAD_FOLDER)
+        if not os.path.exists(f"{UPLOAD_FOLDER}/{test_name}"):
+            os.makedirs(f"{UPLOAD_FOLDER}/{test_name}")
         n_of_qs = 0
         difficulty_levels = ['low', 'medium', 'high']
         for difficulty in difficulty_levels:
@@ -361,7 +361,7 @@ def upload_files():
                 selected_files = []
                 for file in files:
                     if file:
-                        filename = os.path.join(UPLOAD_FOLDER, file.filename)
+                        filename = os.path.join(f"{UPLOAD_FOLDER}/{test_name}", file.filename)
                         file.save(filename)
                         file_paths.append(filename)
                         selected_files.append(file.filename)
