@@ -85,11 +85,7 @@ def administratorLogin():
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
-        print(form.username.data)
-        # user = User.get(form.username.data)
         user = User.get(username= form.username.data)
-        # user = User.query.filter_by(id=form.username.data).first()
-        print(user)
         if user is None:
             return redirect(url_for('administratorLogin'))
         if not user.is_admin or not user.check_passwd(form.passwd.data):
@@ -139,6 +135,7 @@ def verify():
         elif session['v_code'] == form.v_code.data:
             user = User(username=session['id'])
             user.set_passwd(session['passwd'])
+            user.is_admin = False
             session.pop('id')  # Clear the session variable
             User.write_to(user)
             return redirect(url_for('login'))
