@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from app import app, verification
 import app.interact_database as db
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
-from app.models import User
+from app.models import *
 
 import datetime
 
@@ -300,16 +300,21 @@ def get_audio():
 def save_feedback():
     data = request.get_json()
     text = data.get('txt')
-    week = data.get('week')
+    test_name = data.get('week')
     user = data.get('user')
     print(user)
     print(text)
     # print(week)
-    week = int(week[-1])
+    # week = int(week[-1])
     #THIS IS WHERE WE CAN STORE THE FEEDBACK
     try:
         # REPLACE THIS WITH THE TABLE ASSIGNMENT
-        write_feedback(user,text,week)
+        user_id = User.get(username=user).id
+        test_id = Test.get(test_name=test_name).id
+        f = Feedback.get(user_id=user_id,test_id=test_id)
+        if f is None:
+            f = Feedback(user_id=user_id,test_id=test_id,feedback=text)
+            Feedback.write_to(f)
         # print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
         return "passed",200
     except:
