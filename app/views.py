@@ -349,8 +349,10 @@ def upload_files():
                 files = request.files.getlist(file_key)
                 n_of_qs = n_of_qs + len(files)
 
+
+        test = Test(week_no = int(week_number), test_name=test_name,due_date=due_date,no_of_qs=n_of_qs)
+        Test.write_to(test)
         uploaded_files = {}
-        # difficulty_levels = ['low', 'medium', 'high']
         for difficulty in difficulty_levels:
             file_key = f'{difficulty}DifficultyFile'
             if file_key in request.files:
