@@ -315,6 +315,9 @@ def save_feedback():
         if f is None:
             f = Feedback(user_id=user_id,test_id=test_id,feedback=text)
             Feedback.write_to(f)
+            return "passed",200
+        f.feedback = text
+        Feedback.write_to(f)
         # print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
         return "passed",200
     except:
@@ -325,8 +328,7 @@ def save_feedback():
 @app.route('/get-feedback',methods=["GET"])
 def send_feedback():
     user = request.args.get('user')
-    week = request.args.get('week')
-    week = int(week[-1])
+    test_name = request.args.get('week')
     # print(f"User: {user}, Week: {week}")
     # THIS IS WHERE WE RETRIVE FEEDBACK FROM THE DATABASE
 
@@ -339,7 +341,9 @@ def send_feedback():
     # }
     # }
     try:
-        txt = get_feedback(user,week)
+        user_id = User.get(username=user).id
+        test_id = Test.get(test_name=test_name).id
+        txt = Feedback.get(user_id=user_id,test_id=test_id).feedback
         # string = data[user][week]
         return txt,200
     except:
