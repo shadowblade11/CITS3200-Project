@@ -247,8 +247,8 @@ def calculate_score():
     user_id = User.get(username=user).id
     test_id = Test.get(test_name=test_name).id
     question_id = Question.get(test_id=test_id,question_name=name_of_clip).id
-    q = Question(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
-    Question.write_to(q)
+    s = Score(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
+    Score.write_to(s)
     #MAKE SCORE OBJECT WITH user_score and score
 
     questions_completed = User.get(id=user_id).scores.all()
@@ -261,6 +261,8 @@ def calculate_score():
     for i in test_questions:
         if i in questions_completed:
             count = count +1
+    print(Test.get(id=test_id).number_of_questions)
+    print(count)
     if count == Test.get(id=test_id).number_of_questions:
         c = Complete(user_id=user_id,test_id=test_id,status=True)
         Complete.write_to(c)
@@ -386,7 +388,9 @@ def upload_files():
             file_key = f'{difficulty}DifficultyFile'
             if file_key in request.files:
                 files = request.files.getlist(file_key)
-                n_of_qs = n_of_qs + len(files)
+                for file in files:
+                    if file:
+                        n_of_qs = n_of_qs + 1
 
 
         test = Test(week_no = int(week_number), test_name=test_name,due_date=due_date,no_of_qs=n_of_qs)
