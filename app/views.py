@@ -338,9 +338,11 @@ def upload_files():
         test_name = request.form.get('testName')
         due_date = request.form.get('dueDate')
         week_number = request.form.get('weekNumber')
-
-        if not os.path.exists(f"{UPLOAD_FOLDER}/{test_name}"):
-            os.makedirs(f"{UPLOAD_FOLDER}/{test_name}")
+        TEST_LOCATION_FOLDER = f"{UPLOAD_FOLDER}/{test_name}" 
+        if not os.path.exists(TEST_LOCATION_FOLDER):
+            os.makedirs(TEST_LOCATION_FOLDER)
+        if not os.path.exists(f"app/static/images/{test_name}"):
+            os.makedirs(f"app/static/images/{test_name}")
         n_of_qs = 0
         difficulty_levels = ['low', 'medium', 'high']
         for difficulty in difficulty_levels:
@@ -361,10 +363,17 @@ def upload_files():
                 selected_files = []
                 for file in files:
                     if file:
-                        filename = os.path.join(f"{UPLOAD_FOLDER}/{test_name}", file.filename)
+                        name, suffix = file.filename.split('.')
+                        filename = os.path.join(TEST_LOCATION_FOLDER, f"{name}-raw.{suffix}")
+                        # print(file.filename)
                         file.save(filename)
-                        file_paths.append(filename)
-                        selected_files.append(file.filename)
+                        # print(filename)
+                        OUTPUT_FILE = f"{TEST_LOCATION_FOLDER}/{name}.wav"
+                        convert_to_wav_working_format(filename,OUTPUT_FILE)
+                        os.remove(filename)
+                        generate_soundwave_image(OUTPUT_FILE,f"app/static/images/{test_name}",name)
+                        file_paths.append(OUTPUT_FILE)
+                        selected_files.append(name)
                 uploaded_files[difficulty] = file_paths
                 print(f"Difficulty : {difficulty} File : {', '.join(selected_files)}")
         print(f"Test Name : {test_name}")
