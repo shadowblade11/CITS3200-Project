@@ -19,6 +19,9 @@ from app.produceImage import generate_soundwave_image
 from app.interact_database import *
 
 
+import random 
+
+
 @app.route('/')
 @app.route('/intro')
 def intro():
@@ -238,15 +241,29 @@ def calculate_score():
     print(PATH_TO_USER_ATTEMPT)
     print(PATH_TO_SOURCE)
 
+    score = random.randrange(0,100)
     # score = similarity_function(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
-    import time
-
-    time.sleep(5)
-    score = 5
     print(f"User Score = {user_score}, Actual Score = {score}")
-    #GET TEST OBJECT
-    #GET USER OBJECT
+    user_id = User.get(username=user).id
+    test_id = Test.get(test_name=test_name).id
+    question_id = Question.get(test_id=test_id,question_name=name_of_clip).id
+    q = Question(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
+    Question.write_to(q)
     #MAKE SCORE OBJECT WITH user_score and score
+
+    questions_completed = User.get(id=user_id).scores.all()
+    questions_completed = [i.question_id for i in questions_completed]
+    test_questions = Test.get(id=test_id).questions.all()
+    test_questions = [i.id for i in test_questions]
+
+    count = 0
+
+    for i in test_questions:
+        if i in questions_completed:
+            count = count +1
+    if count == Test.get(id=test_id).number_of_questions:
+        c = Complete(user_id=user_id,test_id=test_id,status=True)
+        Complete.write_to(c)
     return str(score),200
 
 @login_required

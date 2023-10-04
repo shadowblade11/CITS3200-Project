@@ -113,6 +113,8 @@ class Score(DB_Queries):
         self.user_score = user_score
         self.sys_score = sys_score
         self.attempt_chosen = attempt
+    def __repr__(self):
+        return f'<question_id: {self.question_id}>'
 
 
 class Test(DB_Queries):
@@ -147,4 +149,4 @@ class Question(DB_Queries):
         self.test_id = test_id
         self.difficulty = difficulty
     def __repr__(self):
-        return f'<{self.question_name}>'
+        return f'<id: {self.id},question name:{self.question_name}>'
