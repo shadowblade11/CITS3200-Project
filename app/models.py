@@ -91,9 +91,11 @@ class Feedback(DB_Queries):
     test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
 
-    def __init__(self, user):
-        self.feedback = None
-        self.user_id = user
+    def __init__(self, user_id,test_id,feedback):
+        self.id = int(f'{user_id}{test_id}')
+        self.feedback = feedback
+        self.user_id = user_id
+        self.test_id = test_id
 
 
 class Score(DB_Queries):
