@@ -1,5 +1,4 @@
 import speech_recognition as sr
-from ipapy.ipastring import IPAString
 import epitran
 
 def checkPronounciation(sourcePhone, submittedPhone):
@@ -33,10 +32,10 @@ def getPhone(audioFile):
 
 def convertAudio(sourceFile, submittedFile):
     source = sourceFile
-    sourcePhone = IPAString(unicode_string=getPhone(source)) # converting the unicode string to IPA string (done by the package)
+    sourcePhone = getPhone(source)
 
     submittedAudio = submittedFile 
-    submittedPhone = IPAString(unicode_string=getPhone(submittedAudio))
-    score = checkPronounciation(sourcePhone, submittedPhone) # getting a score
+    submittedPhone = getPhone(submittedAudio)
+    score = checkPronounciation(sourcePhone, submittedPhone)
 
     return score
