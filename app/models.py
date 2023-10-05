@@ -30,14 +30,6 @@ class DB_Queries(db.Model):
             raise DatabaseException("Error while retrieving data from the database.") from e
 
     @classmethod
-    def view_all(cls):
-        try:
-            return cls.query.all()
-        except SQLAlchemyError as e:
-            # Handle the exception
-            raise DatabaseException("Error while retrieving data from the database.") from e
-
-    @classmethod
     def write_to(cls, obj):
         try:
             db.session.add(obj)
@@ -49,10 +41,15 @@ class DB_Queries(db.Model):
 
 
 class User(UserMixin, DB_Queries):
-    id = db.Column(db.String, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
-    tests = db.relationship('Test', backref='user', lazy='dynamic')
+    
+    #relationships
+    completed_tests = db.relationship('Complete', backref='user', lazy='dynamic')
+    feedback = db.relationship('Feedback', backref='user',lazy='dynamic')
+    scores = db.relationship('Score', backref='user',lazy='dynamic')
 
     def set_passwd(self, passwd):
         self.password_hash = generate_password_hash(passwd)
@@ -61,11 +58,10 @@ class User(UserMixin, DB_Queries):
         return check_password_hash(self.password_hash, passwd)
 
     def __repr__(self):
-        return f'<User {self.id}>'
+        return f'<User {self.username}>'
 
-    def __init__(self, id):
-        self.is_admin = False
-        self.id = id
+    def __init__(self, username):
+        self.username = username
 
 
 @login.user_loader
@@ -73,40 +69,84 @@ def load_user(id):
     return User.query.get(id)
 
 
-class Test(DB_Queries):
-    id = db.Column(db.Integer, primary_key=True)
-    test_id = db.Column(db.Integer)
-    user_id = db.Column(db.String, db.ForeignKey('user.id'),
-                        name='fk_test_user_id')
-    questions = db.relationship('Question', backref='test', lazy='dynamic')
-    feedback = db.Column(db.String(512))
+class Complete(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
+    completed = db.Column(db.Boolean)
+
+    def __init__(self, user_id, test_id, status):
+        self.id = int(f'{user_id}{test_id}')
+        self.user_id = user_id
+        self.test_id = test_id
+        self.completed = status
 
     def __repr__(self):
-        return f'<Test {self.test_id} (User ID: {self.user_id}),Feedback:{self.feedback}>'
+        return f'<id: {self.id}, test id: {self.test_id}, user id: {self.user_id}>'
 
-    def __init__(self, test_id, user_id):
-        self.test_id = test_id
+
+class Feedback(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    feedback = db.Column(db.String(512))
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'), nullable=False)
+    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+
+    def __init__(self, user_id,test_id,feedback):
+        self.id = int(f'{user_id}{test_id}')
+        self.feedback = feedback
         self.user_id = user_id
-        self.feedback = None
+        self.test_id = test_id
+
+
+class Score(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    user_score = db.Column(db.Integer)
+    sys_score = db.Column(db.Integer)
+    attempt_chosen = db.Column(db.Integer)
+
+    def __init__(self, user_id, question_id,user_score,sys_score,attempt):
+        self.id = int(f'{user_id}{question_id}')
+        self.user_id = user_id
+        self.question_id = question_id
+        self.user_score = user_score
+        self.sys_score = sys_score
+        self.attempt_chosen = attempt
+    def __repr__(self):
+        return f'<question_id: {self.question_id}>'
+
+
+class Test(DB_Queries):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    week_number = db.Column(db.Integer)
+    test_name = db.Column(db.String(128))
+    due_date = db.Column(db.String(128))  # dd/mm/yy
+    number_of_questions = db.Column(db.Integer)
+
+    #relationships
+    questions = db.relationship('Question', backref='test',lazy='dynamic')
+    completed = db.relationship('Complete', backref='test',lazy='dynamic')
+    feedback = db.relationship('Feedback', backref='test',lazy='dynamic')
+
+    def __init__(self, week_no, test_name, due_date, no_of_qs):
+        self.test_name = test_name
+        self.due_date = due_date
+        self.number_of_questions = no_of_qs
+        self.week_number = week_no
+    def __repr__(self):
+        return f'<id: {self.id}, test_name: {self.test_name}>'
 
 
 class Question(DB_Queries):
-    id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer)
-    difficulty = db.Column(db.Integer)
-    self_evaluation = db.Column(db.Integer)
-    program_evaluation = db.Column(db.Integer)
-    user_id = db.Column(db.String, db.ForeignKey('user.id'))
-    test_id = db.Column(db.Integer, db.ForeignKey('test.test_id'))
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    question_name = db.Column(db.String(128))
+    difficulty = db.Column(db.String(10))
+    test_id = db.Column(db.Integer, db.ForeignKey('test.id'))
 
-    def __repr__(self):
-        return ('<Question {} (User ID: {}, Test ID: {})>'
-                .format(self.question_id, self.user_id, self.test_id))
-
-    def __init__(self, question_id, user_id, test_id, difficulty):
-        self.program_evaluation, self.self_evaluation, self.teacher_evaluation = 0, 0, 0
-        self.question_id = question_id
-        self.user_id = user_id
+    def __init__(self, question_name, test_id, difficulty):
+        self.question_name = question_name
         self.test_id = test_id
-        self.difficulty = 6
-
+        self.difficulty = difficulty
+    def __repr__(self):
+        return f'<id: {self.id},question name:{self.question_name}>'

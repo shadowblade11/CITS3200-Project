@@ -23,7 +23,11 @@
       </div>
     </details>
 
-    <h2>Unassessed Tests</h2>
+    {% for test_name in tests_to_do%}
+    <a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name}}</a>
+    {% endfor %}
+
+    <!-- <h2>Unassessed Tests</h2>
     <label for="Assessed Test">Unassessed Tests</label> 
     <select name="UnTEST" id="UnTest"> 
         <option value="Test1">Test1</option> 
@@ -31,7 +35,6 @@
         <option value="Test3">Test3</option> 
         <option value="Test4">Test4</option> 
     </select>
-    <a href = "{{url_for('test' ,username=username, data='week1')}}">test 1</a>
     <h2>Assessed Tests</h2>
     <label for="Assessed Test">Assessed Tests</label> 
     <select name="TEST" id="Test"> 
@@ -39,7 +42,7 @@
         <option value="Test2">Test2</option> 
         <option value="Test3">Test3</option> 
         <option value="Test4">Test4</option> 
-    </select>
+    </select> -->
   </div>
 
 {% endblock %}
