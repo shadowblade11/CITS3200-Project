@@ -3,8 +3,8 @@ from analyseDF import getScores
 
 
 if __name__ == "__main__":
-    sourceFile = 'audiofiles_wav/Come_Ti_Chiami.wav'
-    submittedFile = 'recording.wav'
+    sourceFile = 'audio/1 come ti chiami.m4a'
+    submittedFile = 'audio/3 questo e Matteo.m4a'
 
     print("\nAssessing now.... Please wait...\n")
     audio_to_text_score = convertAudio(sourceFile, submittedFile)
