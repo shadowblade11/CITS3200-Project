@@ -39,7 +39,7 @@
 
   {% for clip in audio_clips%}
   <details class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
-    <summary class="task-header"> <h1>Task: {{loop.index}}</h1></summary>
+    <summary class="task-header"> <h1 class="task-number">Task {{loop.index}}</h1></summary>
     <div class="task">
       <div class="question-container">
         <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="400" height="160"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
@@ -223,8 +223,10 @@
               if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                   let score = listOfDivs[index].querySelector(".computed-score-value");
+                  let task_number = listOfDivs[index]. querySelector("h1.task-number").innerHTML;
                   score.innerHTML = xmlhttp.responseText;
                   console.log(xmlhttp.responseText);
+                  alert("Your score for " + task_number + " has been loaded");
                 }
               }
             }
@@ -233,13 +235,14 @@
             submitButton.disabled = true;
             submitButton.classList.add("disabled")
             listOfDivs[index].style.background = "lightgreen";
+            alert("Please wait while your score is being computed. You may proceed to complete the other tasks while it is being computed.")
           }
           else{
-            alert("Pick an attempt");
+            alert("Pick an attempt.");
           }
         }
         else{
-          alert("Do all submissions first");
+          alert("Do all submissions first.");
         }
 
         }
