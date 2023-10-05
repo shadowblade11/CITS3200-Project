@@ -8,51 +8,91 @@
     <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{user}}</span>!</h1>
     <h1 class="flex">This Is Test:&nbsp;<span id="week">{{week}}</span></h1>
   </div>
+
+  <details class="instructions-container" open>
+    <summary class="instructions-header"><h1>Instructions</h1></summary>
+    <div class="instructions-content">
+      <p>The aim of these tests are to assess your Italian pronounciation and fluency.</p>
+      <p>For each task, you will be given an audio file to listen to. You will then record yourself repeating the phrase as close to the original audio. After three attempts you are required to choose one for submission.</p>
+      <p>Once you have selected your audio, you will be asked to rate how similar you think your audio clip is to the original, on a scale of 0-10.</p>
+      <p>Our audio similarity function will also provide a score to determine how close you were.</p>
+      <p>Your audio file, self-assessment score and computed score will be submitted for review by the teaching team.</p>
+      <p>Once reviewed, you will be able to view your results in the Grades tab.</p>
+      <p>Good luck!</p>
+
+      <h3>Step One</h3>
+      <p>Press play to listen to the provided audio clip.</p>
+      <h3>Step Two</h3>
+      <p>Press the record button to record your own audio clip.</p>
+      <h3>Step Three</h3>
+      <p>You have three attempts for each task, use the playback features to assess how close you are to the original audio and select one to submit.</p>
+      <h3>Step Four</h3>
+      <p>Use the slider to rate how similar you think your audio clip is to the original. This is how well you think you did on a scale of 0-10</p>
+      <p>0 being not similar at all and 10 being very similar.</p>
+      <h3>Step Five</h3>
+      <p>Once you are happy with your selection and have given yourself a score, press submit to complete the task.</p>
+      
+
+      
+    </div>
+  </details>
+
   {% for clip in audio_clips%}
-  <div class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
-    <h1 class="task-header">Task: {{loop.index}}</h1>
+  <details class="task-container"> <!--this is where you can put the css file, so each "question is its own div"-->
+    <summary class="task-header"> <h1>Task: {{loop.index}}</h1></summary>
     <div class="task">
       <div class="question-container">
         <img src="{{ url_for('static', filename='images/' + week + '/' + clip + '.png') }}" width="400" height="160"> <!--right now the img is way too big, will need to discuss appropriate sizing when generating img, also off centred-->
-        <audio class = "supplied_clip" id="{{clip}}" controls=true src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
+        <audio class = "supplied_clip" id="{{clip}}" controls controlslist="nofullscreen nodownload noremoteplayback noplaybackrate foobar" src="{{ url_for('static', filename='audio/' + week + '/' + clip + '.wav') }}"></audio>
       </div>
       <div class="response-container">
-        <div class="button-container">
-          <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
-          <button class="submit">Submit</button> <!-- perhaps add a img-->
-        </div>
+
+        <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
         <div class="count-container">
           <p class = "count-text">Submissions:&nbsp;</p>
           <p class = "count">3</p>
         </div>
-        <div class="self-assessment">
-          <label for="score-{{loop.index}}">Similarity Score:</label>
-          <input type="number" id="score-{{loop.index}}" name="score-{{loop.index}}" min="10" max="100"/>
+        <div class="recordings">
+          <div class="recording attempt-3">
+            <h3 class="task-header">Attempt: 1</h3>
+            <input type="radio" class="select-attempt" data-attempt="1" name= "select-attempt-{{loop.index}}" disabled />
+          </div>
+          <div class="recording attempt-2">
+            <h3 class="task-header">Attempt: 2</h3>
+            <input type="radio" class="select-attempt" data-attempt="2" name= "select-attempt-{{loop.index}}" disabled />
+          </div>
+          <div class="recording attempt-1">
+            <h3 class="task-header">Attempt: 3</h3>
+            <input type="radio" class="select-attempt" data-attempt="3" name= "select-attempt-{{loop.index}}" disabled />
+          </div>
         </div>
       </div>
+
+      <div class="assessment-container">
+        <div class="test-scores">
+          <div class="self-assessment-scores">
+            <h3>Self Assessment</h3>
+            <label for="score-{{loop.index}}">Similarity Score:</label>
+            <input type="range" min="0" max="10" value="5" class="slider self-assessment-range" name="score-{{loop.index}}">
+            <p>Value: <span class="self-assessment-value"></span></p>
+          </div>
+          <div class="computed-scores">
+            <h3>Similarity Function</h3>
+            <p>Value: <span class="computed-score-value"></span></p>
+          </div>
+        </div>
+
+        <button class="submit">Submit</button> <!-- perhaps add a img-->
+      </div>
     </div>
-  </div>
+  </details>
   {% endfor %}
 
   <script>
-    /*
-    const saveButton = document.querySelector('.save-button');
-
-    saveButton.addEventListener('click', function() {
-      const pageTitle = document.title;
-      const pageContent = document.querySelector('.content').innerHTML;
-      
-      // Store data in local storage
-      localStorage.setItem('pageTitle', pageTitle);
-      localStorage.setItem('pageContent', pageContent);
-
-    //   alert('Page information saved.');
-    });
-    */
-
     const recordButtons = document.querySelectorAll('button.record');
-    const listOfDivs = document.querySelectorAll('div.task-container');
+    const listOfDivs = document.querySelectorAll('details.task-container');
     const submitButtons = document.querySelectorAll('button.submit');
+    const scoreContainers = document.querySelectorAll('.test-scores');
     const submissionAttempts = document.querySelectorAll('p.count');
     const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
     const userID = document.getElementById("user").innerHTML;
@@ -67,6 +107,12 @@
 
     recordButtons.forEach((recordButton,index) => {
       recordButton.onclick = () => {
+
+        let countContainer = listOfDivs[index].querySelector(".count");
+        let count = Number(countContainer.innerHTML);
+
+        if (count <= 0) return; 
+
         // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
         if (RECORDING == 0) {
           RECORDING = 1;
@@ -91,23 +137,44 @@
               blobList[index] = blob;
               // clear the recordedchunk
               recordedChunksList[index] = [];
-            
               
               //indicate that new audio clip has been made
               newRecording[index] = 1;
+              
+              let currentRecordingContainer = listOfDivs[index].querySelector(`.recordings .attempt-${count}`);
 
-              // check if audioplayer exist and change src to audioclip
-              const existingAudioPlayer = document.getElementById("audioplayer" + index);
-              if (existingAudioPlayer){
-                existingAudioPlayer.src = URL.createObjectURL(blob);
+              //decrease count
+              countContainer.innerHTML = count - 1;
 
-              }else{ //create new audioplayer if it doesn't exist
-                var audioPlayer = document.createElement("audio");
-                audioPlayer.controls = true;
-                audioPlayer.id = "audioplayer" + index;
-                audioPlayer.src = URL.createObjectURL(blob);
-                listOfDivs[index].querySelector(".response-container").insertBefore(audioPlayer, listOfDivs[index].querySelector(".button-container"));
+              var audioPlayer = document.createElement("audio");
+              audioPlayer.controls = true;
+              audioPlayer.id = "audioplayer" + index + count;
+              audioPlayer.src = URL.createObjectURL(blob);
+
+              let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
+              currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
+              radioSelector.removeAttribute("disabled");
+              
+              let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
+
+              save_audio(blob, name_of_clip, 4 - count, userID, weekID, function () {
+                var img = document.createElement("img");
+                img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${4 - count}.png`;
+                img.width = "400";
+                img.height = "160";
+                currentRecordingContainer.insertBefore(img, audioPlayer);
+              });
+
+
+
+
+
+
+              // This is an old pointer whose value has decremented to 0, so disable the button
+              if (count === 1) {
+                listOfDivs[index].querySelector(".record").classList.add("disabled");
               }
+              
               
             }
             
@@ -128,85 +195,94 @@
 
     submitButtons.forEach((submitButton,index) => {
       submitButton.onclick = () =>{
-        // make sure audioclip exists, submission is allowed, and its a new clip
-        var blob = blobList[index];
-        var count = submissionAttempts[index];
-        var new_clip = newRecording[index];
-        if (blob && count.innerHTML != 0 && new_clip == 1){
-        // get needed information
-          const audioplayer = listOfDivs[index].querySelector('.supplied_clip');
-          let name_of_clip = audioplayer.id;
+        let countContainer = listOfDivs[index].querySelector(".count");
+        let count = Number(countContainer.innerHTML);
+        if (count === 0){
+          let selectedRadioButton = listOfDivs[index].querySelector('.select-attempt:checked');
+          if (selectedRadioButton){
+            let attempt = selectedRadioButton.dataset.attempt;
 
-          //create form and json
-          const formData = new FormData();
-          formData.append('blob',blob);
-          formData.append('user', userID);
-          formData.append('week', weekID);
-          formData.append('name', name_of_clip);
-          formData.append('attempt', count.innerHTML);
-          const json = JSON.stringify(
-            {
-              "user":userID,
-              "name":name_of_clip,
-              "week":weekID,
-              "attempt":count.innerHTML
-            }
-          )
+            let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
 
-          //decrease count
-          count.innerHTML = Number(count.innerHTML) - 1;
+            let user_score = listOfDivs[index].querySelector('.self-assessment-value').innerHTML;
+            console.log(attempt);
+            console.log(name_of_clip);
+            console.log(user_score);
 
-          // send audio to be saved
-          var xmlhttp = new XMLHttpRequest();
-          xmlhttp.open("POST", "/save-audio",true);
-          xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4) {
-                    if (xmlhttp.status == 200) {
-                        // on success, request for image creation
-                        xmlhttpImage = new XMLHttpRequest();
-                        xmlhttpImage.open("POST","/send-image",true);
-                        xmlhttpImage.setRequestHeader('Content-Type','application/json');
-                        xmlhttpImage.send(json)
+            const formData = new FormData();
 
-                        xmlhttpImage.onreadystatechange = function() {
-                          if(xmlhttpImage.readyState==4){
-                            if(xmlhttpImage.status==200){
-                              name_of_clip = name_of_clip.replaceAll(' ','_');
-                              
-                              //path for image
-                              let filename = '/static/images/users/' + userID + '/' + weekID + '/' + name_of_clip + '.png';
+            formData.append('user',userID);
+            formData.append('test_name', weekID);
+            formData.append('attempt',attempt);
+            formData.append('name',name_of_clip);
+            formData.append('user_score',user_score);
+            var xmlhttp = new XMLHttpRequest();
 
-                              // check if img exist and update src
-                              var img = document.getElementById("recorded_image" + index);
-                              if(img){
-                                img.src = filename + "?timestamp=" + new Date().getTime(); //workaround to updating images of same name
-                              }else{ // create new img
-                                var create_image = document.createElement("img");
-                                create_image.src = filename;
-                                create_image.width = "400";
-                                create_image.height = "160";
-                                create_image.id = "recorded_image" + index;
-                                listOfDivs[index].querySelector(".response-container").insertBefore(create_image, document.getElementById("audioplayer" + index));
-                              }
-                            }
-                            else{
-                              console.log("error");
-                            }
-                          }
-                        }
-
-                    } else {
-                        // Request failed
-                        console.error("Request failed with status: " + xmlhttp.status);
-                    }
+            xmlhttp.open('POST','/calculate-score',true);
+            xmlhttp.onreadystatechange = function () {
+              if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                  let score = listOfDivs[index].querySelector(".computed-score-value");
+                  score.innerHTML = xmlhttp.responseText;
+                  console.log(xmlhttp.responseText);
                 }
-            };
-          xmlhttp.send(formData);
-          newRecording[index] = 0;
+              }
+            }
+
+
+            xmlhttp.send(formData);
+            submitButton.disabled = true;
+            submitButton.classList.add("disabled")
+            listOfDivs[index].style.background = "lightgreen";
+          }
+          else{
+            alert("Pick an attempt");
+          }
+        }
+        else{
+          alert("Do all submissions first");
         }
 
-      }
+        }
 
-    })
+    });
+
+    scoreContainers.forEach((scoreContainer,index) => {
+      const selfAssessmentRange = scoreContainer.querySelector('.self-assessment-range');
+      const selfAssessmentValue = scoreContainer.querySelector('.self-assessment-value');
+      selfAssessmentValue.innerHTML = selfAssessmentRange.value;
+
+      selfAssessmentRange.oninput = () => {
+        selfAssessmentValue.innerHTML = selfAssessmentRange.value;
+      }
+    });
+
+
+    function save_audio(blob, name_of_clip, attempt, user, test_name, callback){
+      const formData = new FormData();
+          formData.append('blob',blob);
+          formData.append('user', user);
+          formData.append('test_name', test_name);
+          formData.append('name', name_of_clip);
+          formData.append('attempt', attempt);
+
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "/save-audio",true);
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+          if (xmlhttp.status == 200) {
+            console.log("success");
+            if (callback && typeof callback === 'function') {
+              callback();
+            }
+          } else {
+            // Request failed
+              console.error("Request failed with status: " + xmlhttp.status);
+            }
+        }
+      };
+      xmlhttp.send(formData);
+    }
+
   </script>
 {% endblock %}
