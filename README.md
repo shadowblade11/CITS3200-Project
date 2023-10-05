@@ -127,7 +127,7 @@ brew install ffmpeg
 ## Testing Installation
 Run the following python script to that you installed it correctly
 ```bash
-python3 testInstallation.py
+python testInstallation.py
 ```
 
 ---
