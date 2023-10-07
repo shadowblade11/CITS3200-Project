@@ -159,7 +159,7 @@ def activate_questions(question_num, week):
     tests = Test.get_all(test_id=week)
     for test in tests:
         for i in range(question_num):
-            question = Question(question_id=i, test_id=week, user_id=test.user_id)
+            question = Question(question_name=i, test_id=week, user_id=test.user_id)
             Question.write_to(question)
 
 

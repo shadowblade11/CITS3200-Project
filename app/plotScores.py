@@ -1,6 +1,12 @@
 import wave
 import matplotlib.pyplot as plt
 import numpy as np
+from app import db
+
+# sample code to grab scores given our database.
+user_id=3
+db.session.query(Question).filter_by(user_id=user_id, ) # gives all questions attempted by a student. Would need to then order by which test it is within.
+test_scores = {}
 
 def plot_aggregate_scores(weeks, output_path, filename):
     """
@@ -22,7 +28,7 @@ def plot_aggregate_scores(weeks, output_path, filename):
 
     plt.figure(figsize=(20,5))
     plt.title(f"Average Scores")
-    plt.plot(length, numpy.array(avgs))
+    plt.plot(length, np.array(avgs))
     
     plt.savefig(f"{output_path}/{filename}")
     plt.close()
