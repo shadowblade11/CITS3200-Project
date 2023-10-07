@@ -21,6 +21,8 @@
   </div>
 </details>
 
+
+
   <div class="content">
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
@@ -33,7 +35,7 @@
     </div>
 
     <div id = "res">
-
+      
     </div>
     <br>
         <div id="feedback-box" style="display: none;"> <!--Display has to be none initially-->
@@ -41,9 +43,24 @@
             <button id="submit-feedback">Submit</button>
         </div>
      </div>
+     <!-- average score over time
+     score per question
+     single student's score over time
+     download excel sheet. -->
+     <canvas id="myChart" style="width:100%;max-width:700px" />
       <br>
       <br>
+      
   </div>
+  
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+  </script>
+
+  <script
+  src="/static/js/graph.js">
+  </script>
+
   <script>
     // global variables
     const submitButton = document.getElementById("search-button");
