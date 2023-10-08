@@ -67,12 +67,6 @@ def grades():
     return render_template("gradesPage.html", css='./static/gradesPage.css')
 
 
-@app.route('/contact')
-def contact():
-    form = ContactForm()
-    return render_template('contact.html', form=form, css=url_for('static', filename='contact.css'))
-
-
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
