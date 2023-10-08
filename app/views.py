@@ -281,11 +281,6 @@ def Account():
     return render_template("AccountPage.html", css=url_for('static', filename='Account.css'))
 
 
-@app.route('/start')
-def start():
-    return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
-
-
 @app.route('/get-user', methods=['POST'])
 def get_user():
     data = request.get_json()
