@@ -96,3 +96,18 @@
   color: black;
 }
 
+@media (max-width: 1660px) {
+  .recordings {
+    display: flex; /* Set the display property to flex */
+    flex-direction: column;
+  }
+
+  .column {
+    width: 100%;
+    display: block;
+  }
+
+  .card {
+    max-width: fit-content;
+  }
+}
