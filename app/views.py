@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from app import app, verification
 import app.interact_database as db
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import *
 
 import datetime
