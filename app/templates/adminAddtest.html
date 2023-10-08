@@ -13,9 +13,9 @@
             <h3>Step One</h3>
             <p>Enter a name for the test (e.g., 'Week One').</p>
             <h3>Step Two</h3>
-            <p>Upload Italian audio file.</p>
+            <p>Select week number.</p>
             <h3>Step Three</h3>
-            <p>Select a difficulty rating (Low, Medium, High).</p>
+            <p>Upload files to their respective difficulty rating (Low, Medium, High).</p>
             <h3>Step Four</h3>
             <p>Set a due date.</p>
             <h3>Step Five</h3>
@@ -29,24 +29,25 @@
         <label for="test-name">Test Name:</label>
         <input type="text" id="test-name" name="testName" required>
         <label for="week-number">Week Number:</label>
-        <input type="number" id="week-number" name="weekNumber" required min="1">
+        <input type="number" id="week-number" name="weekNumber" required min="1" max = "12">
+        <label for="files">File Selection:</label>
         <div id="file-uploads">
             <div class="file-upload" data-difficulty="low">
-                <label for="low-difficulty-file">Upload Low Difficulty File:</label>
+                <label for="low-difficulty-file">Low Difficulty File:</label>
                 <input type="file" id="low-difficulty-file" name="lowDifficultyFile" accept=".mp3,.m4a,.wav" multiple>
                 <button type="button" onclick="document.getElementById('low-difficulty-file').click()">Select File</button>
                 <div id="selected-files-low"></div>
             </div>
 
             <div class="file-upload" data-difficulty="medium">
-                <label for="medium-difficulty-file">Upload Medium Difficulty File:</label>
+                <label for="medium-difficulty-file">Medium Difficulty File:</label>
                 <input type="file" id="medium-difficulty-file" name="mediumDifficultyFile" accept=".mp3,.m4a,.wav" multiple>
                 <button type="button" onclick="document.getElementById('medium-difficulty-file').click()">Select File</button>
                 <div id="selected-files-medium"></div>
             </div>
 
             <div class="file-upload" data-difficulty="high">
-                <label for="high-difficulty-file">Upload High Difficulty File:</label>
+                <label for="high-difficulty-file">High Difficulty File:</label>
                 <input type="file" id="high-difficulty-file" name="highDifficultyFile" accept=".mp3,.m4a,.wav" multiple>
                 <button type="button" onclick="document.getElementById('high-difficulty-file').click()">Select File</button>
                 <div id="selected-files-high"></div>
