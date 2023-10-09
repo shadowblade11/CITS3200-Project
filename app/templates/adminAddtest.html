@@ -54,7 +54,7 @@
         </div>
         <h4>Due Date:</h4>
         <input type="date" id="due-date" name="dueDate" required>
-        <button type="submit">Upload Test</button>
+        <button type="submit" id="upload">Upload Test</button>
     </form>
 </div>
 <script>
@@ -92,6 +92,8 @@
 document.getElementById("test-form").addEventListener("submit", function (event) {
     event.preventDefault();
     const formData = new FormData(this);
+    const upload = document.getElementById("upload");
+
     fetch("/upload_files", {
         method: "POST",
         body: formData,
@@ -99,6 +101,8 @@ document.getElementById("test-form").addEventListener("submit", function (event)
     .then((response) => response.json())
     .then((data) => {
         alert("File(s) uploaded successfully!");
+         upload.style.backgroundColor = "green";
+            upload.style.color = "white";
         console.log(data);
     })
     .catch((error) => {
