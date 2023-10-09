@@ -297,6 +297,18 @@ def get_user():
         return jsonify({"weeks": wk})
     else:
         return jsonify({"error": "User not found or no audio files"}), 404
+    
+    
+@app.route('/get-user-marks', methods=['POST'])
+def get_user_marks():
+    data = request.get_json()
+    user = data.get('userID')
+    try:
+        user_id = User.get(username=user).average_score_per_week()
+        print(user_id)
+        return jsonify(user_id), 200
+    except:
+        return "", 404
 
 
 @app.route('/get-audio', methods=["POST"])

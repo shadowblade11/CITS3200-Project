@@ -43,11 +43,15 @@
             <button id="submit-feedback">Submit</button>
         </div>
      </div>
+     <button id="all">Graph average scores across weeks</button>
+     <button id="student-graph">student's</button>
+     <button id="week-graph">Weeks'es</button>
+     <!-- <button id=""></button> -->
      <!-- average score over time
      score per question
      single student's score over time
      download excel sheet. -->
-     <canvas id="myChart" style="width:100%;max-width:700px" />
+     <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
       <br>
       <br>
       
@@ -57,24 +61,78 @@
   src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
   </script>
 
-  <script
-  src="/static/js/graph.js">
-  </script>
-
   <script>
     // global variables
     const submitButton = document.getElementById("search-button");
+    const student_graph = document.getElementById("student-graph");
+    const week_graph = document.getElementById("week-graph");
     const WkRecording = document.getElementById("WkRecording");
     const feedback_box = document.getElementById("feedback-box");
     const textarea_box = document.getElementById("feedback-input");
     const submitFeedbackButton = document.getElementById("submit-feedback");
     const container = document.getElementById("res");
 
+    let weekNumbers = []
+    let sysAverageScores = []
+    let userAverageScores = []
+
+    let graph_values = [];
+    let student_values = [];
+    let week_values = [];
+
+
+    function setGraph(yValues) {
+      const xValues = ["1", "2", "3", "4", "5", "6", "7", "8", "10", "11", "12"];
+      new Chart("myChart", {
+        type: "line",
+        data: {
+          labels: xValues,
+          text: "Student 123",
+          datasets: [{
+            backgroundColor: "rgba(210,50,210,0.3)",
+            data: yValues
+          }]
+        }, 
+        options: {
+          scales: {
+            yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Score (%)'
+            },
+            display: true,
+            ticks: {
+                suggestedMin: 0, 
+                suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
+                // OR //
+                beginAtZero: true   // minimum value will be 0.
+            }
+        }],
+        xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Week'
+            }
+          }]
+        }
+        }
+      });
+    }
+    setGraph(graph_values)
+    
+    student_graph.onclick = () => {
+      console.log(sysAverageScores)
+      setGraph(sysAverageScores)
+    }
+    week_graph.onclick = () => {
+      setGraph(week_values)
+    }
     // on click, search for user
     submitButton.onclick = () => {
       let textvalue = document.getElementById("search-bar").value;
       if (textvalue != ""){
         GettingUser(textvalue);
+        GettingUserMarks(textvalue);
         document.getElementById("search-bar").value = "";
       }
     }
@@ -93,13 +151,41 @@
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
               new_element.onclick =  function () {
-            gettingAudioClips(userID, value); 
+              gettingAudioClips(userID, value); 
           };
               WkRecording.appendChild(new_element);
             }
           }
           else{
-            alert("User does not exist");
+            alert("User does not exist or has not taken any tests");
+            container.innerHTML = "";
+            feedback_box.style.display="none";
+          }
+        }
+      }
+      console.log(userID)
+      xml.send(JSON.stringify({ "userID": userID }));
+    }
+
+    function GettingUserMarks(userID){
+      const xml = new XMLHttpRequest();
+      WkRecording.innerHTML = "";
+      xml.open('POST',"/get-user-marks",true);
+      xml.setRequestHeader("Content-Type", "application/json");
+      xml.onreadystatechange = function(){
+        if(xml.readyState == 4){
+          if(xml.status==200){
+            let values = JSON.parse(xml.responseText);
+            graph_values = values
+            console.log(graph_values)
+            extractChartData(values);
+
+            console.log('Week Numbers:', weekNumbers);
+            console.log('System Average Scores:', sysAverageScores);
+            console.log('User Average Scores:', userAverageScores);
+          }
+          else{
+            alert("User does not exist or has not taken any tests");
             container.innerHTML = "";
             feedback_box.style.display="none";
           }
@@ -116,7 +202,6 @@
       xml.onreadystatechange = function(){
         if(xml.readyState === 4){
           if(xml.status === 200){
-
             // get json data from request
             let json_data = JSON.parse(xml.responseText);
             let clips = json_data.clips;
@@ -220,6 +305,23 @@
         }
       }
       xml.send();
+    }
+ 
+    function extractChartData(data) {
+      sysAverageScores = [];
+      userAverageScores = [];
+      weekNumbers = [];
+
+      for (const weekNumber in data) {
+        if (data.hasOwnProperty(weekNumber)) {
+          const weekData = data[weekNumber];
+          weekNumbers.push(Number(weekNumber));
+          sysAverageScores.push(weekData.sys_average_score);
+          userAverageScores.push(weekData.user_average_score);
+        }
+      }
+
+    return { weekNumbers, sysAverageScores, userAverageScores };
     }
   </script>
 {% endblock %}
