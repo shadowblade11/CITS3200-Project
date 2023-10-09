@@ -236,7 +236,6 @@ def calculate_score():
 
     print(PATH_TO_USER_ATTEMPT)
     print(PATH_TO_SOURCE)
-
     score = compute_score(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
     print(f"User Score = {user_score}, Actual Score = {score}")
     return str(score),200
