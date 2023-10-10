@@ -257,7 +257,13 @@ def calculate_score():
     difficulty = question_obj.difficulty
     # print(difficulty)
     multiplier = diff_dict[difficulty]
+    
     score = int(score*multiplier) #needs to make sure it stays within 0-100, and also that it can be an integer
+    if (score > 100): 
+        score = 100
+    elif (score < 0):
+        score = 0 
+    
     s = Score(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
     Score.write_to(s)
     #MAKE SCORE OBJECT WITH user_score and score
