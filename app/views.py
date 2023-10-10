@@ -51,9 +51,14 @@ def home(username):
     tests_to_do_id = list(set(all_tests)-set(completed_tests))
     tests_to_do = []
     for i in tests_to_do_id:
-        tests_to_do.append(Test.get(id=i).test_name)
-    print(tests_to_do)
-    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username, tests_to_do=tests_to_do)
+        test_obj = Test.get(id=i)
+        dd = datetime.datetime.strptime(test_obj.due_date,"%Y-%m-%d")
+        formatted_dd = dd.strftime("%d/%m/%y")
+        print(formatted_dd)
+        tests_to_do.append((test_obj.test_name,formatted_dd))
+    sorted_tests_to_do = sorted(tests_to_do,key=lambda x: x[1])
+    print(sorted_tests_to_do)
+    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username, tests_to_do=sorted_tests_to_do)
 
 
 @app.route('/adminHome', methods=["GET", "POST"])

@@ -35,7 +35,8 @@
                 <th>Due Date</th>
             {% for test_name in tests_to_do%}
               <tr>
-                <td><a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name}}</a></td>
+                <td><a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name[0]}}</a></td>
+                <td>{{test_name[1]}}</td>
               </tr>
             {% endfor %}
             </table>
