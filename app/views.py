@@ -226,6 +226,8 @@ def save_audio():
         return str(e), 400
 
 
+diff_dict = {"low":1.0, "medium":1.2,"high":1.3}
+
 @app.route('/calculate-score', methods=['POST'])
 def calculate_score():
     user = request.form['user']
@@ -245,7 +247,12 @@ def calculate_score():
     print(f"User Score = {user_score}, Actual Score = {score}")
     user_id = User.get(username=user).id
     test_id = Test.get(test_name=test_name).id
-    question_id = Question.get(test_id=test_id,question_name=name_of_clip).id
+    question_obj = Question.get(test_id=test_id,question_name=name_of_clip)
+    question_id = question_obj.id
+    difficulty = question_obj.difficulty
+    # print(difficulty)
+    multiplier = diff_dict[difficulty]
+    score = int(score*multiplier) #needs to make sure it stays within 0-100, and also that it can be an integer
     s = Score(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
     Score.write_to(s)
     #MAKE SCORE OBJECT WITH user_score and score
