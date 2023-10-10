@@ -70,15 +70,8 @@ def adminHome():
 def grades():
     # print(request.args['username'])
     username = request.args['username']
-    user_id = User.get(username=username).id
-    # print(user_id)
-    # lists_of_feedbacks = Feedback.query.filter_by(user_id=user_id).all()
-    # print(lists_of_feedbacks)
-
     user_obj = User.get(username=username)
-
     lists_of_feedbacks = user_obj.feedback.all()
-    print(lists_of_feedbacks)
     formatted_list = []
     for i in lists_of_feedbacks:
         test_name = Test.get(id = i.test_id).test_name
