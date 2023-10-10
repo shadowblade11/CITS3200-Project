@@ -3,11 +3,12 @@ import os
 from flask import render_template, redirect, url_for, flash, request, session, jsonify
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import urlsplit
+from werkzeug.utils import secure_filename
 
 from app import app, verification
-from app import interact_database as db
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
-from app.models import User
+import app.interact_database as db
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
+from app.models import *
 
 import datetime
 
@@ -39,8 +40,23 @@ def about():
 @app.route('/home/<username>')
 @login_required
 def home(username):
-    user = User.query.filter_by(id=username).first_or_404()
-    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username)
+    user = User.query.filter_by(username=username).first_or_404()
+
+    completed_tests = user.completed_tests.all()
+    all_tests = Test.get_all()
+    completed_tests = [i.test_id for i in completed_tests]
+    all_tests = [i.id for i in all_tests]
+
+    tests_to_do_id = list(set(all_tests)-set(completed_tests))
+    tests_to_do = []
+    for i in tests_to_do_id:
+        test_obj = Test.get(id=i)
+        dd = datetime.datetime.strptime(test_obj.due_date,"%Y-%m-%d")
+        formatted_dd = dd.strftime("%d/%m/%y")
+        tests_to_do.append((test_obj.test_name,formatted_dd))
+    sorted_tests_to_do = sorted(tests_to_do,key=lambda x: x[1], reverse=True)
+    print(sorted_tests_to_do)
+    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username, tests_to_do=sorted_tests_to_do)
 
 
 @app.route('/adminHome', methods=["GET", "POST"])
@@ -51,22 +67,25 @@ def adminHome():
 
 @app.route('/grades')
 def grades():
-    return render_template("gradesPage.html", css='./static/gradesPage.css')
-
-
-@app.route('/contact')
-def contact():
-    form = ContactForm()
-    return render_template('contact.html', form=form, css=url_for('static', filename='contact.css'))
+    # print(request.args['username'])
+    username = request.args['username']
+    user_obj = User.get(username=username)
+    lists_of_feedbacks = user_obj.feedback.all()
+    formatted_list = []
+    for i in lists_of_feedbacks:
+        test_name = Test.get(id = i.test_id).test_name
+        temp = (test_name, i.feedback) #this is where we can put score avgs (like within the tuple)
+        formatted_list.append(temp)
+    return render_template("gradesPage.html", css='./static/gradesPage.css', feedbacks = formatted_list)
 
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home', username=current_user.id))  # Provide the username
+        return redirect(url_for('home', username=current_user.username))  # Provide the username
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.get_user(user_id=form.id.data)
+        user = User.get(username=form.id.data)
         if user is None or not user.check_passwd(form.passwd.data) or user.is_admin:
             flash("Invalid id or password.")
             return redirect(url_for('login'))
@@ -74,7 +93,7 @@ def login():
         next_page = request.args.get('next')
         session['uid'] = form.id.data
         if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('home', username=user.id)
+            next_page = url_for('home', username=user.username)
         return redirect(next_page)
     return render_template('loginPage.html', form=form, css=url_for('static', filename='loginPage.css'))
 
@@ -82,16 +101,11 @@ def login():
 @app.route('/administratorLogin', methods=['GET', 'POST'])
 def administratorLogin():
     if (current_user.is_authenticated and
-            db.get_user(user_id=current_user.id).is_admin):
-        print("id=======", current_user.id)
+            User.query.filter_by(username=current_user.username).is_admin):
         return redirect(url_for('adminHome'))  # Provide the username
     form = AdminForm()
     if form.validate_on_submit():
-        print(form.username.data)
-        # user = User.get(form.username.data)
-        user = User.get(id= form.username.data)
-        # user = User.query.filter_by(id=form.username.data).first()
-        print(user)
+        user = User.get(username= form.username.data)
         if user is None:
             return redirect(url_for('administratorLogin'))
         if not user.is_admin or not user.check_passwd(form.passwd.data):
@@ -115,8 +129,8 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if User.get(id=form.id.data) is not None:
-            message = "ID already exists."
+        if User.get(username=form.id.data) is not None:
+            message = "Username already exists."
             return render_template('register.html', form=form, title='Register', message=message)
         session['id'] = form.id.data
         session['passwd'] = form.passwd2.data
@@ -139,8 +153,9 @@ def verify():
             # Verification code doesn't match
             form.v_code.errors = ["Incorrect verification code"]
         elif session['v_code'] == form.v_code.data:
-            user = User(id=session['id'])
+            user = User(username=session['id'])
             user.set_passwd(session['passwd'])
+            user.is_admin = False
             session.pop('id')  # Clear the session variable
             User.write_to(user)
             return redirect(url_for('login'))
@@ -183,11 +198,6 @@ def test(username):
                            week=week, user=username)
 
 
-@app.route('/audio-test')
-def audio_test():
-    return render_template('main.html')
-
-
 @app.route("/save-audio", methods=['POST'])
 def save_audio():
     blob = request.files['blob']
@@ -223,6 +233,8 @@ def save_audio():
         return str(e), 400
 
 
+diff_dict = {"low":1.0, "medium":1.2,"high":1.3}
+
 @app.route('/calculate-score', methods=['POST'])
 def calculate_score():
     user = request.form['user']
@@ -238,6 +250,33 @@ def calculate_score():
     print(PATH_TO_SOURCE)
     score = compute_score(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
     print(f"User Score = {user_score}, Actual Score = {score}")
+    user_id = User.get(username=user).id
+    test_id = Test.get(test_name=test_name).id
+    question_obj = Question.get(test_id=test_id,question_name=name_of_clip)
+    question_id = question_obj.id
+    difficulty = question_obj.difficulty
+    # print(difficulty)
+    multiplier = diff_dict[difficulty]
+    score = int(score*multiplier) #needs to make sure it stays within 0-100, and also that it can be an integer
+    s = Score(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
+    Score.write_to(s)
+    #MAKE SCORE OBJECT WITH user_score and score
+
+    questions_completed = User.get(id=user_id).scores.all()
+    questions_completed = [i.question_id for i in questions_completed]
+    test_questions = Test.get(id=test_id).questions.all()
+    test_questions = [i.id for i in test_questions]
+
+    count = 0
+
+    for i in test_questions:
+        if i in questions_completed:
+            count = count +1
+    print(Test.get(id=test_id).number_of_questions)
+    print(count)
+    if count == Test.get(id=test_id).number_of_questions:
+        c = Complete(user_id=user_id,test_id=test_id,status=True)
+        Complete.write_to(c)
     return str(score),200
 
 @login_required
@@ -251,11 +290,6 @@ def addtest():
 @app.route('/Account')
 def Account():
     return render_template("AccountPage.html", css=url_for('static', filename='Account.css'))
-
-
-@app.route('/start')
-def start():
-    return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
 
 
 @app.route('/get-user', methods=['POST'])
@@ -291,16 +325,24 @@ def get_audio():
 def save_feedback():
     data = request.get_json()
     text = data.get('txt')
-    week = data.get('week')
+    test_name = data.get('week')
     user = data.get('user')
     print(user)
     print(text)
     # print(week)
-    week = int(week[-1])
+    # week = int(week[-1])
     #THIS IS WHERE WE CAN STORE THE FEEDBACK
     try:
         # REPLACE THIS WITH THE TABLE ASSIGNMENT
-        write_feedback(user,text,week)
+        user_id = User.get(username=user).id
+        test_id = Test.get(test_name=test_name).id
+        f = Feedback.get(user_id=user_id,test_id=test_id)
+        if f is None:
+            f = Feedback(user_id=user_id,test_id=test_id,feedback=text)
+            Feedback.write_to(f)
+            return "passed",200
+        f.feedback = text
+        Feedback.write_to(f)
         # print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
         return "passed",200
     except:
@@ -311,8 +353,7 @@ def save_feedback():
 @app.route('/get-feedback',methods=["GET"])
 def send_feedback():
     user = request.args.get('user')
-    week = request.args.get('week')
-    week = int(week[-1])
+    test_name = request.args.get('week')
     # print(f"User: {user}, Week: {week}")
     # THIS IS WHERE WE RETRIVE FEEDBACK FROM THE DATABASE
 
@@ -325,34 +366,74 @@ def send_feedback():
     # }
     # }
     try:
-        txt = get_feedback(user,week)
+        user_id = User.get(username=user).id
+        test_id = Test.get(test_name=test_name).id
+        txt = Feedback.get(user_id=user_id,test_id=test_id).feedback
         # string = data[user][week]
         return txt,200
     except:
-        return "",404
+        return "", 404
 
 
-@app.route("/upload_file", methods=["POST"])
-def upload_file():
-    print(3242423)
-    if request.method == "POST":
-        test_name = request.form["testName"]
-        test_file = request.files["testFile"]
+UPLOAD_FOLDER = 'app/static/audio'
 
-        if test_file:
-            file_name = test_file.filename
-            parent_dir = os.path.dirname(os.path.dirname(__file__))
-            save_path = os.path.join(parent_dir, "test", file_name)
+@app.route('/upload_files', methods=['POST'])
+def upload_files():
+    try:
+        test_name = request.form.get('testName')
+        due_date = request.form.get('dueDate')
+        week_number = request.form.get('weekNumber')
+        TEST_LOCATION_FOLDER = f"{UPLOAD_FOLDER}/{test_name}" 
+        if not os.path.exists(TEST_LOCATION_FOLDER):
+            os.makedirs(TEST_LOCATION_FOLDER)
+        if not os.path.exists(f"app/static/images/{test_name}"):
+            os.makedirs(f"app/static/images/{test_name}")
+        n_of_qs = 0
+        difficulty_levels = ['low', 'medium', 'high']
+        for difficulty in difficulty_levels:
+            file_key = f'{difficulty}DifficultyFile'
+            if file_key in request.files:
+                files = request.files.getlist(file_key)
+                for file in files:
+                    if file:
+                        n_of_qs = n_of_qs + 1
 
-            test_file.save(save_path)
 
-            return "File uploaded successfully."
-
-    return render_template("adminAddtest.html")
-
-
-
-
+        test = Test(week_no = int(week_number), test_name=test_name,due_date=due_date,no_of_qs=n_of_qs)
+        Test.write_to(test)
+        uploaded_files = {}
+        for difficulty in difficulty_levels:
+            file_key = f'{difficulty}DifficultyFile'
+            if file_key in request.files:
+                files = request.files.getlist(file_key)
+                file_paths = []
+                selected_files = []
+                for file in files:
+                    if file:
+                        name, suffix = file.filename.split('.')
+                        filename = os.path.join(TEST_LOCATION_FOLDER, f"{name}-raw.{suffix}")
+                        # print(file.filename)
+                        file.save(filename)
+                        # print(filename)
+                        formatted_name = name.replace(' ','_')
+                        OUTPUT_FILE = f"{TEST_LOCATION_FOLDER}/{formatted_name}.wav"
+                        convert_to_wav_working_format(filename,OUTPUT_FILE)
+                        os.remove(filename)
+                        generate_soundwave_image(OUTPUT_FILE,f"app/static/images/{test_name}",formatted_name)
+                        file_paths.append(OUTPUT_FILE)
+                        selected_files.append(formatted_name)
+                        question = Question(question_name=formatted_name,difficulty=difficulty,test_id=test.id)
+                        Question.write_to(question)
+                uploaded_files[difficulty] = file_paths
+                print(f"Difficulty : {difficulty} File : {', '.join(selected_files)}")
+        print(f"Test Name : {test_name}")
+        print(f"Week number : {week_number}")
+        print(f"Due date : {due_date}")
+        print(f"Number of Questions : {n_of_qs}")
+        return jsonify(uploaded_files), 200
+    except Exception as e:
+        print(e)
+        return str(e), 500
 
 
 

@@ -49,7 +49,7 @@
 
         <button class="record">Start Recording</button> <!-- perhaps add a microphone img-->
         <div class="count-container">
-          <p class = "count-text">Submissions:&nbsp;</p>
+          <p class = "count-text">Attempts:&nbsp;</p>
           <p class = "count">3</p>
         </div>
         <div class="recordings">
@@ -78,7 +78,7 @@
           </div>
           <div class="computed-scores">
             <h3>Similarity Function</h3>
-            <p>Score: <span class="computed-score-value"></span></p>
+            <p>Score: <span class="computed-score-value">Computed on Submit</span></p>
           </div>
         </div>
 
@@ -94,7 +94,7 @@
     const submitButtons = document.querySelectorAll('button.submit');
     const scoreContainers = document.querySelectorAll('.test-scores');
     const submissionAttempts = document.querySelectorAll('p.count');
-    const timeoutseconds = 3000; //adding a timeout as previously discussed (5000 = 5 seconds)
+    const timeoutseconds = 5000; // Failsafe in case the user forgets to stop recording
     const userID = document.getElementById("user").innerHTML;
     const weekID = document.getElementById("week").innerHTML;
 
@@ -103,98 +103,107 @@
     let recordedChunksList = [];
     let newRecording = [];
     let RECORDING = 0;
+    let timeout;
 
+    let startRecordingListener = (recordButton, index) => () => {
+      let countContainer = listOfDivs[index].querySelector(".count");
+      let count = Number(countContainer.innerHTML);
 
-    recordButtons.forEach((recordButton,index) => {
-      recordButton.onclick = () => {
+      if (count <= 0) return; 
 
-        let countContainer = listOfDivs[index].querySelector(".count");
-        let count = Number(countContainer.innerHTML);
-
-        if (count <= 0) return; 
-
-        // change div to red to indicate recording REMOVE LATER AS SHE DOES NOT WANT ANY RED ////////////////////////////////////////////////////////////////
-        if (RECORDING == 0) {
-          RECORDING = 1;
-          listOfDivs[index].style.background = "yellow";
+      if (RECORDING == 0) {
+        RECORDING = 1;
+        recordButton.classList.add("flashing");
+        recordButton.innerHTML = "Recording... Click to Stop";
         
-          navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
-            
-            //initalise the recordedChunk to contain an empty list
+        navigator.mediaDevices.getUserMedia({audio:true}).then((stream) => {
+          
+          //initalise the recordedChunk to contain an empty list
+          recordedChunksList[index] = [];
+          
+          // make new media recorder and push data to recordedchunk
+          mediaRecorders[index] = new MediaRecorder(stream);
+          mediaRecorders[index].ondataavailable = (e) => {
+            recordedChunksList[index].push(e.data);
+          }
+
+          mediaRecorders[index].start();
+          recordButton.onclick = stopRecordingListener(recordButton, index);
+
+          mediaRecorders[index].onstop = () => {
+            // make a blob and add to list
+            const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
+            blobList[index] = blob;
+            // clear the recordedchunk
             recordedChunksList[index] = [];
             
-            // make new media recorder and push data to recordedchunk
-            mediaRecorders[index] = new MediaRecorder(stream);
-            mediaRecorders[index].ondataavailable = (e) => {
-              recordedChunksList[index].push(e.data);
-            }
-
-            mediaRecorders[index].start();
-
-            mediaRecorders[index].onstop = () => {
-              // make a blob and add to list
-              const blob = new Blob(recordedChunksList[index], {type: "audio/wav"});
-              blobList[index] = blob;
-              // clear the recordedchunk
-              recordedChunksList[index] = [];
-              
-              //indicate that new audio clip has been made
-              newRecording[index] = 1;
-              
-              let currentRecordingContainer = listOfDivs[index].querySelector(`.recordings .attempt-${count}`);
-
-              //decrease count
-              countContainer.innerHTML = count - 1;
-
-              var audioPlayer = document.createElement("audio");
-              audioPlayer.controls = true;
-              audioPlayer.id = "audioplayer" + index + count;
-              audioPlayer.src = URL.createObjectURL(blob);
-
-              let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
-              currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
-              radioSelector.removeAttribute("disabled");
-              
-              let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
-
-              save_audio(blob, name_of_clip, 4 - count, userID, weekID, function () {
-                var img = document.createElement("img");
-                img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${4 - count}.png`;
-                img.width = "400";
-                img.height = "160";
-                currentRecordingContainer.insertBefore(img, audioPlayer);
-              });
-
-
-
-
-
-
-              // This is an old pointer whose value has decremented to 0, so disable the button
-              if (count === 1) {
-                listOfDivs[index].querySelector(".record").classList.add("disabled");
-              }
-              
-              
-            }
+            //indicate that new audio clip has been made
+            newRecording[index] = 1;
             
-          }).catch((err)=>{
-            console.log(err);
-            alert("problem");
-          });
-        
-          // add timeout to recording
-          setTimeout(() => {
-            listOfDivs[index].style.background="none";
-            mediaRecorders[index].stop();
-            RECORDING = 0;
-          },timeoutseconds);
-        }
+            let currentRecordingContainer = listOfDivs[index].querySelector(`.recordings .attempt-${count}`);
+
+            //decrease count
+            countContainer.innerHTML = count - 1;
+
+            var audioPlayer = document.createElement("audio");
+            audioPlayer.controls = true;
+            audioPlayer.id = "audioplayer" + index + count;
+            audioPlayer.src = URL.createObjectURL(blob);
+
+            let radioSelector = currentRecordingContainer.querySelector(".select-attempt");
+            currentRecordingContainer.insertBefore(audioPlayer, radioSelector);
+            radioSelector.removeAttribute("disabled");
+            
+            let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
+
+            save_audio(blob, name_of_clip, 4 - count, userID, weekID, function () {
+              var img = document.createElement("img");
+              img.src = `/static/images/users/${userID}/${weekID}/${name_of_clip}-${4 - count}.png`;
+              img.width = "400";
+              img.height = "160";
+              currentRecordingContainer.insertBefore(img, audioPlayer);
+            });
+
+            // This is an old pointer whose value has decremented to 0, so disable the button
+            if (count === 1) {
+              recordButton.classList.add("disabled");
+              recordButton.innerHTML = "No More Attempts";
+            }
+          }
+          
+        }).catch((err)=>{
+          console.log(err);
+          alert("problem");
+        });
+
+        timeout = setTimeout(() => {
+          if (RECORDING == 1) {
+            stopRecordingListener(recordButton, index)();
+          }
+        }, timeoutseconds);
       }
+    }
+
+    let stopRecordingListener = (recordButton, index) => () => {
+      let countContainer = listOfDivs[index].querySelector(".count");
+      let count = Number(countContainer.innerHTML);
+
+      recordButton.classList.remove("flashing");
+      recordButton.onclick = startRecordingListener(recordButton, index);
+      recordButton.innerHTML = "Start Recording";
+
+      mediaRecorders[index].stop();
+
+      clearTimeout(timeout);
+      RECORDING = 0;
+    }
+
+    recordButtons.forEach((recordButton,index) => {
+      recordButton.onclick = startRecordingListener(recordButton, index);
     });
 
     submitButtons.forEach((submitButton,index) => {
-      submitButton.onclick = () =>{
+      submitButton.onclick = () => {
         let countContainer = listOfDivs[index].querySelector(".count");
         let count = Number(countContainer.innerHTML);
         if (count === 0){
@@ -234,7 +243,7 @@
             xmlhttp.send(formData);
             submitButton.disabled = true;
             submitButton.classList.add("disabled")
-            listOfDivs[index].style.background = "lightgreen";
+            listOfDivs[index].style.background = "linear-gradient(106deg, rgba(152, 207, 152, 1) 0%, rgba(250, 250, 250, 1) 100%)";
             alert("Please wait while your score is being computed. You may proceed to complete the other tasks while it is being computed.")
           }
           else{
@@ -285,6 +294,7 @@
       };
       xmlhttp.send(formData);
     }
+
 
   </script>
 {% endblock %}
