@@ -12,26 +12,16 @@
     <table>
         <tr>
             <th>Test Name</th>
-            <th>Task Number</th>
-            <th>Audio File</th>
-            <th>Self Assessment Score</th>
-            <th>Audio Similarity Score</th>
+            <th>Feedback</th>
+            <!-- make sure you add the headers -->
         </tr>
+        {% for feedback_obj in feedbacks%}
         <tr>
-            <td>Test 1</td>
-            <td>Task 1</td>
-            <td><a href="audio1.mp3" download>Download Audio</a></td>
-            <td>85</td>
-            <td>92</td>
+            <th>{{feedback_obj[0]}}</th>
+            <th>{{feedback_obj[1]}}</th>
+<!-- this is where you can add more columns (avg scores, etc) -->
         </tr>
-        <tr>
-            <td>Test 1</td>
-            <td>Task 2</td>
-            <td><a href="audio2.mp3" download>Download Audio</a></td>
-            <td>78</td>
-            <td>85</td>
-        </tr>
-        
+        {% endfor %}
     </table>
 </div>
 {% endblock %}
