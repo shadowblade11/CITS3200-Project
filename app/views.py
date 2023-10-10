@@ -70,9 +70,21 @@ def adminHome():
 def grades():
     # print(request.args['username'])
     username = request.args['username']
-    user_id = User.get(username=username)
-    print(user_id)
-    return render_template("gradesPage.html", css='./static/gradesPage.css')
+    user_id = User.get(username=username).id
+    # print(user_id)
+    # lists_of_feedbacks = Feedback.query.filter_by(user_id=user_id).all()
+    # print(lists_of_feedbacks)
+
+    user_obj = User.get(username=username)
+
+    lists_of_feedbacks = user_obj.feedback.all()
+    print(lists_of_feedbacks)
+    formatted_list = []
+    for i in lists_of_feedbacks:
+        test_name = Test.get(id = i.test_id).test_name
+        temp = (test_name, i.feedback) #this is where we can put score avgs (like within the tuple)
+        formatted_list.append(temp)
+    return render_template("gradesPage.html", css='./static/gradesPage.css', feedbacks = formatted_list)
 
 
 @app.route('/login', methods=["GET", "POST"])
