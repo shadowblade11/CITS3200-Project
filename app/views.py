@@ -68,6 +68,10 @@ def adminHome():
 
 @app.route('/grades')
 def grades():
+    # print(request.args['username'])
+    username = request.args['username']
+    user_id = User.get(username=username)
+    print(user_id)
     return render_template("gradesPage.html", css='./static/gradesPage.css')
 
 
