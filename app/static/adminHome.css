@@ -57,12 +57,22 @@
   margin-top: 5%;
 }
 
-.dropbtn {
+#res {
+  max-width: calc(100vw - 4%);
+}
+
+#dropbtn {
   background-color: #000000;
   color: white;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
+}
+
+#dropbtn.empty {
+  background-color: #666;
+  color: black;
+  cursor: not-allowed;
 }
 
 .dropdown-content {
@@ -83,12 +93,6 @@
 
 .dropdown:hover .dropdown-content {
   display: block;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #000000;
-  margin-top: 5%;
-
 }
 
   /* adminHome.css */
@@ -114,4 +118,32 @@
   background-color: #cccccc;
 }
 
+.audio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+.task-container {
+  border: solid 1px black;
+  display: flex;
+  flex-direction: column;
+  margin: 0.67em;
+}
+
+  .inner-task-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .file-container {
+    padding: 0.67em;
+  }
+
+    .file-container label {
+      font-weight: bold;
+    }
+
+    .file-container .audio-container {
+      padding: 0.67em;
+    }
