@@ -102,14 +102,6 @@
     flex-direction: column;
   }
 
-  .column {
-    width: 100%;
-    display: block;
-  }
-
-  .card {
-    max-width: fit-content;
-  }
 }
 /* Define the flashing animation */
 @keyframes flash {
@@ -127,8 +119,8 @@
 /* Apply the flashing animation to the recording indicator */
 .response-container .record.flashing {
   animation: flash 1s infinite;
-  background-color: antiquewhite;
-  border-color: antiquewhite;
+  background-color: #87A96B;
+  border-color: #87A96B;
   color: black;
 }
 
