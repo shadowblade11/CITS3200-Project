@@ -111,3 +111,24 @@
     max-width: fit-content;
   }
 }
+/* Define the flashing animation */
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Apply the flashing animation to the recording indicator */
+.response-container .record.flashing {
+  animation: flash 1s infinite;
+  background-color: antiquewhite;
+  border-color: antiquewhite;
+  color: black;
+}
+
