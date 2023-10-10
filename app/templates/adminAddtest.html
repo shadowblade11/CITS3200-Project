@@ -26,10 +26,21 @@
 
 
     <form id="test-form" enctype="multipart/form-data" method="POST" action={{ url_for('upload_files') }}>
-        <label for="test-name">Test Name:</label>
-        <input type="text" id="test-name" name="testName" required>
-        <label for="week-number">Week Number:</label>
-        <input type="number" id="week-number" name="weekNumber" required min="1" max = "12">
+        <div class="input-container">
+            <label for="test-name">Test Name:</label>
+            <input type="text" id="test-name" name="testName" required>
+        </div>
+        
+        <div class="input-container">
+            <label for="week-number">Week Number:</label>
+            <input type="number" id="week-number" name="weekNumber" required min="1" max = "12">
+        </div>
+        
+        <div class="input-container">
+            <label>Due Date:</label>
+            <input type="date" id="due-date" name="dueDate" required>
+        </div>
+
         <label for="files">File Selection:</label>
         <div id="file-uploads">
             <div class="file-upload" data-difficulty="low">
@@ -53,14 +64,12 @@
                 <div id="selected-files-high"></div>
             </div>
         </div>
-        <h4>Due Date:</h4>
-        <input type="date" id="due-date" name="dueDate" required>
+
         <button type="submit">Upload Test</button>
     </form>
 </div>
+
 <script>
-
-
     function displaySelectedFiles(inputId, containerId) {
         const fileInput = document.getElementById(inputId);
         const container = document.getElementById(containerId);

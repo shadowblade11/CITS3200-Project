@@ -19,7 +19,7 @@
   border: 2px solid black;
   margin: 0 10%;
   padding: 0.67em;
-  margin-bottom: 0.67em;
+  margin-bottom: 1.34em;
   width: 50%;
   font-size: 1rem;
 }
@@ -34,16 +34,15 @@
 }
 
 #test-name,
-#file-upload {
-  margin: 1rem 0;
+#file-upload,
+#week-number {
   font-size: 1.25rem;
 }
 
 label {
   font-weight: bold;
   font-size: 1.25rem;
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
+  margin-right: 0.5rem;
 }
 
 input[type="file"]::file-selector-button {
@@ -78,4 +77,11 @@ button[type="submit"] {
 
 .file-upload {
   margin-top: 1.25rem;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1.25rem;
 }
