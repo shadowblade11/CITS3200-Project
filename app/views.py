@@ -54,9 +54,8 @@ def home(username):
         test_obj = Test.get(id=i)
         dd = datetime.datetime.strptime(test_obj.due_date,"%Y-%m-%d")
         formatted_dd = dd.strftime("%d/%m/%y")
-        print(formatted_dd)
         tests_to_do.append((test_obj.test_name,formatted_dd))
-    sorted_tests_to_do = sorted(tests_to_do,key=lambda x: x[1])
+    sorted_tests_to_do = sorted(tests_to_do,key=lambda x: x[1], reverse=True)
     print(sorted_tests_to_do)
     return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username, tests_to_do=sorted_tests_to_do)
 
