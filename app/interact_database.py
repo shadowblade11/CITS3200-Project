@@ -1,6 +1,7 @@
 from app.models import *
 
 
+
 def write_feedback(user_id, feedback, week):
     test = Test.get(week_number=week)
     if test is None:

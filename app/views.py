@@ -1,12 +1,13 @@
 import os
 
-from flask import render_template, redirect, url_for, flash, request, session, jsonify
+from flask import render_template, redirect, url_for, flash, request, session, jsonify, send_from_directory
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import urlsplit
 from werkzeug.utils import secure_filename
 
 from app import app, verification
 import app.interact_database as db
+from app.export_to_excel import export_to_excel
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.models import *
 
@@ -430,8 +431,16 @@ def upload_files():
         return str(e), 500
 
 
+@app.route('/export', methods=['POST'])
+def export():
+    user = request.form.get('user')
+    week = request.form.get('test')
+    print("    ", user)
+    export_to_excel(user=user, week=week)
+    filename = f'{user}\'s_{week}_result.xlsx'
 
-
+    return send_from_directory('.', filename, as_attachment=True,
+                               mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 # @app.route('/test')
 # def testPage():
 #     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))

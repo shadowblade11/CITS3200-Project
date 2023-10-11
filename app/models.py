@@ -104,7 +104,7 @@ class Feedback(DB_Queries):
 
 
 class Score(DB_Queries):
-    score_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
     user_score = db.Column(db.Integer)
@@ -121,7 +121,7 @@ class Score(DB_Queries):
 
     def __repr__(self):
         return (f'<Score self eval: {self.user_score} , program eval: {self.sys_score} '
-                f'(User ID: {self.user_id}, Week:{self.test_id}, Question ID: {self.question_name})>')
+                f'(User ID: {self.user_id}, Question ID: {self.question_id})>')
 
 class Test(DB_Queries):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
