@@ -311,6 +311,18 @@ def get_user_marks():
         return "", 404
 
 
+@app.route('/get-test-marks', methods=['POST'])
+def get_test_marks():
+    try:
+        test = Test.get(test_name="asdf")
+        print(test)
+        averages = test.average_scores_per_test_per_week()
+        print(jsonify(averages))
+        return jsonify(averages), 200
+    except:
+        return "", 404
+
+
 @app.route('/get-audio', methods=["POST"])
 def get_audio():
     data = request.get_json()
