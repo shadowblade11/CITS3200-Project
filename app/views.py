@@ -233,7 +233,7 @@ def save_audio():
         return str(e), 400
 
 
-diff_dict = {"low":1.0, "medium":1.2,"high":1.3}
+diff_dict = {"low":1.0, "medium":1.2,"high":1.4}
 
 @app.route('/calculate-score', methods=['POST'])
 def calculate_score():
