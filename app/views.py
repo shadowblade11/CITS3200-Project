@@ -318,16 +318,21 @@ def get_user():
 def get_audio():
     data = request.get_json()
     user = data.get('userID')
-    week = data.get('week')
-    path = f"./app/static/audio/users/{user}/{week}"
-    print(path)
-    if os.path.exists(path) and os.path.isdir(path):
-        clips = os.listdir(path)
+    test_name = data.get('test_name')
+    user_obj = User.get(username=user)
+    test_obj = Test.get(test_name=test_name)
+    list_of_questions = [(i.question_name,i.id) for i in test_obj.questions.all()]
+    print(list_of_questions)
+    
+    # path = f"./app/static/audio/users/{user}/{test_name}"
+    # print(path)
+    # if os.path.exists(path) and os.path.isdir(path):
+        # clips = os.listdir(path)
         # THIS IS JUST AN EXAMPLE DATA, REPLACE THIS ONCE DB IS IMPLEMENTED
-        EXAMPLE_DATA_USER = [5 for i in clips]
-        EXAMPLE_DATA_SYS = [8 for i in clips]
+        # EXAMPLE_DATA_USER = [5 for i in clips]
+        # EXAMPLE_DATA_SYS = [8 for i in clips]
         # print(EXAMPLE_DATA_USER)
-        return jsonify({"clips":clips,"user_scores":EXAMPLE_DATA_USER,"sys_scores": EXAMPLE_DATA_SYS})
+        # return jsonify({"clips":clips,"user_scores":EXAMPLE_DATA_USER,"sys_scores": EXAMPLE_DATA_SYS})
     return jsonify({"error":"No audio files"}),404
 
 @app.route('/save-feedback',methods=["POST"])
