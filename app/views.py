@@ -8,7 +8,6 @@ from werkzeug.utils import secure_filename
 from app import app, verification
 import app.interact_database as db
 from app.export_to_excel import export_to_excel
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import *
 
@@ -53,6 +52,7 @@ def home(username):
     tests_to_do = []
     for i in tests_to_do_id:
         test_obj = Test.get(id=i)
+        print(test_obj.due_date)
         dd = datetime.datetime.strptime(test_obj.due_date,"%Y-%m-%d")
         formatted_dd = dd.strftime("%d/%m/%y")
         tests_to_do.append((test_obj.test_name,formatted_dd))
@@ -453,12 +453,17 @@ def upload_files():
 def export():
     user = request.form.get('user')
     week = request.form.get('test')
-    print("    ", user)
-    export_to_excel(user=user, week=week)
-    filename = f'{user}\'s_{week}_result.xlsx'
-
-    return send_from_directory('.', filename, as_attachment=True,
-                               mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    if user == '':
+        user = []
+        users = User.get_all()
+        for u in users:
+            if not u.is_admin:
+                user.append(u.id)
+    filename = export_to_excel(user=user, week=week)
+    path = os.path.join('.', filename)
+    response = send_from_directory('..', filename, as_attachment=True)
+    os.remove(path)
+    return response
 # @app.route('/test')
 # def testPage():
 #     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))

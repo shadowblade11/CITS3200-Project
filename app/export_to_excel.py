@@ -2,7 +2,7 @@ import pandas as pd
 from app.models import *
 
 
-def export_sheet(writer, user, test_name):
+def export_sheet(user, test_name):  # Take an int as user id(pk)
     test = Test.get(test_name=test_name)
     feedback = Feedback.get(user_id=user, test_id=test.id)
     if feedback is None:
@@ -12,40 +12,74 @@ def export_sheet(writer, user, test_name):
     questions = Question.get_all(test_id=test.id)
     headers = ['', 'Self Evaluation', 'System Evaluation', 'Complete Status']
 
-    data = [headers, [f'Student ID: {user}']]
+    data = [headers, [f'Student ID: {User.get(id=user).username}']]
     for question in questions:
         question_name = question.question_name
         score = Score.get(user_id=user, question_id=question.id)
+
         if score is None:
-            data.append([question_name, '', ''])
+            data.append([question_name, '', '', ''])
             continue
         else:
-            data.append([question_name, score.user_score, score.sys_score])
+            complete = 'Completed' if score.attempt_chosen in [1, 2, 3] else 'Uncompleted'
+            data.append([question_name, score.user_score, score.sys_score, complete])
     data.append([f'Feedback for test({test_name}): {feedback}'])
     data.append([])  # Empty row, if there is a next user
-    print(data)
     return data, headers
 
 
-
 def export_to_excel(user, week):
+    filename = ''
     if type(user) == list:
-        filename = 'result.xlsx'
-        writer = pd.ExcelWriter(filename, engine='xlsxwriter')
+        datas = []
+        headers = []
         if week != '':
-            for u in user:
+            filename = f'result_{week}.xlsx'
+            writer = pd.ExcelWriter(filename, engine='xlsxwriter')
 
-                export_sheet(writer, u, week)
-        writer._save()
+            for u in user:
+                data, headers = export_sheet(u, week)
+                if not datas:
+                    datas = data
+                else:
+                    datas += data[1:]
+            df = pd.DataFrame(data=datas)
+            df.to_excel(writer, index=False, sheet_name=week, header=None)
+
+            workbook = writer.book
+            worksheet = writer.sheets[week]
+            formatting(workbook, worksheet, datas, headers)
+            writer._save()
+
+        else:
+            filename = 'result_all.xlsx'
+            writer = pd.ExcelWriter(filename, engine='xlsxwriter')
+            tests = Test.get_all()
+            for test in tests:
+                datas = []  # Empty the data for the next sheet
+                for u in user:
+                    data, headers = export_sheet(u, test.test_name)
+                    if not datas:
+                        datas = data
+                    else:
+                        datas += data[1:]
+                df = pd.DataFrame(data=datas)
+                df.to_excel(writer, index=False, sheet_name=test.test_name, header=None)
+
+                workbook = writer.book
+                worksheet = writer.sheets[test.test_name]
+                formatting(workbook, worksheet, datas, headers)
+            writer._save()
+
     elif type(user) == str:
+        user_id = User.get(username=user).id
         filename = f'{user}\'s result.xlsx'
         writer = pd.ExcelWriter(filename, engine='xlsxwriter')
         if week != '':  # Admin specify the week
-            data, headers = export_sheet(writer, user, week)
+            data, headers = export_sheet(user_id, week)
             df = pd.DataFrame(data=data)
             df.to_excel(writer, index=False, sheet_name=week, header=None)
 
-            # Access the XlsxWriter workbook and worksheet objects from the DataFrame.
             workbook = writer.book
             worksheet = writer.sheets[week]
             formatting(workbook, worksheet, data, headers)
@@ -53,9 +87,17 @@ def export_to_excel(user, week):
         else:
             tests = Test.get_all()
             for test in tests:
-                export_sheet(writer, user, test.test_name)
-    # Save the Excel file.
+                data, headers = export_sheet(user_id, test.test_name)
+                df = pd.DataFrame(data=data)
+                df.to_excel(writer, index=False, sheet_name=test.test_name, header=None)
+
+                workbook = writer.book
+                worksheet = writer.sheets[test.test_name]
+                formatting(workbook, worksheet, data, headers)
+        # Save the Excel file.
         writer._save()
+    return filename
+
 
 def formatting(workbook, worksheet, data, headers):
     # Formatting header cells with bold and a light gray fill.
@@ -71,8 +113,6 @@ def formatting(workbook, worksheet, data, headers):
     cell_format = workbook.add_format({
         'border': 1
     })
-
-    no_border_format = workbook.add_format()
 
     # Formatting for the "Student ID" and "Feedback" rows.
     merge_format = workbook.add_format({
@@ -103,7 +143,3 @@ def formatting(workbook, worksheet, data, headers):
             worksheet.merge_range(f'A{row_num + 1}:D{row_num + 1}', row[0], merge_format)
     # Freeze the header row
     worksheet.freeze_panes(1, 0)
-
-
-if __name__ == "__main__":
-    export_to_excel(['111', '123'],'week1')

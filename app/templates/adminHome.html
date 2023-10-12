@@ -25,7 +25,7 @@
       <form action="{{ url_for('export') }}"  method="post">
           <input type="hidden" name="user" id="student-id-input" value="">
           <input type="hidden" name="test" id="week-input" value="">
-            <button onclick="downloadFileAndRedirect()">Export to Excel</button>
+            <button onclick="download()">Export to Excel</button>
       </form>
     <h1>Student Search</h1>
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
@@ -84,6 +84,8 @@
 
     // searching for user, dynamically creates list if user exists
     function GettingUser(userID){
+        document.getElementById("student-id-input").value = userID;
+
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
       xml.open('POST',"/get-user",true);
@@ -293,35 +295,9 @@
       }
       xml.send();
     }
-    function downloadFileAndRedirect() {
-    const userValue = document.getElementById("student-id-input").value;
-    const weekValue = document.getElementById("week-input").value;
-
-    fetch("/export", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `user=${userValue}&test=${weekValue}`
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${userValue}'s ${weekValue} result.xlsx`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-
-        // Redirect to homepage after download
-        window.location.href = "/";  // assuming "/" is your homepage URL
-    })
-    .catch(error => {
-        console.error('Error during download:', error);
-    });
-}
+    function download() {
+        window.location.href = '/export/';
+    }
 
   </script>
 {% endblock %}
