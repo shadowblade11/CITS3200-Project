@@ -248,7 +248,10 @@ def calculate_score():
 
     print(PATH_TO_USER_ATTEMPT)
     print(PATH_TO_SOURCE)
-    score = compute_score(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
+    try:
+        score = compute_score(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
+    except Exception as e:
+        score = 0
     print(f"User Score = {user_score}, Actual Score = {score}")
     user_id = User.get(username=user).id
     test_id = Test.get(test_name=test_name).id
