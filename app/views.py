@@ -322,18 +322,18 @@ def get_audio():
     user_obj = User.get(username=user)
     test_obj = Test.get(test_name=test_name)
     list_of_questions = [(i.question_name,i.id) for i in test_obj.questions.all()]
-    print(list_of_questions)
-    
-    # path = f"./app/static/audio/users/{user}/{test_name}"
-    # print(path)
-    # if os.path.exists(path) and os.path.isdir(path):
-        # clips = os.listdir(path)
-        # THIS IS JUST AN EXAMPLE DATA, REPLACE THIS ONCE DB IS IMPLEMENTED
-        # EXAMPLE_DATA_USER = [5 for i in clips]
-        # EXAMPLE_DATA_SYS = [8 for i in clips]
-        # print(EXAMPLE_DATA_USER)
-        # return jsonify({"clips":clips,"user_scores":EXAMPLE_DATA_USER,"sys_scores": EXAMPLE_DATA_SYS})
-    return jsonify({"error":"No audio files"}),404
+    question_ids = [id for name,id in list_of_questions]
+    filtered_scores = []
+    for i in user_obj.scores.all():
+        if i.question_id in question_ids:
+            temp = (i.question_id, i.user_score,i.sys_score,i.attempt_chosen)
+            filtered_scores.append(temp)
+
+    id_to_name_mapping = {id: name for name, id in list_of_questions}
+    final_list = [(id_to_name_mapping[id],usr,sys,ac) for id,usr,sys,ac in filtered_scores]
+
+    # print(final_list)
+    return jsonify({"list_of_scores":final_list}),200
 
 @app.route('/save-feedback',methods=["POST"])
 def save_feedback():

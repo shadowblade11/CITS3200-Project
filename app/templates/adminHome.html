@@ -128,16 +128,13 @@
 
             // get json data from request
             let json_data = JSON.parse(xml.responseText);
-            let clips = json_data.clips;
-            let user_scores = json_data.user_scores;
-            let sys_scores = json_data.sys_scores;
+            let list_of_scores = json_data.list_of_scores;
 
-            let arr_length = clips.length;
             resetResultsList();
 
             let audio_path = `/static/audio/users/${userID}/${week}`;
             let image_path = `/static/images/users/${userID}/${week}`;
-            console.log(clips);
+            console.log(list_of_scores);
             // let innerTaskCounter = 0;
             // let taskNumber = 1;
             // let taskContainer = document.createElement("div");
