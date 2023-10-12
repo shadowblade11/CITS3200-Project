@@ -23,26 +23,36 @@
       </div>
     </details>
 
-    {% for test_name in tests_to_do%}
-    <a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name}}</a>
-    {% endfor %}
+    <div class="student-tests">
 
-    <!-- <h2>Unassessed Tests</h2>
-    <label for="Assessed Test">Unassessed Tests</label> 
-    <select name="UnTEST" id="UnTest"> 
-        <option value="Test1">Test1</option> 
-        <option value="Test2">Test2</option> 
-        <option value="Test3">Test3</option> 
-        <option value="Test4">Test4</option> 
-    </select>
-    <h2>Assessed Tests</h2>
-    <label for="Assessed Test">Assessed Tests</label> 
-    <select name="TEST" id="Test"> 
-        <option value="Test1">Test1</option> 
-        <option value="Test2">Test2</option> 
-        <option value="Test3">Test3</option> 
-        <option value="Test4">Test4</option> 
-    </select> -->
-  </div>
+      <details class="test-container" open>
+          <summary class="assessed-tests"><h1>Available Tests</h1></summary>
+          <div class="test-content">
+            <p>Below are the tests available for you to attempt.</p>
+            <table>
+              <tr>
+                <th>Test Name</th>
+                <th>Due Date</th>
+            {% for test_name in tests_to_do%}
+              <tr>
+                <td><a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name[0]}}</a></td>
+                <td>{{test_name[1]}}</td>
+              </tr>
+            {% endfor %}
+            </table>
+          </div>
+        </details>
+
+        <details class="test-container" open>
+          <summary class="practice-tests"><h1>Practice Tests</h1></summary>
+          <div class="test-content">
+            <p>Below are the practice tests available for you to attempt.</p>
+            <!--{% for test_name in tests_to_do%}
+            <a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name}}</a>
+            {% endfor %} -->
+          </div>
+        </details>
+      </div>
+    </div>
 
 {% endblock %}

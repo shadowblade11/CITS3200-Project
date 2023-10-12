@@ -96,3 +96,31 @@
   color: black;
 }
 
+@media (max-width: 1660px) {
+  .recordings {
+    display: flex; /* Set the display property to flex */
+    flex-direction: column;
+  }
+
+}
+/* Define the flashing animation */
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Apply the flashing animation to the recording indicator */
+.response-container .record.flashing {
+  animation: flash 1s infinite;
+  background-color: #87A96B;
+  border-color: #87A96B;
+  color: black;
+}
+
