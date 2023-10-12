@@ -26,4 +26,6 @@ def recognizePhones(path, emit=1.2, lang='eng'):
     
     phones = timestampOutput(out)
     phones['consonant'] = phones['label'].apply(isConsonant) #adding consonant feature to df
+    print(phones)
+    print("\n\n")
     return phones

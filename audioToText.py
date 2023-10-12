@@ -24,7 +24,7 @@ def getPhone(audioFile):
         audio_data = r.record(source)
         text = r.recognize_google(audio_data, language="it-IT") # initialisation + getting the audio to text conversion
         text = text.replace(" ", "")
-        #print("%s\n"%text)
+        print("%s\n"%text)
         epi = epitran.Epitran('ita-Latn') # using the package to get the phoneme string from the text
         phone = epi.transliterate(text)
         #print("%s\n"%phone)
