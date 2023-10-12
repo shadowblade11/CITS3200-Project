@@ -22,23 +22,33 @@ def export_sheet(writer, user, test_name):
         else:
             data.append([question_name, score.user_score, score.sys_score])
     data.append([f'Feedback for test({test_name}): {feedback}'])
-    df = pd.DataFrame(data=data)
-    df.to_excel(writer, index=False, sheet_name=test_name, header=None)
+    data.append([])  # Empty row, if there is a next user
+    print(data)
+    return data, headers
 
-    # Access the XlsxWriter workbook and worksheet objects from the DataFrame.
-    workbook = writer.book
-    worksheet = writer.sheets[test_name]
-    formatting(workbook, worksheet, data, headers)
 
 
 def export_to_excel(user, week):
     if type(user) == list:
-        pass
+        filename = 'result.xlsx'
+        writer = pd.ExcelWriter(filename, engine='xlsxwriter')
+        if week != '':
+            for u in user:
+
+                export_sheet(writer, u, week)
+        writer._save()
     elif type(user) == str:
         filename = f'{user}\'s result.xlsx'
         writer = pd.ExcelWriter(filename, engine='xlsxwriter')
-        if week != '':
-            export_sheet(writer, user, week)
+        if week != '':  # Admin specify the week
+            data, headers = export_sheet(writer, user, week)
+            df = pd.DataFrame(data=data)
+            df.to_excel(writer, index=False, sheet_name=week, header=None)
+
+            # Access the XlsxWriter workbook and worksheet objects from the DataFrame.
+            workbook = writer.book
+            worksheet = writer.sheets[week]
+            formatting(workbook, worksheet, data, headers)
 
         else:
             tests = Test.get_all()
@@ -96,4 +106,4 @@ def formatting(workbook, worksheet, data, headers):
 
 
 if __name__ == "__main__":
-    export_to_excel('111','')
+    export_to_excel(['111', '123'],'week1')
