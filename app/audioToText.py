@@ -2,6 +2,9 @@ import speech_recognition as sr
 import epitran
 
 def checkPronounciation(sourcePhone, submittedPhone):
+    if ((sourcePhone == 0) or (submittedPhone == 0)):
+        return 0
+    
     matchedPhone = 0 
 
     for x,y in zip(sourcePhone, submittedPhone): # will iterate through the list in parallel and will be limited to the shortest list

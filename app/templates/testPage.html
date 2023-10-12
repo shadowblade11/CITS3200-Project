@@ -237,6 +237,13 @@
                   console.log(xmlhttp.responseText);
                   alert("Your score for " + task_number + " has been loaded");
                 }
+                if (xmlhttp.status == 500){
+                  let score = listOfDivs[index].querySelector(".computed-score-value");
+                  let task_number = listOfDivs[index]. querySelector("h1.task-number").innerHTML;
+                  score.innerHTML = 0;
+                  console.log(0);
+                  alert("Your score for " + task_number + " has been loaded");
+                }
               }
             }
 
