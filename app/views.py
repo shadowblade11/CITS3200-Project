@@ -135,7 +135,7 @@ def register():
         session['id'] = form.id.data
         session['passwd'] = form.passwd2.data
         v_code = verification.generate_v_code(6)
-        # verification.send_v_code(form.id.data+'@student.uwa.edu.au', v_code)
+        verification.send_v_code(form.id.data+'@student.uwa.edu.au', v_code)
         print(v_code)
         session['v_code'] = v_code
         session['start_time'] = datetime.datetime.now()
