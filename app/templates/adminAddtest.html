@@ -64,14 +64,9 @@
                 <div id="selected-files-high"></div>
             </div>
         </div>
-<<<<<<< HEAD
         <h4>Due Date:</h4>
         <input type="date" id="due-date" name="dueDate" required>
         <button type="submit" id="upload">Upload Test</button>
-=======
-
-        <button type="submit">Upload Test</button>
->>>>>>> origin/i10-admin-reformat
     </form>
 </div>
 
@@ -117,7 +112,7 @@ document.getElementById("test-form").addEventListener("submit", function (event)
     .then((response) => response.json())
     .then((data) => {
         alert("File(s) uploaded successfully!");
-         upload.style.backgroundColor = "green";
+            upload.style.backgroundColor = "green";
             upload.style.color = "white";
         console.log(data);
         location.reload();
