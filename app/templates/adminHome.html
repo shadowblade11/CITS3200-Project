@@ -86,7 +86,7 @@
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
           if(xml.status == 200){
-            let weeks = JSON.parse(xml.responseText).weeks;
+            let weeks = JSON.parse(xml.responseText).tests;
             for (let value of weeks){
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
@@ -103,18 +103,6 @@
         }
       }
       xml.send(JSON.stringify({ "userID": userID }));
-    }
-
-    function populateTaskContainer(taskContainer, taskNumber) {
-      taskContainer.classList.add("task-container");
-      
-      let taskContainerLabel = document.createElement("h1");
-      taskContainerLabel.textContent = `Task ${taskNumber}`;
-      taskContainer.appendChild(taskContainerLabel);
-            
-      let innerTaskContainer = document.createElement("div");
-      innerTaskContainer.classList.add("inner-task-container");
-      taskContainer.appendChild(innerTaskContainer);
     }
 
     // Gets audio clips after admin clicks a specific week
@@ -137,7 +125,6 @@
             console.log(list_of_scores);
 
             const arr_length = list_of_scores.length
-            // populateTaskContainer(taskContainer, 1);
             for (let idx = 0; idx < arr_length; idx++){
               let taskContainer = document.createElement("div");
               taskContainer.classList.add("task-container");
@@ -218,6 +205,7 @@
             feedback_box.style.display= "block";
             textarea_box.dataset.week = week;
             textarea_box.dataset.user = userID;
+
             gettingFeedback(userID,week,function(response){
               textarea_box.value = response;
             });

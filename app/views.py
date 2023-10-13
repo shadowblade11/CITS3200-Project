@@ -306,12 +306,12 @@ def get_user():
     data = request.get_json()
     user = data.get('userID')
     # print(user)
-    path = f"./app/static/audio/users/{user}"
-    if os.path.exists(path) and os.path.isdir(path):
-        wk = os.listdir(path)
-        return jsonify({"weeks": wk})
-    else:
-        return jsonify({"error": "User not found or no audio files"}), 404
+    user_obj = User.get(username=user)
+
+    completed_tests = user_obj.completed_tests.all()
+    completed_tests_name = [Test.get(id = i.test_id).test_name for i in completed_tests]
+    print(completed_tests_name)
+    return jsonify({"tests":completed_tests_name})
 
 
 @app.route('/get-audio', methods=["POST"])
