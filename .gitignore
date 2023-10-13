@@ -1,3 +1,4 @@
+*.db
 .venv/
 .vscode/
 
@@ -5,7 +6,6 @@ __pycache__/
 
 users/
 audio/
-*.db
 
 ffmpeg.exe
 .idea/
