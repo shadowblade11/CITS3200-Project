@@ -1,10 +1,10 @@
+*.db
 .venv/
 .vscode/
 
 __pycache__/
 
-
-images/
+users/
 audio/
 
 ffmpeg.exe

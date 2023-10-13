@@ -6,7 +6,7 @@
   <h1>Welcome Admin Team</h1>
   <h2>Please review instructions below to view student scores.</h2>
 </div>
-<details class="instructions-container" open>
+<details class="instructions-resultsContainer" open>
   <summary class="instructions-header"><h1>Instructions</h1></summary>
   <div class="instructions-content">
     <p>This page allows admin users to view student scores and provide feedback on their weekly tests.</p>
@@ -22,28 +22,26 @@
 </details>
 
   <div class="content">
+    <h1>Student Search</h1>
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
 
       <!--Empty div used to dynamically hold the list of weeks-->
     <div class="dropdown">
-        <button class="dropbtn" id="week">Week Recording</button>
-     <div id = "WkRecording" class="dropdown-content">
-     </div>
+      <h1>Completed Tests</h1>
+        <button id="dropbtn" class="empty" id="week">Week Recording &#9660;</button>
+      <div id="WkRecording" class="dropdown-content">
+      </div>
     </div>
 
-    <div id = "res">
+    <div id = "res"></div>
 
+    <div id="feedback-box" style="display: none;"> <!--Display has to be none initially-->
+        <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
+        <button id="submit-feedback">Submit</button>
     </div>
-    <br>
-        <div id="feedback-box"style="display: none;"> <!--Display has to be none initially-->
-            <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
-            <button id="submit-feedback">Submit</button>
-        </div>
-     </div>
-      <br>
-      <br>
   </div>
+
   <script>
     // global variables
     const submitButton = document.getElementById("search-button");
@@ -51,14 +49,31 @@
     const feedback_box = document.getElementById("feedback-box");
     const textarea_box = document.getElementById("feedback-input");
     const submitFeedbackButton = document.getElementById("submit-feedback");
-    const container = document.getElementById("res");
+    const resultsContainer = document.getElementById("res");
+    const searchbar = document.getElementById("search-bar");
+    const dropdownButton = document.getElementById("dropbtn");
+
+    let resetResultsList = () => {
+      dropdownButton.classList.add("empty");
+      resultsContainer.innerHTML = "";
+      feedback_box.style.display = "none";
+    }
+    
+    searchbar.onkeyup = function(event) {
+      if (event.keyCode === 13){
+        event.preventDefault();
+        submitButton.click();
+      }
+    }
 
     // on click, search for user
     submitButton.onclick = () => {
-      let textvalue = document.getElementById("search-bar").value;
+      let textvalue = searchbar.value;
       if (textvalue != ""){
+        resetResultsList();
         GettingUser(textvalue);
-        document.getElementById("search-bar").value = "";
+        searchbar.value = "";
+        dropdownButton.classList.remove("empty");
       }
     }
 
@@ -70,21 +85,20 @@
       xml.setRequestHeader("Content-Type", "application/json");
       xml.onreadystatechange = function(){
         if(xml.readyState == 4){
-          if(xml.status==200){
-            let weeks = JSON.parse(xml.responseText).weeks;
+          if(xml.status == 200){
+            let weeks = JSON.parse(xml.responseText).tests;
             for (let value of weeks){
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
-              new_element.onclick =  function () {
-            gettingAudioClips(userID, value); 
-          };
+              new_element.onclick = function () {
+                gettingAudioClips(userID, value); 
+              };
               WkRecording.appendChild(new_element);
             }
           }
           else{
             alert("User does not exist");
-            container.innerHTML = "";
-            feedback_box.style.display="none";
+            resetResultsList();
           }
         }
       }
@@ -97,69 +111,110 @@
       xml.open('POST',"/get-audio",true);
       xml.setRequestHeader("Content-Type", "application/json");
       xml.onreadystatechange = function(){
-        if(xml.readyState == 4){
-          if(xml.status==200){
+        if(xml.readyState === 4){
+          if(xml.status === 200) {
 
             // get json data from request
             let json_data = JSON.parse(xml.responseText);
-            let clips = json_data.clips;
-            let user_scores = json_data.user_scores;
-            let sys_scores = json_data.sys_scores;
+            let list_of_scores = json_data.list_of_scores;
 
-            let arr_length = clips.length;
-            container.innerHTML = "";
+            resetResultsList();
 
             let audio_path = `/static/audio/users/${userID}/${week}`;
             let image_path = `/static/images/users/${userID}/${week}`;
+            console.log(list_of_scores);
+
+            const arr_length = list_of_scores.length
             for (let idx = 0; idx < arr_length; idx++){
-              let small_container = document.createElement("div");
+              let taskContainer = document.createElement("div");
+              taskContainer.classList.add("task-container");
+              
+              //Adds task number header
+              let taskContainerLabel = document.createElement("h1");
+              taskContainerLabel.textContent = `Task ${idx+1}`;
+              taskContainer.appendChild(taskContainerLabel);
 
-              // create audio element
-              let aud_clip = document.createElement("audio");
-              aud_clip.controls = true;
-              aud_clip.type = "audio/wav";
-              aud_clip.src = `${audio_path}/${clips[idx]}`;
+              //This will hold all 3 audio clips and images
+              let innerTaskContainer = document.createElement("div");
+              innerTaskContainer.classList.add("inner-task-container");
 
-              // create image element
-              let img = document.createElement("img");
-              let image_name = clips[idx].replace(".wav",".png");
-              img.src = `${image_path}/${image_name}`;
-              img.width = "400";
-              img.height = "160";
+              for (let inner_idx = 0; inner_idx < 3; inner_idx++){
+                let actual_idx = inner_idx+1;
 
-              // create p element to hold scores and name
-              let user_sc = document.createElement("p");
-              user_sc.textContent = user_scores[idx];
-              let sys_sc = document.createElement("p");
-              sys_sc.textContent = sys_scores[idx];
-              let name = document.createElement("p");
-              name.textContent = clips[idx];
+                let audioContainer = document.createElement("div");
+                audioContainer.classList.add("audio-container");
 
-              // adds all the element to the container
-              small_container.appendChild(name);
-              small_container.appendChild(aud_clip);
-              small_container.appendChild(img);
-              small_container.appendChild(user_sc);
-              small_container.appendChild(sys_sc);
+                let name_of_clip = list_of_scores[idx][0];
+                
+                let aud_clip = document.createElement("audio");
+                aud_clip.controls = true;
+                aud_clip.type = "audio/wav";
+                aud_clip.src = `${audio_path}/${name_of_clip}-${actual_idx}.wav`;
+                
+                let img = document.createElement("img");
+                img.src = `${image_path}/${name_of_clip}-${actual_idx}.png`;
+                img.width = "400";
+                img.height = "160";
 
-              small_container.style.border = "1px solid black";
-              container.appendChild(small_container);
+                audioContainer.appendChild(img);
+                audioContainer.appendChild(aud_clip);
+                if (actual_idx === list_of_scores[idx][3]){
+                  audioContainer.style.backgroundColor = "lightgreen";
+
+                  // Handle Scores
+                  let scoreContainer = document.createElement("div");
+                  scoreContainer.classList.add("score-container");
+
+                  let userScoreContainer = document.createElement("div");
+                  userScoreContainer.classList.add("user-score-container");
+
+                  let userScoreLabel = document.createElement("label");
+                  userScoreLabel.textContent = "Self-Assessment Score: ";
+
+                  let userScoreValue = document.createElement("span");
+                  userScoreValue.textContent = list_of_scores[idx][1];
+
+                  userScoreContainer.appendChild(userScoreLabel);
+                  userScoreContainer.appendChild(userScoreValue);
+
+                  let systemScoreContainer = document.createElement("div");
+                  systemScoreContainer.classList.add("sys-score-container");
+
+                  let systemScoreLabel = document.createElement("label");
+                  systemScoreLabel.textContent = "System Score: ";
+
+                  let systemScoreValue = document.createElement("span");
+                  systemScoreValue.textContent = list_of_scores[idx][2];
+
+                  systemScoreContainer.appendChild(systemScoreLabel);
+                  systemScoreContainer.appendChild(systemScoreValue);
+
+                  scoreContainer.appendChild(userScoreContainer);
+                  scoreContainer.appendChild(systemScoreContainer);
+                  audioContainer.appendChild(scoreContainer);
+                }
+                innerTaskContainer.appendChild(audioContainer);
+              }
+
+              taskContainer.appendChild(innerTaskContainer);
+              resultsContainer.appendChild(taskContainer);
             }
+
+            dropdownButton.classList.remove("empty");
 
             feedback_box.style.display= "block";
             textarea_box.dataset.week = week;
             textarea_box.dataset.user = userID;
+
             gettingFeedback(userID,week,function(response){
               textarea_box.value = response;
             });
-
-          }
-          else{
+          } else {
             console.log("error");
           }
         }
       }
-      xml.send(JSON.stringify({ "userID": userID, "week":week}));
+      xml.send(JSON.stringify({ "userID": userID, "test_name":week}));
     }
 
     // sending feedback to get saved

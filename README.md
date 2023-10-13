@@ -127,7 +127,7 @@ brew install ffmpeg
 ## Testing Installation
 Run the following python script to that you installed it correctly
 ```bash
-python3 testInstallation.py
+python testInstallation.py
 ```
 
 ---
@@ -140,4 +140,6 @@ while within the virtual environment. (.venv)
 
 ## Relevant links:
 [Figma](https://www.figma.com/file/iRdR7IwBRmGQy51VEWec3x/Student-Login?type=design&node-id=0%3A1&mode=design&t=RxDeRqttoMxhIba1-1) (website design)
+
+[Flask](https://flask.palletsprojects.com/en/2.3.x/) (Python Framework)
 

@@ -22,7 +22,7 @@
         <li><a href="{{url_for('logout')}}">Logout</a></li>
           {% if not current_user.is_admin %}
             <li><a href="{{url_for('home', username=current_user.id)}}">Tests</a></li>
-            <li><a href="{{url_for('grades')}}">Grades</a></li>
+            <li><a href="{{url_for('grades', username=current_user.username)}}">Grades</a></li>
           {% else %}
             <li><a href="{{url_for('adminHome')}}">Admin</a></li>
           {% endif %}
@@ -32,7 +32,6 @@
         <li><a href="{{url_for('addtest')}}">Create Test</a></li>
     {% endif %}
       <li><a href="{{url_for('about')}}">About</a></li>
-      <li><a href="{{url_for('contact')}}">Contact</a></li>
     </ul>
   </nav>
 <div class="content">
