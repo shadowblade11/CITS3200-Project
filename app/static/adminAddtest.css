@@ -24,6 +24,16 @@
   font-size: 1rem;
 }
 
+.created-tests {
+  border: 2px solid black;
+  margin: 0 10%;
+  padding: 0.67em;
+  margin-top: 1.34em;
+  margin-bottom: 1.34em;
+  width: 25%;
+  font-size: 1rem;
+}
+
 #test-form {
   font-weight: bold;
   font-size: 1.25rem;
