@@ -104,6 +104,7 @@ document.getElementById("test-form").addEventListener("submit", function (event)
          upload.style.backgroundColor = "green";
             upload.style.color = "white";
         console.log(data);
+        location.reload();
     })
     .catch((error) => {
         console.error(error);
