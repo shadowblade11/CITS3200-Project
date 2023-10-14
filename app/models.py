@@ -168,13 +168,10 @@ class Test(DB_Queries):
 
     def __repr__(self):
         return f'<id: {self.id}, test_name: {self.test_name}, dd: {self.due_date}>'
+        # return f'<Test {self.test_name} (Week: {self.week_number})(Questions: {self.questions})>'
 
     def average_scores_per_test_per_week(self):
         average_scores_per_week = {}
-        return f'<Test {self.test_name} (Week: {self.week_number})(Questions: {self.questions})>'
-
-    def create_test(self, week_no, test_name, due_date, no_of_qs):
-        self.__init__(week_no, test_name, due_date, no_of_qs)
 
         # Get distinct week numbers
         distinct_weeks = db.session.query(Test.week_number).distinct()
@@ -206,6 +203,10 @@ class Test(DB_Queries):
                         'sys_average_score': average_sys_score,
                     }
         return average_scores_per_week
+        
+    def create_test(self, week_no, test_name, due_date, no_of_qs):
+        self.__init__(week_no, test_name, due_date, no_of_qs)
+
 
 
 class Question(DB_Queries):
