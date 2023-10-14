@@ -477,13 +477,13 @@
 
     function extractTestData(data) {
       cohortScores.sysScores = [];
-      cohortScores.userScores = [];
+      cohortScores.selfScores = [];
 
       for (const weekNumber in data) {
         if (data.hasOwnProperty(weekNumber)) {
           const weekData = data[weekNumber];
           cohortScores.sysScores.push(weekData.sys_average_score);
-          cohortScores.userScores.push(weekData.user_average_score);
+          cohortScores.selfScores.push(weekData.user_average_score);
         }
       }
       // TODO: debug out of order scores.
