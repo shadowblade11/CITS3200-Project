@@ -17,13 +17,15 @@
     <p>After searching for a student, use the "Week Recording" dropdown to select a test to view.</p>
     <h3>Step Three</h3>
     <p>Review the student's scores and provide feedback in the text box below.</p>
+    <h3>Step Four (Optional)</h3>
+    <p>Generate plots of the students scores using the dropdown menus below.</p>
+    <p>Plots can be adjusted to view varying difficulty levels and either individual or cohort scores.</p>
+    <h3>Step Five (Optional)</h3>
+    <p>Click the provided button to export the data.</p>
     
   </div>
 </details>
 
-
-
-  <div class="content">
     <h1>Student Search</h1>
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
@@ -36,42 +38,54 @@
       </div>
     </div>
 
+    <div class="content">
+      <form action="{{ url_for('export') }}"  method="post">
+          <input type="hidden" name="user" id="student-id-input" value="">
+          <input type="hidden" name="test" id="week-input" value="">
+            <button id="export" onclick="download()">Export to Excel</button>
+      </form>
+
     <div id = "res">
-      
+
     </div>
     <br>
-        <div id="feedback-box" style="display: none;"> <!--Display has to be none initially-->
-            <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
-            <button id="submit-feedback">Submit</button>
+        <div id="feedback-box"> 
+          <h1>Feedback</h1><!--Display has to be none initially-->
+          <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
+          <button id="submit-feedback">Submit</button>
         </div>
-     </div>
-     <div>
-      <label for="selectOption">Select option:</label>
-      Plot
-      <select id="difficulty">
-        <option value="all">All</option>
-        <option value="Easy">Easy</option>
-        <option value="Medium">Medium</option>
-        <option value="Hard">Hard</option>
-        <!-- Add more student options as needed -->
-      </select>
-      questions for
-      <select id="cohort-option">
-        <option value="all">All Students</option>
-        <option value="student">Searched Student</option>
-        <!-- Add more student through js? -->
-      </select>
-    
-      <button onclick="plotScores()">Plot</button>
+    </div>
+    <div class="analytics">
+      <h1>Analytics</h1>
+      <p>Display the weekly self-assessed, and computed scores of individual students and cohort.</p>
+      <p>Select the difficulty and granularity options from the dropdown menus to customize the plot.</p>
+      <div class="analytics-content">
+        <label for="selectOption">Select Views:</label>
+        Difficulty
+        <select id="difficulty">
+          <option value="all">All</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+          <!-- Add more student options as needed -->
+        </select>
+        Granularity
+        <select id="cohort-option">
+          <option value="all">All Students</option>
+          <option value="student">Searched Student</option>
+          <!-- Add more student through js? -->
+        </select>
+      </div>
+      <button id="plot-graph" onclick="plotScores()">Plot</button>
     </div>
     <br>
-     
+
     <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
       <br>
       <br>
-      
+
   </div>
-  
+
   <script
   src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
   </script>
@@ -100,6 +114,7 @@
 
     let resetResultsList = () => {
       dropdownButton.classList.add("empty");
+      dropdownButton.style.display = "flex";
       resultsContainer.innerHTML = "";
       feedback_box.style.display = "none";
     }
@@ -115,11 +130,11 @@
 
     let userScores = {userID: null, sysScores: [], selfScores: []} // avg user sys scores
     let cohortScores = {sysScores: [], selfScores: []} // avg cohort sys scores
-    
+
     let graph_values = [];
     let student_values = [];
     let week_values = [];
-    
+
     const myChart = new Chart("myChart", {
       type: 'line',
       data: {},
@@ -131,7 +146,7 @@
             },
             display: true,
             ticks: {
-                suggestedMin: 0, 
+                suggestedMin: 0,
                 suggestedMax: 100,
                 // OR //
                 beginAtZero: true   // minimum value will be 0.
@@ -145,7 +160,7 @@
           }],
         title: {
           display: true,
-          text: "Choose Data to Plot above",
+          text: "Self-Assessed and Computed Scores of Students by Week",
         },}
     });
 
@@ -161,7 +176,7 @@
             },
             display: true,
             ticks: {
-                suggestedMin: 0, 
+                suggestedMin: 0,
                 suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
                 // OR //
                 beginAtZero: true   // minimum value will be 0.
@@ -193,7 +208,7 @@
         dropdownButton.classList.remove("empty");
       }
     }
-    
+
     function plotScores() {
       let title = "Missing Title"
       const data = {
@@ -216,7 +231,7 @@
         // not integrated into backend yet.
       } else {}
       if (cohort_option.value == 'all') {
-        // 
+        //
         data.datasets[0].data = cohortScores.sysScores
         data.datasets[1].data = cohortScores.selfScores
         title = "Average Scores by Week"
@@ -227,10 +242,12 @@
       }
 
       setGraph(data, title)
-    } 
+    }
 
     // searching for user, dynamically creates list if user exists
     function GettingUser(userID){
+        document.getElementById("student-id-input").value = userID;
+
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
       xml.open('POST',"/get-user",true);
@@ -243,18 +260,16 @@
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
               new_element.onclick = function () {
-                gettingAudioClips(userID, value); 
+                gettingAudioClips(userID, value);
               };
               new_element.onclick =  function () {
-              gettingAudioClips(userID, value); 
+              gettingAudioClips(userID, value);
           };
               WkRecording.appendChild(new_element);
             }
           }
           else{
             alert("User does not exist or has not taken any tests");
-            container.innerHTML = "";
-            feedback_box.style.display="none";
           }
         }
       }
@@ -283,6 +298,18 @@
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
+    function populateTaskContainer(taskContainer, taskNumber) {
+      taskContainer.classList.add("task-container");
+
+      let taskContainerLabel = document.createElement("h1");
+      taskContainerLabel.textContent = `Task ${taskNumber}`;
+      taskContainer.appendChild(taskContainerLabel);
+
+      let innerTaskContainer = document.createElement("div");
+      innerTaskContainer.classList.add("inner-task-container");
+      taskContainer.appendChild(innerTaskContainer);
+    }
+
     function GettingTestMarks(){
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
@@ -297,13 +324,12 @@
           }
           else{
             alert("User does not exist or has not taken any tests");
-            container.innerHTML = "";
-            feedback_box.style.display="none";
           }
         }
       }
       xml.send();
     }
+    
     try {
       GettingTestMarks()  
     } catch (error) {
@@ -329,11 +355,11 @@
             let image_path = `/static/images/users/${userID}/${week}`;
             console.log(list_of_scores);
 
-            const arr_length = list_of_scores.length
+            const arr_length = list_of_scores.length;
             for (let idx = 0; idx < arr_length; idx++){
               let taskContainer = document.createElement("div");
               taskContainer.classList.add("task-container");
-              
+
               //Adds task number header
               let taskContainerLabel = document.createElement("h1");
               taskContainerLabel.textContent = `Task ${idx+1}`;
@@ -350,12 +376,12 @@
                 audioContainer.classList.add("audio-container");
 
                 let name_of_clip = list_of_scores[idx][0];
-                
+
                 let aud_clip = document.createElement("audio");
                 aud_clip.controls = true;
                 aud_clip.type = "audio/wav";
                 aud_clip.src = `${audio_path}/${name_of_clip}-${actual_idx}.wav`;
-                
+
                 let img = document.createElement("img");
                 img.src = `${image_path}/${name_of_clip}-${actual_idx}.png`;
                 img.width = "400";
@@ -407,7 +433,7 @@
 
             dropdownButton.classList.remove("empty");
 
-            feedback_box.style.display= "block";
+            feedback_box.style.display= "flex";
             textarea_box.dataset.week = week;
             textarea_box.dataset.user = userID;
 
@@ -446,7 +472,7 @@
     submitFeedbackButton.onclick = function(){
       sendingFeedback();
     }
-    
+
     // getting feedback from the DB
     function gettingFeedback(user,week,callback){
       const xml = new XMLHttpRequest();
@@ -465,7 +491,7 @@
       }
       xml.send();
     }
- 
+
     function extractChartData(data, userID) {
       userScores.sysScores = [];
       userScores.selfScores = [];
@@ -492,6 +518,10 @@
       }
       // TODO: debug out of order scores.
       console.log(cohortScores)
+    }
+
+    function download() {
+        window.location.href = '/export/';
     }
 
   </script>

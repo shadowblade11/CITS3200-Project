@@ -27,20 +27,6 @@
   margin-bottom: 0.67em;
 }
 
-  #search-bar {
-    padding: 8px;
-    width: 300px;
-  }
-  
-  #search-button {
-    padding: 8px 12px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    margin-top: 3%;
-  }
-
   .image-container {
   text-align: center; /* Center the images horizontally within the container */
 }
@@ -51,30 +37,25 @@
 }
 
   /* adminHome.css */
-.dropdown {
-  position: relative;
-  display: inline-block;
-  margin-top: 2%;
-}
+
 
 #res {
   max-width: calc(100vw - 4%);
-}
-
-#dropbtn {
-  background-color: #000000;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
 }
 
 #dropbtn.empty {
   background-color: #666;
   color: black;
   cursor: not-allowed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dropdown-content {
@@ -109,24 +90,52 @@
 }
 
 #feedback-box {
-  margin-top: 20px; /* Add space below the search form */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.34em;
 }
 
-#feedback-input {
-  width: 100%;
+#feedback-input, #search-bar {
   padding: 10px;
   margin-bottom: 10px;
   resize: vertical; /* Allow vertical resizing of the textarea */
   font-family: inherit;
 }
 
-#submit-feedback {
-  background-color: #3498db;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
+.analytics h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.analytics-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-top: 1.34em;
+}
+
+#submit-feedback, #search-button, #plot-graph, #dropbtn, #export {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#plot-graph {
+  margin-top: 1.34em;
+  display: flex;
+  margin: auto;
+  margin-top: 1.34em;
+
+}
+
 #student-picture{
   background-color: #cccccc;
 }
@@ -161,7 +170,7 @@
       padding: 0.67em;
     }
 
-    @media (max-width: 1450px) {
+    @media (max-width: 1300px) {
       .inner-task-container {
         display: flex;
         flex-direction: column;
