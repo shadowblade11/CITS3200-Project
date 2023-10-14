@@ -1,6 +1,5 @@
 <!-- Using HTML markdown so as to not mess with auto table of contents generation. -->
-<p style="font-size:30px;text-align:center"><strong>CITS3200 PROJECT</strong></p>  
-<p style="font-size:18px;text-align:center"><strong>SCORING ORAL SKILLS</strong></p> 
+<h1 style="text-align:center">CITS3200 PROJECT: SCORING ORAL SKILLS</h1>
 
 <h2> TABLE OF CONTENTS </h2>  
 
