@@ -78,7 +78,7 @@ class User(UserMixin, DB_Queries):
                 sys_avg_scores = []
 
                 for score in user_scores:
-                    user_avg_scores.append(score.user_score*10)
+                    user_avg_scores.append(score.user_score)
                     sys_avg_scores.append(score.sys_score)
 
                 average_user_score = sum(user_avg_scores) / len(user_avg_scores)
@@ -187,7 +187,7 @@ class Test(DB_Queries):
 
                     if test_scores:
                         for score in test_scores:
-                            total_user_scores += score.user_score*10
+                            total_user_scores += score.user_score
                             total_sys_scores += score.sys_score
 
                         num_tests += 1

@@ -48,32 +48,25 @@
      <div>
       <label for="selectOption">Select option:</label>
       Plot
-      <select id="selectOption">
+      <select id="difficulty">
         <option value="all">All</option>
-        <option value="student1">Easy</option>
-        <option value="student2">Medium</option>
-        <option value="student2">Hard</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
         <!-- Add more student options as needed -->
       </select>
       questions for
-      <select id="selectOption">
+      <select id="cohort-option">
         <option value="all">All Students</option>
-        <option value="student1">Student 123</option>
-        <!-- Add more student options as needed -->
+        <option value="student">Searched Student</option>
+        <!-- Add more student through js? -->
       </select>
     
       <button onclick="plotScores()">Plot</button>
     </div>
     <br>
-     Graph average scores across weeks
-     <button id="student-graph">Selected Student's</button>
-     <button id="week-graph">Group Average</button>
-     <!-- <button id=""></button> -->
-     <!-- average score over time
-     score per question
-     single student's score over time
-     download excel sheet. -->
-     <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+     
+    <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
       <br>
       <br>
       
@@ -94,8 +87,9 @@
   <script>
     // global variables
     const submitButton = document.getElementById("search-button");
-    const student_graph = document.getElementById("student-graph");
-    const week_graph = document.getElementById("week-graph");
+    const difficulty = document.getElementById("difficulty");
+    const cohort_option = document.getElementById("cohort-option");
+    const Plot_Graph = document.getElementById("cohort-option");
     const WkRecording = document.getElementById("WkRecording");
     const feedback_box = document.getElementById("feedback-box");
     const textarea_box = document.getElementById("feedback-input");
@@ -118,88 +112,74 @@
     }
 
     let weekNumbers = []
-    let sysAverageScores = []
-    let userAverageScores = []
 
+    let userScores = {userID: null, sysScores: [], selfScores: []} // avg user sys scores
+    let cohortScores = {sysScores: [], selfScores: []} // avg cohort sys scores
+    
     let graph_values = [];
     let student_values = [];
     let week_values = [];
-
+    
+    const myChart = new Chart("myChart", {
+      type: 'line',
+      data: {},
+      options: {
+        yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Score (%)'
+            },
+            display: true,
+            ticks: {
+                suggestedMin: 0, 
+                suggestedMax: 100,
+                // OR //
+                beginAtZero: true   // minimum value will be 0.
+            },
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Week'
+            }
+          }],
+        title: {
+          display: true,
+          text: "Choose Data to Plot above",
+        },}
+    });
 
     function setGraph(data, title) {
       const xValues = ["1", "2", "3", "4", "5", "6", "7", "8", "10", "11", "12"];
-      new Chart("myChart", {
-        type: "line",
-        data: data, 
-        options: {
-          scales: {
-            yAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Score (%)'
-              },
+      myChart.data = data
+      myChart.options = {
+        scales: {
+          yAxes: [{
+            scaleLabel: {
               display: true,
-              ticks: {
-                  suggestedMin: 0, 
-                  suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
-                  // OR //
-                  beginAtZero: true   // minimum value will be 0.
-              },
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Week'
-              }
-            }]
-          },
-          title: {
+              labelString: 'Score (%)'
+            },
             display: true,
-            text: title,
-          },
-        }
-      });
-    }
-    
-    setGraph(graph_values, "Click on button to graph")
-    
-    student_graph.onclick = () => {
-      const data = {
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-        datasets: [
-          {
-              label: 'System Average Scores',
-              data: sysAverageScores.scores,
-              backgroundColor: "rgba(210,50,210,0.3)",
-          },
-          {
-              label: 'User Average Scores',
-              data: userAverageScores.scores,
-              backgroundColor: "rgba(210,0,0,0.3)"
-          }
-        ]
+            ticks: {
+                suggestedMin: 0, 
+                suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
+                // OR //
+                beginAtZero: true   // minimum value will be 0.
+            },
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Week'
+            }
+          }]
+        },
+        title: {
+          display: true,
+          text: title,
+        },
       };
-      setGraph(data, "Student " + sysAverageScores.student_id + "'s Scores")
-    }
-    GettingTestMarks();
-    week_graph.onclick = async () => {
-      await GettingTestMarks(); 
-      const data = {
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-        datasets: [
-          {
-              label: 'System Average Scores',
-              data: sysAverageScores,
-              backgroundColor: "rgba(210,50,210,0.3)",
-          },
-          {
-              label: 'User Average Scores',
-              data: userAverageScores,
-              backgroundColor: "rgba(210,0,0,0.3)"
-          }
-        ]
-      };
-      setGraph(data, "Average Scores by Week")
+      myChart.update()
     }
 
     // on click, search for user
@@ -213,6 +193,41 @@
         dropdownButton.classList.remove("empty");
       }
     }
+    
+    function plotScores() {
+      let title = "Missing Title"
+      const data = {
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+        datasets: [
+          {
+              label: 'System Average Scores',
+              data: [],
+              backgroundColor: "rgba(210,50,210,0.3)",
+          },
+          {
+              label: 'User Average Scores',
+              data: [],
+              backgroundColor: "rgba(210,0,0,0.3)"
+          }
+        ]
+      };
+      // called on PlotClick
+      if (difficulty.value == 'all') {
+        // not integrated into backend yet.
+      } else {}
+      if (cohort_option.value == 'all') {
+        // 
+        data.datasets[0].data = cohortScores.sysScores
+        data.datasets[1].data = cohortScores.selfScores
+        title = "Average Scores by Week"
+      } else if (cohort_option.value == 'student') {
+        data.datasets[0].data = userScores.sysScores
+        data.datasets[1].data = userScores.selfScores
+        title = "Student " + userScores.userID + "'s Scores"
+      }
+
+      setGraph(data, title)
+    } 
 
     // searching for user, dynamically creates list if user exists
     function GettingUser(userID){
@@ -243,7 +258,6 @@
           }
         }
       }
-      console.log(userID)
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
@@ -279,7 +293,6 @@
           if(xml.status==200){
             let values = JSON.parse(xml.responseText);
             graph_values = values
-            console.log(graph_values)
             extractTestData(values);
           }
           else{
@@ -291,7 +304,8 @@
       }
       xml.send();
     }
-
+    
+    GettingTestMarks()
     // Gets audio clips after admin clicks a specific week
     function gettingAudioClips(userID,week){
       const xml = new XMLHttpRequest();
@@ -428,6 +442,7 @@
     submitFeedbackButton.onclick = function(){
       sendingFeedback();
     }
+    
     // getting feedback from the DB
     function gettingFeedback(user,week,callback){
       const xml = new XMLHttpRequest();
@@ -448,31 +463,31 @@
     }
  
     function extractChartData(data, userID) {
-      sysAverageScores = {student_id: userID, scores: []};
-      userAverageScores = {student_id: userID, scores: []};
-
+      userScores.sysScores = [];
+      userScores.selfScores = [];
+      userScores.userID = userID;
       for (const weekNumber in data) {
         if (data.hasOwnProperty(weekNumber)) {
           const weekData = data[weekNumber];
-          sysAverageScores.scores.push(weekData.sys_average_score);
-          userAverageScores.scores.push(weekData.user_average_score);
+          userScores.sysScores.push(weekData.sys_average_score);
+          userScores.selfScores.push(weekData.user_average_score);
         }
       }
     }
 
     function extractTestData(data) {
-      sysAverageScores = [];
-      userAverageScores = [];
+      cohortScores.sysScores = [];
+      cohortScores.userScores = [];
 
       for (const weekNumber in data) {
         if (data.hasOwnProperty(weekNumber)) {
           const weekData = data[weekNumber];
-          sysAverageScores.push(weekData.sys_average_score);
-          userAverageScores.push(weekData.user_average_score);
+          cohortScores.sysScores.push(weekData.sys_average_score);
+          cohortScores.userScores.push(weekData.user_average_score);
         }
       }
-      console.log(sysAverageScores)
-      console.log(userAverageScores)
+      // TODO: debug out of order scores.
+      console.log(cohortScores)
     }
 
   </script>
