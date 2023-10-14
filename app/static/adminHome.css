@@ -118,7 +118,7 @@
   margin-top: 1.34em;
 }
 
-#submit-feedback, #search-button, #plot-graph, #dropbtn {
+#submit-feedback, #search-button, #plot-graph, #dropbtn, #export {
   background-color: rgb(0, 0, 0);
   color: white;
   border: none;

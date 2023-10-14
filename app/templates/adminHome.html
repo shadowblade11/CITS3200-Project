@@ -26,14 +26,6 @@
   </div>
 </details>
 
-
-
-  <div class="content">
-      <form action="{{ url_for('export') }}"  method="post">
-          <input type="hidden" name="user" id="student-id-input" value="">
-          <input type="hidden" name="test" id="week-input" value="">
-            <button onclick="download()">Export to Excel</button>
-      </form>
     <h1>Student Search</h1>
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
@@ -45,6 +37,13 @@
       <div id="WkRecording" class="dropdown-content">
       </div>
     </div>
+
+    <div class="content">
+      <form action="{{ url_for('export') }}"  method="post">
+          <input type="hidden" name="user" id="student-id-input" value="">
+          <input type="hidden" name="test" id="week-input" value="">
+            <button id="export" onclick="download()">Export to Excel</button>
+      </form>
 
     <div id = "res">
 
