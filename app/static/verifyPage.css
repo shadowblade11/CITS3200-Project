@@ -45,4 +45,15 @@ body {
     border-radius: 8px;
     cursor: pointer;
   }
-  
+
+  #resend-button, #return-home-button {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 1em;
+  }
+
+

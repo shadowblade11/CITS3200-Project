@@ -10,6 +10,7 @@
             color: #a12323;
         }
     </style>
+
     <script>
     // Function to start the timer
     function startTimer(duration, display) {
@@ -57,11 +58,16 @@
         </form>
 
     <form action="{{url_for('resend_verification')}}" method="post">
+    
+    <p>Time left: <span id="timer">01:00</span></p>
+        <div class="buttons">
+            <p><button id="resend-button" type="submit" disabled>Resend Verification Code</button></p>
+            <button id="return-home-button"><a href="{{ url_for('intro') }}">Return Home</a></button>
+        </div>
 
-    <p><button id="resend-button" type="submit" disabled>Resend Verification Code</button></p>
-        <p>Time left: <span id="timer">01:00</span></p>
 
 </form>
+
     </div>
 </body>
 </html>
