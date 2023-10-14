@@ -12,9 +12,9 @@
     <p>This page allows admin users to view student scores and provide feedback on their weekly tests.</p>
 
     <h3>Step One</h3>
-    <p>Enter the student ID into the search bar.</p>
+    <p>Enter the student ID into the search bar and select "Search" or hit Enter.</p>
     <h3>Step Two</h3>
-    <p>Select the test you would like to review.</p>
+    <p>After searching for a student, use the "Week Recording" dropdown to select a test to view.</p>
     <h3>Step Three</h3>
     <p>Review the student's scores and provide feedback in the text box below.</p>
     
@@ -159,7 +159,7 @@
                 audioContainer.appendChild(img);
                 audioContainer.appendChild(aud_clip);
                 if (actual_idx === list_of_scores[idx][3]){
-                  audioContainer.style.backgroundColor = "lightgreen";
+                  audioContainer.style.background = "linear-gradient(106deg, rgba(152, 207, 152, 1) 0%, rgba(250, 250, 250, 1) 100%)";
 
                   // Handle Scores
                   let scoreContainer = document.createElement("div");
