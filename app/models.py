@@ -112,7 +112,7 @@ class Complete(DB_Queries):
         self.completed = status
 
     def __repr__(self):
-        return f'<id: {self.id}, test id: {self.test_id}, user id: {self.user_id}>'
+        return f"<Complete (Username: {self.user_id}, Week: {self.test_id}, Completed: {self.completed})>"
 
 
 class Feedback(DB_Queries):
@@ -143,9 +143,10 @@ class Score(DB_Queries):
         self.user_score = user_score
         self.sys_score = sys_score
         self.attempt_chosen = attempt
-    def __repr__(self):
-        return f'<question_id: {self.question_id}>'
 
+    def __repr__(self):
+        return (f'<Score self eval: {self.user_score} , program eval: {self.sys_score} '
+                f'(User ID: {self.user_id}, Question ID: {self.question_id})>')
 
 class Test(DB_Queries):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -164,11 +165,16 @@ class Test(DB_Queries):
         self.due_date = due_date
         self.number_of_questions = no_of_qs
         self.week_number = week_no
+
     def __repr__(self):
         return f'<id: {self.id}, test_name: {self.test_name}, dd: {self.due_date}>'
-    
+
     def average_scores_per_test_per_week(self):
         average_scores_per_week = {}
+        return f'<Test {self.test_name} (Week: {self.week_number})(Questions: {self.questions})>'
+
+    def create_test(self, week_no, test_name, due_date, no_of_qs):
+        self.__init__(week_no, test_name, due_date, no_of_qs)
 
         # Get distinct week numbers
         distinct_weeks = db.session.query(Test.week_number).distinct()
@@ -212,5 +218,6 @@ class Question(DB_Queries):
         self.question_name = question_name
         self.test_id = test_id
         self.difficulty = difficulty
+
     def __repr__(self):
-        return f'<id: {self.id},question name:{self.question_name}>'
+        return f'<Question {self.question_name} ( Week: {self.test_id}, Difficulty: {self.difficulty})>'

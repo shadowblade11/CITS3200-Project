@@ -29,6 +29,11 @@
 
 
   <div class="content">
+      <form action="{{ url_for('export') }}"  method="post">
+          <input type="hidden" name="user" id="student-id-input" value="">
+          <input type="hidden" name="test" id="week-input" value="">
+            <button onclick="download()">Export to Excel</button>
+      </form>
     <h1>Student Search</h1>
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
@@ -42,7 +47,7 @@
     </div>
 
     <div id = "res">
-      
+
     </div>
     <br>
         <div id="feedback-box"> 
@@ -79,9 +84,9 @@
     <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
       <br>
       <br>
-      
+
   </div>
-  
+
   <script
   src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
   </script>
@@ -126,11 +131,11 @@
 
     let userScores = {userID: null, sysScores: [], selfScores: []} // avg user sys scores
     let cohortScores = {sysScores: [], selfScores: []} // avg cohort sys scores
-    
+
     let graph_values = [];
     let student_values = [];
     let week_values = [];
-    
+
     const myChart = new Chart("myChart", {
       type: 'line',
       data: {},
@@ -142,7 +147,7 @@
             },
             display: true,
             ticks: {
-                suggestedMin: 0, 
+                suggestedMin: 0,
                 suggestedMax: 100,
                 // OR //
                 beginAtZero: true   // minimum value will be 0.
@@ -172,7 +177,7 @@
             },
             display: true,
             ticks: {
-                suggestedMin: 0, 
+                suggestedMin: 0,
                 suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
                 // OR //
                 beginAtZero: true   // minimum value will be 0.
@@ -204,7 +209,7 @@
         dropdownButton.classList.remove("empty");
       }
     }
-    
+
     function plotScores() {
       let title = "Missing Title"
       const data = {
@@ -227,7 +232,7 @@
         // not integrated into backend yet.
       } else {}
       if (cohort_option.value == 'all') {
-        // 
+        //
         data.datasets[0].data = cohortScores.sysScores
         data.datasets[1].data = cohortScores.selfScores
         title = "Average Scores by Week"
@@ -238,10 +243,12 @@
       }
 
       setGraph(data, title)
-    } 
+    }
 
     // searching for user, dynamically creates list if user exists
     function GettingUser(userID){
+        document.getElementById("student-id-input").value = userID;
+
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
       xml.open('POST',"/get-user",true);
@@ -254,10 +261,10 @@
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
               new_element.onclick = function () {
-                gettingAudioClips(userID, value); 
+                gettingAudioClips(userID, value);
               };
               new_element.onclick =  function () {
-              gettingAudioClips(userID, value); 
+              gettingAudioClips(userID, value);
           };
               WkRecording.appendChild(new_element);
             }
@@ -292,6 +299,18 @@
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
+    function populateTaskContainer(taskContainer, taskNumber) {
+      taskContainer.classList.add("task-container");
+
+      let taskContainerLabel = document.createElement("h1");
+      taskContainerLabel.textContent = `Task ${taskNumber}`;
+      taskContainer.appendChild(taskContainerLabel);
+
+      let innerTaskContainer = document.createElement("div");
+      innerTaskContainer.classList.add("inner-task-container");
+      taskContainer.appendChild(innerTaskContainer);
+    }
+
     function GettingTestMarks(){
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
@@ -311,7 +330,7 @@
       }
       xml.send();
     }
-    
+
     GettingTestMarks()
     // Gets audio clips after admin clicks a specific week
     function gettingAudioClips(userID,week){
@@ -326,6 +345,7 @@
             let json_data = JSON.parse(xml.responseText);
             let list_of_scores = json_data.list_of_scores;
 
+            let arr_length = clips.length;
             resetResultsList();
 
             let audio_path = `/static/audio/users/${userID}/${week}`;
@@ -336,7 +356,7 @@
             for (let idx = 0; idx < arr_length; idx++){
               let taskContainer = document.createElement("div");
               taskContainer.classList.add("task-container");
-              
+
               //Adds task number header
               let taskContainerLabel = document.createElement("h1");
               taskContainerLabel.textContent = `Task ${idx+1}`;
@@ -352,13 +372,24 @@
                 let audioContainer = document.createElement("div");
                 audioContainer.classList.add("audio-container");
 
+              let aud_clip = document.createElement("audio");
+              aud_clip.controls = true;
+              aud_clip.type = "audio/wav";
+              aud_clip.src = `${audio_path}/${clips[idx]}`;
+
+              // create image element
+              let img = document.createElement("img");
+              let image_name = clips[idx].replace(".wav",".png");
+              img.src = `${image_path}/${image_name}`;
+              img.width = "400";
+              img.height = "160";
                 let name_of_clip = list_of_scores[idx][0];
-                
+
                 let aud_clip = document.createElement("audio");
                 aud_clip.controls = true;
                 aud_clip.type = "audio/wav";
                 aud_clip.src = `${audio_path}/${name_of_clip}-${actual_idx}.wav`;
-                
+
                 let img = document.createElement("img");
                 img.src = `${image_path}/${name_of_clip}-${actual_idx}.png`;
                 img.width = "400";
@@ -449,7 +480,7 @@
     submitFeedbackButton.onclick = function(){
       sendingFeedback();
     }
-    
+
     // getting feedback from the DB
     function gettingFeedback(user,week,callback){
       const xml = new XMLHttpRequest();
@@ -468,7 +499,7 @@
       }
       xml.send();
     }
- 
+
     function extractChartData(data, userID) {
       userScores.sysScores = [];
       userScores.selfScores = [];
@@ -495,6 +526,10 @@
       }
       // TODO: debug out of order scores.
       console.log(cohortScores)
+    }
+
+    function download() {
+        window.location.href = '/export/';
     }
 
   </script>
