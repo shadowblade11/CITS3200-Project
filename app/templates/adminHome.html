@@ -45,22 +45,27 @@
      </div>
      <div>
       <label for="selectOption">Select option:</label>
+      Plot
+      <select id="selectOption">
+        <option value="all">All</option>
+        <option value="student1">Easy</option>
+        <option value="student2">Medium</option>
+        <option value="student2">Hard</option>
+        <!-- Add more student options as needed -->
+      </select>
+      questions for
       <select id="selectOption">
         <option value="all">All Students</option>
-        <option value="student1">Student 1</option>
-        <option value="student2">Student 2</option>
+        <option value="student1">Student 123</option>
         <!-- Add more student options as needed -->
       </select>
     
       <button onclick="plotScores()">Plot</button>
     </div>
-    
-    <div>
-      <canvas id="scoreChart"></canvas>
-    </div>
-     <button id="all">Graph average scores across weeks</button>
-     <button id="student-graph">student's</button>
-     <button id="week-graph">Weeks'es</button>
+    <br>
+     Graph average scores across weeks
+     <button id="student-graph">Selected Student's</button>
+     <button id="week-graph">Group Average</button>
      <!-- <button id=""></button> -->
      <!-- average score over time
      score per question
