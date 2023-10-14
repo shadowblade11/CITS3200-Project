@@ -22,6 +22,11 @@
 </details>
 
   <div class="content">
+      <form action="{{ url_for('export') }}"  method="post">
+          <input type="hidden" name="user" id="student-id-input" value="">
+          <input type="hidden" name="test" id="week-input" value="">
+            <button onclick="download()">Export to Excel</button>
+      </form>
     <h1>Student Search</h1>
         <input type="text" id="search-bar" placeholder="Enter the Student ID">
         <button type="submit" id="search-button">Search</button>
@@ -79,6 +84,8 @@
 
     // searching for user, dynamically creates list if user exists
     function GettingUser(userID){
+        document.getElementById("student-id-input").value = userID;
+
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
       xml.open('POST',"/get-user",true);
@@ -91,7 +98,7 @@
               let new_element = document.createElement('a');
               new_element.innerHTML = value;
               new_element.onclick = function () {
-                gettingAudioClips(userID, value); 
+                gettingAudioClips(userID, value);
               };
               WkRecording.appendChild(new_element);
             }
@@ -105,8 +112,22 @@
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
+    function populateTaskContainer(taskContainer, taskNumber) {
+      taskContainer.classList.add("task-container");
+
+      let taskContainerLabel = document.createElement("h1");
+      taskContainerLabel.textContent = `Task ${taskNumber}`;
+      taskContainer.appendChild(taskContainerLabel);
+
+      let innerTaskContainer = document.createElement("div");
+      innerTaskContainer.classList.add("inner-task-container");
+      taskContainer.appendChild(innerTaskContainer);
+    }
+
     // Gets audio clips after admin clicks a specific week
     function gettingAudioClips(userID,week){
+        document.getElementById("week-input").value = week;  // Set the value of the hidden week input field
+
       const xml = new XMLHttpRequest();
       xml.open('POST',"/get-audio",true);
       xml.setRequestHeader("Content-Type", "application/json");
@@ -118,6 +139,7 @@
             let json_data = JSON.parse(xml.responseText);
             let list_of_scores = json_data.list_of_scores;
 
+            let arr_length = clips.length;
             resetResultsList();
 
             let audio_path = `/static/audio/users/${userID}/${week}`;
@@ -128,7 +150,7 @@
             for (let idx = 0; idx < arr_length; idx++){
               let taskContainer = document.createElement("div");
               taskContainer.classList.add("task-container");
-              
+
               //Adds task number header
               let taskContainerLabel = document.createElement("h1");
               taskContainerLabel.textContent = `Task ${idx+1}`;
@@ -144,13 +166,24 @@
                 let audioContainer = document.createElement("div");
                 audioContainer.classList.add("audio-container");
 
+              let aud_clip = document.createElement("audio");
+              aud_clip.controls = true;
+              aud_clip.type = "audio/wav";
+              aud_clip.src = `${audio_path}/${clips[idx]}`;
+
+              // create image element
+              let img = document.createElement("img");
+              let image_name = clips[idx].replace(".wav",".png");
+              img.src = `${image_path}/${image_name}`;
+              img.width = "400";
+              img.height = "160";
                 let name_of_clip = list_of_scores[idx][0];
-                
+
                 let aud_clip = document.createElement("audio");
                 aud_clip.controls = true;
                 aud_clip.type = "audio/wav";
                 aud_clip.src = `${audio_path}/${name_of_clip}-${actual_idx}.wav`;
-                
+
                 let img = document.createElement("img");
                 img.src = `${image_path}/${name_of_clip}-${actual_idx}.png`;
                 img.width = "400";
@@ -259,5 +292,9 @@
       }
       xml.send();
     }
+    function download() {
+        window.location.href = '/export/';
+    }
+
   </script>
 {% endblock %}
