@@ -40,9 +40,10 @@
 </head>
 <body>
     <div class="login-container">
-        <h1>A verification code has been sent to your associated student email, please check and enter.</h1>
-        <br>
-        <br>
+        <h1>Account Verification</h1>
+        <p>A verification code has been sent to your student email address.</p>
+        <p>Please check your Inbox and Junk folders.</p>
+
         <form action="{{url_for('verify')}}" method="post">
             <p>{{ form.v_code.label }}{{ form.v_code }}</p>
             {% if form.v_code.errors %}
@@ -54,9 +55,9 @@
             {% endif %}
             <p>{{ form.send_verification }}</p>
         </form>
-        <br>
+
     <form action="{{url_for('resend_verification')}}" method="post">
-        <br>
+
     <p><button id="resend-button" type="submit" disabled>Resend Verification Code</button></p>
         <p>Time left: <span id="timer">01:00</span></p>
 
