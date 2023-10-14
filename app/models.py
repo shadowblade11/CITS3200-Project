@@ -81,7 +81,7 @@ class User(UserMixin, DB_Queries):
                     user_avg_scores.append(score.user_score)
                     sys_avg_scores.append(score.sys_score)
 
-                average_user_score = sum(user_avg_scores) / len(user_avg_scores)
+                    average_user_score = sum(user_avg_scores) / len(user_avg_scores)
                 average_sys_score = sum(sys_avg_scores) / len(sys_avg_scores)
 
                 average_scores_per_week[week_number] = {
@@ -92,6 +92,32 @@ class User(UserMixin, DB_Queries):
                 }
 
         return average_scores_per_week
+    def average_score_per_test(self):
+        scores = {}
+
+        # Get distinct week numbers
+        distinct_test = db.session.query(Test.test_name).distinct()
+        print()
+        for test in distinct_test:
+            print(test)
+            test_name = test[0]
+            print(test_name)
+            user_scores = self.scores.join(Question).join(Test).filter(Test.test_name == test_name).all()
+
+            if user_scores:
+                scores[test_name] = {
+                    'user_scores': 0,
+                    'sys_scores': 0,
+                }
+                
+                for score in user_scores:
+                    scores[test_name].user_score += score.user_score
+                    scores[test_name].user_score += score.sys_score
+
+                average_user_score /= len(user_scores)
+                average_sys_score /= len(user_scores)
+
+        return scores
 
 
 @login.user_loader
