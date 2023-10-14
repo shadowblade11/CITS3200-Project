@@ -188,7 +188,7 @@
       if (textvalue != ""){
         resetResultsList();
         GettingUser(textvalue);
-        GettingUserMarks(textvalue);
+        GetUserMarks(textvalue);
         searchbar.value = "";
         dropdownButton.classList.remove("empty");
       }
@@ -261,7 +261,7 @@
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
-    function GettingUserMarks(userID){
+    function GetUserMarks(userID){
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
       xml.open('POST',"/get-user-marks",true);
@@ -283,7 +283,7 @@
       xml.send(JSON.stringify({ "userID": userID }));
     }
 
-    function GettingTestMarks(){
+    function GetCohortMarks(){
       const xml = new XMLHttpRequest();
       WkRecording.innerHTML = "";
       xml.open('POST',"/get-test-marks",true);
@@ -293,7 +293,7 @@
           if(xml.status==200){
             let values = JSON.parse(xml.responseText);
             graph_values = values
-            extractTestData(values);
+            extractCohortTestData(values);
           }
           else{
             alert("User does not exist or has not taken any tests");
@@ -305,7 +305,7 @@
       xml.send();
     }
     
-    GettingTestMarks()
+    GetCohortMarks()  // grab cohort test marks on page open
     // Gets audio clips after admin clicks a specific week
     function gettingAudioClips(userID,week){
       const xml = new XMLHttpRequest();
@@ -475,10 +475,10 @@
       }
     }
 
-    function extractTestData(data) {
+    function extractCohortTestData(data) {
       cohortScores.sysScores = [];
       cohortScores.selfScores = [];
-
+      console.log(data)
       for (const weekNumber in data) {
         if (data.hasOwnProperty(weekNumber)) {
           const weekData = data[weekNumber];
