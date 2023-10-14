@@ -92,6 +92,7 @@ class User(UserMixin, DB_Queries):
                 }
 
         return average_scores_per_week
+    
     def average_score_per_test(self):
         scores = {}
 
@@ -112,10 +113,10 @@ class User(UserMixin, DB_Queries):
                 
                 for score in user_scores:
                     scores[test_name].user_score += score.user_score
-                    scores[test_name].user_score += score.sys_score
+                    scores[test_name].sys_score += score.sys_score
 
-                average_user_score /= len(user_scores)
-                average_sys_score /= len(user_scores)
+                scores[test_name].user_score /= len(user_scores)
+                scores[test_name].sys_score /= len(user_scores)
 
         return scores
 
