@@ -304,8 +304,12 @@
       }
       xml.send();
     }
+    try {
+      GettingTestMarks()  
+    } catch (error) {
+      console.log(error)
+    }
     
-    GettingTestMarks()
     // Gets audio clips after admin clicks a specific week
     function gettingAudioClips(userID,week){
       const xml = new XMLHttpRequest();
