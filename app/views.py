@@ -323,6 +323,30 @@ def get_user():
     completed_tests_name = [Test.get(id = i.test_id).test_name for i in completed_tests]
     print(completed_tests_name)
     return jsonify({"tests":completed_tests_name})
+    
+    
+@app.route('/get-user-marks', methods=['POST'])
+def get_user_marks():
+    data = request.get_json()
+    user = data.get('userID')
+    try:
+        user_id = User.get(username=user).average_score_per_week()
+        print(user_id)
+        return jsonify(user_id), 200
+    except:
+        return "", 404
+
+
+@app.route('/get-test-marks', methods=['POST'])
+def get_test_marks():
+    try:
+        test = Test.get(test_name="asdf")
+        print(test)
+        averages = test.average_scores_per_test_per_week()
+        print(jsonify(averages))
+        return jsonify(averages), 200
+    except:
+        return "", 404
 
 
 @app.route('/get-audio', methods=["POST"])

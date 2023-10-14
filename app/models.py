@@ -63,6 +63,36 @@ class User(UserMixin, DB_Queries):
     def __init__(self, username):
         self.username = username
 
+    def average_score_per_week(self):
+        average_scores_per_week = {}
+
+        # Get distinct week numbers
+        distinct_weeks = db.session.query(Test.week_number).distinct()
+
+        for week in distinct_weeks:
+            week_number = week[0]
+            user_scores = self.scores.join(Question).join(Test).filter(Test.week_number == week_number).all()
+
+            if user_scores:
+                user_avg_scores = []
+                sys_avg_scores = []
+
+                for score in user_scores:
+                    user_avg_scores.append(score.user_score)
+                    sys_avg_scores.append(score.sys_score)
+
+                average_user_score = sum(user_avg_scores) / len(user_avg_scores)
+                average_sys_score = sum(sys_avg_scores) / len(sys_avg_scores)
+
+                average_scores_per_week[week_number] = {
+                    'user_average_score': average_user_score,
+                    'sys_average_score': average_sys_score,
+                    'user_scores': user_avg_scores,
+                    'sys_scores': sys_avg_scores
+                }
+
+        return average_scores_per_week
+
 
 @login.user_loader
 def load_user(id):
@@ -137,10 +167,45 @@ class Test(DB_Queries):
         self.week_number = week_no
 
     def __repr__(self):
+        return f'<id: {self.id}, test_name: {self.test_name}, dd: {self.due_date}>'
+
+    def average_scores_per_test_per_week(self):
+        average_scores_per_week = {}
         return f'<Test {self.test_name} (Week: {self.week_number})(Questions: {self.questions})>'
 
     def create_test(self, week_no, test_name, due_date, no_of_qs):
         self.__init__(week_no, test_name, due_date, no_of_qs)
+
+        # Get distinct week numbers
+        distinct_weeks = db.session.query(Test.week_number).distinct()
+
+        for week in distinct_weeks:
+            week_number = week[0]
+            tests_in_week = self.query.filter(Test.week_number == week_number).all()
+
+            if tests_in_week:
+                total_user_scores = 0
+                total_sys_scores = 0
+                num_tests = 0
+
+                for test in tests_in_week:
+                    test_scores = Score.query.filter_by(question_id=test.id).all()
+
+                    if test_scores:
+                        for score in test_scores:
+                            total_user_scores += score.user_score
+                            total_sys_scores += score.sys_score
+
+                        num_tests += 1
+
+                if num_tests > 0:
+                    average_user_score = total_user_scores / num_tests
+                    average_sys_score = total_sys_scores / num_tests
+                    average_scores_per_week[week_number] = {
+                        'user_average_score': average_user_score,
+                        'sys_average_score': average_sys_score,
+                    }
+        return average_scores_per_week
 
 
 class Question(DB_Queries):
