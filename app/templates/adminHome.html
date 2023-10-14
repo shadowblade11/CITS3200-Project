@@ -330,7 +330,6 @@
       xml.send();
     }
 
-    GettingTestMarks()
     // Gets audio clips after admin clicks a specific week
     function gettingAudioClips(userID,week){
       const xml = new XMLHttpRequest();
@@ -344,14 +343,13 @@
             let json_data = JSON.parse(xml.responseText);
             let list_of_scores = json_data.list_of_scores;
 
-            let arr_length = clips.length;
             resetResultsList();
 
             let audio_path = `/static/audio/users/${userID}/${week}`;
             let image_path = `/static/images/users/${userID}/${week}`;
             console.log(list_of_scores);
 
-            const arr_length = list_of_scores.length
+            const arr_length = list_of_scores.length;
             for (let idx = 0; idx < arr_length; idx++){
               let taskContainer = document.createElement("div");
               taskContainer.classList.add("task-container");
@@ -371,17 +369,6 @@
                 let audioContainer = document.createElement("div");
                 audioContainer.classList.add("audio-container");
 
-              let aud_clip = document.createElement("audio");
-              aud_clip.controls = true;
-              aud_clip.type = "audio/wav";
-              aud_clip.src = `${audio_path}/${clips[idx]}`;
-
-              // create image element
-              let img = document.createElement("img");
-              let image_name = clips[idx].replace(".wav",".png");
-              img.src = `${image_path}/${image_name}`;
-              img.width = "400";
-              img.height = "160";
                 let name_of_clip = list_of_scores[idx][0];
 
                 let aud_clip = document.createElement("audio");
