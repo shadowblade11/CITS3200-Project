@@ -13,10 +13,8 @@
 			<div class="text-container">
 				<h2 style="text-align:left">Welcome to Italiano In Pratica</h2>
 				<p>Italiano In Pratica is a web application designed for students studying Italian at UWA. The application is designed to help students practice and improve their Italian pronunciation and fluency.</p>
-				<p>Students will be able to access a range of tests where they will listen to authentic Italian audio and record themselves repeating the provided audio. They will then select one of their recordings and provide a score from 1-10 on how close they think it is to the original.</p>
+				<p>Students will be able to access a range of tests where they will listen to authentic Italian audio and record themselves repeating the provided audio. They will then select one of their recordings and provide a score from 1-100 on how close they think it is to the original.</p>
 				<p>Our web application features an audio similarity function that will generate a score based on the similarity between the student's recording and the provided audio. These two scores and the audio files will be stored and sent to the teaching team to review.</p>
-				<p>One reviewed, students will be able to access their results and feedback through the grades page.</p>
-				<p>On the administrative side, the teaching team can create new tests, review student submissions and provide feedback.</p>
 			</div>
 			<div class="image-container">
 				<img src=".{{ url_for('static',filename = 'images/Intro.png') }}" alt="HomePage">
@@ -28,21 +26,22 @@
 				<img src="{{ url_for('static',filename = 'images/Testing.png') }}" alt="AudioTests">
 			</div>
 			<div class="text-container">
-				<h2 style="text-align:left">How Does It Work?</h2>
-				<p>Upon logging in, students can access tests assigned by the teaching team.</p>
-				<p>After selecting a test, students will be taken to the test page. Each test will contain four to six questions where they will listen to an Italian phrase or sentence and repeat as close as possible to the original audio.</p>
-				<p>Students have three attempts to record the phrase. After recording, they can review their recordings and choose one for grading.</p>
-				<p>Then, students will evaluate their performance and submit a score. After completing all tests and self-assessment, students will submit their audio file and results. Our audio similarity function will generate a score based on the similarity between the recording and the provided audio.</p>
-				<p>Once reviewed, students can access their results and feedback through the grades page</p>
+				<h2 style="text-align:left">Audio Similarity Function: How Does It Work?</h2>
+				<p>This tool makes use of 4 different factors when it comes to assessing the submitted audio.</p>
+				<p>The first factor is audio-to-text conversion. This factor compares the audio-to-text conversion of the submitted audio against the original clip to assess whether students are saying the exact words. Higher scores are awarded for closer audio-to-text conversions.</p>
+				<p>The second factor is duration. This factor compares the duration of the submitted audio from when it first detects speech, to the last time it detects speech. Higher scores awarded for closer durations. </p>
+				<p>The third factor is the vowel-to-consonant ratio. This factor will compare the ratio of vowels and consonants spoken, against that of the original audio clip to assess the enunciation of the Italian phrases. Higher scores will be awarded for closer ratios.</p>
+				<p>The fourth factor compares against the international phonetic alphabet (IPA). The IPA output of the submitted audio clip will be compared against the original clip to assess the enunciation of the Italian phrases. Higher scores will be awarded for closer IPA comparison results.</p>
 			</div>
 			
 		</div>
 
 		<div class="AUText">
 			<div class="text-container">
-				<h2 style="text-align:left">Teaching Team Support</h2>
-				<p>The teaching team will be able to access student results, create new tests and upload audio files. These tasks will be accessible from the 'Admin' section of the log-in page. Only UWA staff or members of the teaching team will have access to the admin side of the application.</p>
-				<p>For any support, questions or queries, please contact the CITS3200 project team. or Dr. Marinella Caruso.</p>
+				<h2 style="text-align:left">Access and Teaching Team Support</h2>
+				<p>The teaching team are able to create new tests, access student results and view cohort analytics. Only UWA staff or members of the teaching team will have access to the admin side of the application.</p>
+				<p>Students are required to register their account by providing their student number and a password. After their account is verified, students will be able to take tests and view their results.</p>
+				<p>For any support questions or queries, please contact Dr. Marinella Caruso.</p>
 			</div>
 			<div class="image-container">
 				<img src="../static/images/uwa-logo.svg" alt="UWALogo">
@@ -61,24 +60,8 @@
 						<p class="title">Senior Lecturer</p>
 						<p>School of Humanities, Discipline of European Languages and Cultures</p>
 						<p>marinella.caruso@uwa.edu.au</p>
-						<p><button class="button">Contact</button></p>
 					</div>
 				</div>
 			</div>
-
-			<div class="column">
-				<div class="card">
-					<img src="../static/images/Generic-Profile-Image.png" alt="Team" style="width:100%">
-					<div class="team-container">
-						<h3>Project Team</h3>
-						<p class="title">CITS 3200 Students</p>
-						<p>Project team from CITS 3200. For support contact below.</p>
-						<p>21386988@student.uwa.edu.au</p>
-						<p><button class="button">Contact</button></p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 {% endblock %}

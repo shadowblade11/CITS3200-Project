@@ -5,44 +5,57 @@
     <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{username}}</span>!</h1>
 
     <div class="student-home">
-      <h2>Here you can find all the tests you have been assigned.</h2>
-      <p>Please review the instructions below, before selecting a test.</p>
+      <h2>Please review the instructions below, before selecting a test.</h2>
     </div>
     <details class="instructions-container" open>
       <summary class="instructions-header"><h1>Instructions</h1></summary>
       <div class="instructions-content">
-        <p>This page features the assessed and unassessed tests.</p>
+        <p>This page features assessed tests and a practice test. Assessed tests will appear under the "Available Tests" section.</p>
+        <p>If you don't see any tests in the dropdown menu, please reach out to the teaching team for assistance.</p>
     
-        <h3>Starting a Test</h3>
-        <p>Under unassessed tests, click on the drop down to select a test. The provided link will take you to the test page.</p>
-        <h3>Reviewing Previous Tests</h3>
-        <p>You can review past tests through the assessed test drop down.</p> 
+        <h3>Selecting a Test</h3>
+        <p>Ready to get started? Select "Available Tests" and click on a test link to begin!</p>
+        <p>Remember, all tests must be completed by their respective due dates to stay on track.</p>
+
+        <h3>Practice Tests</h3>
+        <p>Practice tests are available for you to get familiar with the test format and the system.</p>
+        <p>There is currently one practice test available. The scores and audio recordings of this test are not saved.</p> 
         <h3>Any Issues</h3>
         <p>If you have any issues, please contact the teaching team or Dr. Marinella Caruso.</p>
         
       </div>
     </details>
 
-    {% for test_name in tests_to_do%}
-    <a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name}}</a>
-    {% endfor %}
+    <div class="student-tests">
 
-    <!-- <h2>Unassessed Tests</h2>
-    <label for="Assessed Test">Unassessed Tests</label> 
-    <select name="UnTEST" id="UnTest"> 
-        <option value="Test1">Test1</option> 
-        <option value="Test2">Test2</option> 
-        <option value="Test3">Test3</option> 
-        <option value="Test4">Test4</option> 
-    </select>
-    <h2>Assessed Tests</h2>
-    <label for="Assessed Test">Assessed Tests</label> 
-    <select name="TEST" id="Test"> 
-        <option value="Test1">Test1</option> 
-        <option value="Test2">Test2</option> 
-        <option value="Test3">Test3</option> 
-        <option value="Test4">Test4</option> 
-    </select> -->
-  </div>
+      <details class="test-container" open>
+          <summary class="assessed-tests"><h1>Available Tests</h1></summary>
+          <div class="test-content">
+            <p>Below are the tests available for you to attempt.</p>
+            <table>
+              <tr>
+                <th>Test Name</th>
+                <th>Due Date</th>
+            {% for test_name in tests_to_do%}
+              <tr>
+                <td><a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name[0]}}</a></td>
+                <td>{{test_name[1]}}</td>
+              </tr>
+            {% endfor %}
+            </table>
+          </div>
+        </details>
+
+        <details class="test-container" open>
+          <summary class="practice-tests"><h1>Practice Tests</h1></summary>
+          <div class="test-content">
+            <p>Below are the practice tests available for you to attempt.</p>
+            <!--{% for test_name in tests_to_do%}
+            <a href = "{{url_for('test' ,username=username, data=test_name)}}">{{test_name}}</a>
+            {% endfor %} -->
+          </div>
+        </details>
+      </div>
+    </div>
 
 {% endblock %}

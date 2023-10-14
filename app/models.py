@@ -165,7 +165,7 @@ class Test(DB_Queries):
         self.number_of_questions = no_of_qs
         self.week_number = week_no
     def __repr__(self):
-        return f'<id: {self.id}, test_name: {self.test_name}>'
+        return f'<id: {self.id}, test_name: {self.test_name}, dd: {self.due_date}>'
     
     def average_scores_per_test_per_week(self):
         average_scores_per_week = {}

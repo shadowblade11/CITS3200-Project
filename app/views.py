@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from app import app, verification
 import app.interact_database as db
-from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm, ContactForm
+from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import *
 
 import datetime
@@ -18,8 +18,7 @@ from app.produceImage import generate_soundwave_image
 
 from app.interact_database import *
 
-
-import random 
+from app.computeScore import compute_score
 
 
 @app.route('/')
@@ -51,9 +50,13 @@ def home(username):
     tests_to_do_id = list(set(all_tests)-set(completed_tests))
     tests_to_do = []
     for i in tests_to_do_id:
-        tests_to_do.append(Test.get(id=i).test_name)
-    print(tests_to_do)
-    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username, tests_to_do=tests_to_do)
+        test_obj = Test.get(id=i)
+        dd = datetime.datetime.strptime(test_obj.due_date,"%Y-%m-%d")
+        formatted_dd = dd.strftime("%d/%m/%y")
+        tests_to_do.append((test_obj.test_name,formatted_dd))
+    sorted_tests_to_do = sorted(tests_to_do,key=lambda x: x[1], reverse=True)
+    print(sorted_tests_to_do)
+    return render_template("homePage.html", css=url_for('static', filename='homePage.css'), username=username, tests_to_do=sorted_tests_to_do)
 
 
 @app.route('/adminHome', methods=["GET", "POST"])
@@ -64,19 +67,25 @@ def adminHome():
 
 @app.route('/grades')
 def grades():
-    return render_template("gradesPage.html", css='./static/gradesPage.css')
-
-
-@app.route('/contact')
-def contact():
-    form = ContactForm()
-    return render_template('contact.html', form=form, css=url_for('static', filename='contact.css'))
+    # print(request.args['username'])
+    username = request.args['username']
+    user_obj = User.get(username=username)
+    lists_of_feedbacks = user_obj.feedback.all()
+    formatted_list = []
+    for i in lists_of_feedbacks:
+        test_name = Test.get(id = i.test_id).test_name
+        temp = (test_name, i.feedback) #this is where we can put score avgs (like within the tuple)
+        formatted_list.append(temp)
+    return render_template("gradesPage.html", css='./static/gradesPage.css', feedbacks = formatted_list)
 
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home', username=current_user.username))  # Provide the username
+        if current_user.is_admin:
+            return redirect(url_for('adminHome'))
+        else:
+            return redirect(url_for('home', username=current_user.username))  # Provide the username
     form = LoginForm()
     if form.validate_on_submit():
         user = User.get(username=form.id.data)
@@ -129,7 +138,7 @@ def register():
         session['id'] = form.id.data
         session['passwd'] = form.passwd2.data
         v_code = verification.generate_v_code(6)
-        # verification.send_v_code(form.id.data+'@student.uwa.edu.au', v_code)
+        verification.send_v_code(form.id.data+'@student.uwa.edu.au', v_code)
         print(v_code)
         session['v_code'] = v_code
         session['start_time'] = datetime.datetime.now()
@@ -227,6 +236,8 @@ def save_audio():
         return str(e), 400
 
 
+diff_dict = {"low":1.0, "medium":1.2,"high":1.4}
+
 @app.route('/calculate-score', methods=['POST'])
 def calculate_score():
     user = request.form['user']
@@ -240,13 +251,25 @@ def calculate_score():
 
     print(PATH_TO_USER_ATTEMPT)
     print(PATH_TO_SOURCE)
-
-    score = random.randrange(0,100)
-    # score = similarity_function(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
+    try:
+        score = compute_score(PATH_TO_SOURCE, PATH_TO_USER_ATTEMPT)
+    except Exception as e:
+        score = 0
     print(f"User Score = {user_score}, Actual Score = {score}")
     user_id = User.get(username=user).id
     test_id = Test.get(test_name=test_name).id
-    question_id = Question.get(test_id=test_id,question_name=name_of_clip).id
+    question_obj = Question.get(test_id=test_id,question_name=name_of_clip)
+    question_id = question_obj.id
+    difficulty = question_obj.difficulty
+    # print(difficulty)
+    multiplier = diff_dict[difficulty]
+    
+    score = int(score*multiplier) #needs to make sure it stays within 0-100, and also that it can be an integer
+    if (score > 100): 
+        score = 100
+    elif (score < 0):
+        score = 0 
+    
     s = Score(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
     Score.write_to(s)
     #MAKE SCORE OBJECT WITH user_score and score
@@ -273,7 +296,8 @@ def calculate_score():
 def addtest():
     if not current_user.is_admin:
         return redirect(url_for('page_not_found'))
-    return render_template('adminAddtest.html', css=url_for('static', filename='adminAddtest.css'))
+    list_of_tests = [(i.test_name, i.due_date) for i in Test.get_all()]
+    return render_template('adminAddtest.html', css=url_for('static', filename='adminAddtest.css'), tests = list_of_tests)
 
 
 @app.route('/Account')
@@ -281,22 +305,17 @@ def Account():
     return render_template("AccountPage.html", css=url_for('static', filename='Account.css'))
 
 
-@app.route('/start')
-def start():
-    return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
-
-
 @app.route('/get-user', methods=['POST'])
 def get_user():
     data = request.get_json()
     user = data.get('userID')
     # print(user)
-    path = f"./app/static/audio/users/{user}"
-    if os.path.exists(path) and os.path.isdir(path):
-        wk = os.listdir(path)
-        return jsonify({"weeks": wk})
-    else:
-        return jsonify({"error": "User not found or no audio files"}), 404
+    user_obj = User.get(username=user)
+
+    completed_tests = user_obj.completed_tests.all()
+    completed_tests_name = [Test.get(id = i.test_id).test_name for i in completed_tests]
+    print(completed_tests_name)
+    return jsonify({"tests":completed_tests_name})
     
     
 @app.route('/get-user-marks', methods=['POST'])
@@ -327,17 +346,22 @@ def get_test_marks():
 def get_audio():
     data = request.get_json()
     user = data.get('userID')
-    week = data.get('week')
-    path = f"./app/static/audio/users/{user}/{week}"
-    print(path)
-    if os.path.exists(path) and os.path.isdir(path):
-        clips = os.listdir(path)
-        # THIS IS JUST AN EXAMPLE DATA, REPLACE THIS ONCE DB IS IMPLEMENTED
-        EXAMPLE_DATA_USER = [5 for i in clips]
-        EXAMPLE_DATA_SYS = [8 for i in clips]
-        # print(EXAMPLE_DATA_USER)
-        return jsonify({"clips":clips,"user_scores":EXAMPLE_DATA_USER,"sys_scores": EXAMPLE_DATA_SYS})
-    return jsonify({"error":"No audio files"}),404
+    test_name = data.get('test_name')
+    user_obj = User.get(username=user)
+    test_obj = Test.get(test_name=test_name)
+    list_of_questions = [(i.question_name,i.id) for i in test_obj.questions.all()]
+    question_ids = [id for name,id in list_of_questions]
+    filtered_scores = []
+    for i in user_obj.scores.all():
+        if i.question_id in question_ids:
+            temp = (i.question_id, i.user_score,i.sys_score,i.attempt_chosen)
+            filtered_scores.append(temp)
+
+    id_to_name_mapping = {id: name for name, id in list_of_questions}
+    final_list = [(id_to_name_mapping[id],usr,sys,ac) for id,usr,sys,ac in filtered_scores]
+
+    # print(final_list)
+    return jsonify({"list_of_scores":final_list}),200
 
 @app.route('/save-feedback',methods=["POST"])
 def save_feedback():
@@ -401,6 +425,12 @@ def upload_files():
         test_name = request.form.get('testName')
         due_date = request.form.get('dueDate')
         week_number = request.form.get('weekNumber')
+        list_of_tests = [i.test_name.lower() for i in Test.get_all()]
+
+        if test_name.lower() in list_of_tests:
+            print(test_name)
+            return jsonify({"error": "Test with that name already exists"}), 404
+        
         TEST_LOCATION_FOLDER = f"{UPLOAD_FOLDER}/{test_name}" 
         if not os.path.exists(TEST_LOCATION_FOLDER):
             os.makedirs(TEST_LOCATION_FOLDER)
@@ -416,7 +446,8 @@ def upload_files():
                     if file:
                         n_of_qs = n_of_qs + 1
 
-
+        if n_of_qs == 0:
+            return jsonify({"error": "No questions listed"}), 404
         test = Test(week_no = int(week_number), test_name=test_name,due_date=due_date,no_of_qs=n_of_qs)
         Test.write_to(test)
         uploaded_files = {}

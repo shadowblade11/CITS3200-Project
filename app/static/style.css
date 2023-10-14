@@ -47,3 +47,16 @@ body {
 .navbar-list a:hover {
   color: gray;
 }
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  align-items: center;
+}
+
+td, th {
+  border: 1px solid #000000;
+  text-align: center;
+  padding: 8px;
+}
