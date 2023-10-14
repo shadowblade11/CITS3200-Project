@@ -323,7 +323,7 @@ def get_user_marks():
     data = request.get_json()
     user = data.get('userID')
     try:
-        user_id = User.get(username=user).average_score_per_week()
+        user_id = User.get(username=user).avg_score_per_week()
         print(user_id)
         return jsonify(user_id), 200
     except:
@@ -334,9 +334,7 @@ def get_user_marks():
 def get_test_marks():
     try:
         test = Test.get(test_name="asdf")
-        print(test)
-        averages = test.average_scores_per_test_per_week()
-        print(jsonify(averages))
+        averages = test.cohort_average()
         return jsonify(averages), 200
     except:
         return "", 404
