@@ -296,7 +296,8 @@ def calculate_score():
 def addtest():
     if not current_user.is_admin:
         return redirect(url_for('page_not_found'))
-    return render_template('adminAddtest.html', css=url_for('static', filename='adminAddtest.css'))
+    list_of_tests = [(i.test_name, i.due_date) for i in Test.get_all()]
+    return render_template('adminAddtest.html', css=url_for('static', filename='adminAddtest.css'), tests = list_of_tests)
 
 
 @app.route('/Account')

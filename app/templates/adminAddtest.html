@@ -81,8 +81,8 @@
             </tr>
             {% for test in tests %}
             <tr>
-                <td>{{ test.testName }}</td>
-                <td>{{ test.dueDate }}</td>
+                <td>{{ test[0] }}</td>
+                <td>{{ test[1] }}</td>
             </tr>
             {% endfor %}
         </table>
