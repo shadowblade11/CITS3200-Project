@@ -17,6 +17,11 @@
     <p>After searching for a student, use the "Week Recording" dropdown to select a test to view.</p>
     <h3>Step Three</h3>
     <p>Review the student's scores and provide feedback in the text box below.</p>
+    <h3>Step Four (Optional)</h3>
+    <p>Generate plots of the students scores using the dropdown menus below.</p>
+    <p>Plots can be adjusted to view varying difficulty levels and either individual or cohort scores.</p>
+    <h3>Step Five (Optional)</h3>
+    <p>Click the provided button to export the data.</p>
     
   </div>
 </details>
@@ -40,32 +45,37 @@
       
     </div>
     <br>
-        <div id="feedback-box" style="display: none;"> <!--Display has to be none initially-->
-            <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
-            <button id="submit-feedback">Submit</button>
+        <div id="feedback-box"> 
+          <h1>Feedback</h1><!--Display has to be none initially-->
+          <textarea id="feedback-input" placeholder="Enter your feedback here"></textarea>
+          <button id="submit-feedback">Submit</button>
         </div>
-     </div>
-     <div>
-      <label for="selectOption">Select option:</label>
-      Plot
-      <select id="difficulty">
-        <option value="all">All</option>
-        <option value="Easy">Easy</option>
-        <option value="Medium">Medium</option>
-        <option value="Hard">Hard</option>
-        <!-- Add more student options as needed -->
-      </select>
-      questions for
-      <select id="cohort-option">
-        <option value="all">All Students</option>
-        <option value="student">Searched Student</option>
-        <!-- Add more student through js? -->
-      </select>
-    
-      <button onclick="plotScores()">Plot</button>
+    </div>
+    <div class="analytics">
+      <h1>Analytics</h1>
+      <p>Display the weekly self-assessed, and computed scores of individual students and cohort.</p>
+      <p>Select the difficulty and granularity options from the dropdown menus to customize the plot.</p>
+      <div class="analytics-content">
+        <label for="selectOption">Select Views:</label>
+        Difficulty
+        <select id="difficulty">
+          <option value="all">All</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+          <!-- Add more student options as needed -->
+        </select>
+        Granularity
+        <select id="cohort-option">
+          <option value="all">All Students</option>
+          <option value="student">Searched Student</option>
+          <!-- Add more student through js? -->
+        </select>
+      </div>
+      <button id="plot-graph" onclick="plotScores()">Plot</button>
     </div>
     <br>
-     
+
     <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
       <br>
       <br>
@@ -100,6 +110,7 @@
 
     let resetResultsList = () => {
       dropdownButton.classList.add("empty");
+      dropdownButton.style.display = "flex";
       resultsContainer.innerHTML = "";
       feedback_box.style.display = "none";
     }
@@ -145,7 +156,7 @@
           }],
         title: {
           display: true,
-          text: "Choose Data to Plot above",
+          text: "Self-Assessed and Computed Scores of Students by Week",
         },}
     });
 
@@ -399,7 +410,7 @@
 
             dropdownButton.classList.remove("empty");
 
-            feedback_box.style.display= "block";
+            feedback_box.style.display= "flex";
             textarea_box.dataset.week = week;
             textarea_box.dataset.user = userID;
 
