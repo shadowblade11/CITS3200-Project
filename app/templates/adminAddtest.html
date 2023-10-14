@@ -125,15 +125,23 @@ document.getElementById("test-form").addEventListener("submit", function (event)
     const upload = document.getElementById("upload");
 
     fetch("/upload_files", {
-        method: "POST",
-        body: formData,
+    method: "POST",
+    body: formData,
     })
-    .then((response) => response.json())
+    .then((response) => {
+        if (!response.ok) {
+            // Check for 404 (Not Found)
+            if (response.status === 404) {
+                alert("Something went wrong!! (please check your test name and that you uploaded the files)");
+            }
+            throw new Error('Server error');
+        }
+        return response.json();
+    })
     .then((data) => {
         alert("File(s) uploaded successfully!");
-            upload.style.backgroundColor = "green";
-            upload.style.color = "white";
-        console.log(data);
+        upload.style.backgroundColor = "green";
+        upload.style.color = "white";
         location.reload();
     })
     .catch((error) => {

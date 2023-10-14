@@ -401,6 +401,12 @@ def upload_files():
         test_name = request.form.get('testName')
         due_date = request.form.get('dueDate')
         week_number = request.form.get('weekNumber')
+        list_of_tests = [i.test_name.lower() for i in Test.get_all()]
+
+        if test_name.lower() in list_of_tests:
+            print(test_name)
+            return jsonify({"error": "Test with that name already exists"}), 404
+        
         TEST_LOCATION_FOLDER = f"{UPLOAD_FOLDER}/{test_name}" 
         if not os.path.exists(TEST_LOCATION_FOLDER):
             os.makedirs(TEST_LOCATION_FOLDER)
@@ -416,7 +422,8 @@ def upload_files():
                     if file:
                         n_of_qs = n_of_qs + 1
 
-
+        if n_of_qs == 0:
+            return jsonify({"error": "No questions listed"}), 404
         test = Test(week_no = int(week_number), test_name=test_name,due_date=due_date,no_of_qs=n_of_qs)
         Test.write_to(test)
         uploaded_files = {}
