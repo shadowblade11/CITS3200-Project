@@ -321,9 +321,9 @@ def get_user_marks():
     data = request.get_json()
     user = data.get('userID')
     try:
-        user_id = User.get(username=user).avg_score_per_week()
-        print(user_id)
-        return jsonify(user_id), 200
+        user_scores = User.get(username=user).avg_score_per_week() 
+        print(user_scores)
+        return jsonify(user_scores), 200
     except:
         return "", 404
 
@@ -331,8 +331,7 @@ def get_user_marks():
 @app.route('/get-test-marks', methods=['POST'])
 def get_test_marks():
     try:
-        test = Test.get(test_name="asdf")
-        averages = test.cohort_average()
+        averages = Test.cohort_average()
         return jsonify(averages), 200
     except:
         return "", 404
