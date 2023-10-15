@@ -212,7 +212,7 @@
     function plotScores() {
       let title = "Missing Title"
       const data = {
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         datasets: [
           {
               label: 'System Average Scores',
@@ -301,7 +301,6 @@
           if(xml.status==200){
             let values = JSON.parse(xml.responseText);
             graph_values = values
-            console.log(graph_values)
             extractChartData(values, userID);
           }
           else{
@@ -530,38 +529,28 @@
         if (weekData) {
           userScores.sysScores.all.push(weekData.sys_avg_score.all);
           userScores.selfScores.all.push(weekData.user_avg_score.all);
-          userScores.sysScores.easy.push(weekData.sys_avg_score.low);
-          userScores.selfScores.easy.push(weekData.user_avg_score.low);
-          userScores.sysScores.medium.push(weekData.sys_avg_score.medium);
-          userScores.selfScores.medium.push(weekData.user_avg_score.medium);
-          userScores.sysScores.hard.push(weekData.sys_avg_score.high);
-          userScores.selfScores.hard.push(weekData.user_avg_score.high);
+          if (typeof weekData.sys_avg_score.low === 'number') {
+            userScores.sysScores.easy.push({y: weekData.sys_avg_score.low, x: weekNumber});
+            userScores.selfScores.easy.push({y: weekData.user_avg_score.low, x: weekNumber}); 
+          }
+          if (typeof weekData.sys_avg_score.medium === 'number') {
+            userScores.sysScores.medium.push({y: weekData.sys_avg_score.medium, x: weekNumber});
+            userScores.selfScores.medium.push({y: weekData.user_avg_score.medium, x: weekNumber}); 
+          }
+          if (typeof weekData.sys_avg_score.high === 'number') {
+            userScores.sysScores.hard.push({y: weekData.sys_avg_score.high, x: weekNumber});
+            userScores.selfScores.hard.push({y: weekData.user_avg_score.high, x: weekNumber}); 
+          }
           maxWeek = weekNumber;
         } else {
           // Assign 0 for weeks with no scores
           userScores.sysScores.all.push(0);
           userScores.selfScores.all.push(0);
-          userScores.sysScores.easy.push(0);
-          userScores.selfScores.easy.push(0);
-          userScores.sysScores.medium.push(0);
-          userScores.selfScores.medium.push(0);
-          userScores.sysScores.hard.push(0);
-          userScores.selfScores.hard.push(0);
         }
       }
-      
       if (maxWeek < userScores.sysScores.all.length - 1) {
         userScores.sysScores.all.splice(maxWeek);
         userScores.selfScores.all.splice(maxWeek);
-
-        userScores.sysScores.easy.splice(maxWeek);
-        userScores.selfScores.easy.splice(maxWeek);
-
-        userScores.sysScores.medium.splice(maxWeek);
-        userScores.selfScores.medium.splice(maxWeek);
-
-        userScores.sysScores.hard.splice(maxWeek);
-        userScores.selfScores.hard.splice(maxWeek);
       }
     }
 
@@ -575,38 +564,28 @@
         if (weekData) {
           cohortScores.sysScores.all.push(weekData.sys_avg_score.all);
           cohortScores.selfScores.all.push(weekData.user_avg_score.all);
-          cohortScores.sysScores.easy.push(weekData.sys_avg_score.low);
-          cohortScores.selfScores.easy.push(weekData.user_avg_score.low);
-          cohortScores.sysScores.medium.push(weekData.sys_avg_score.medium);
-          cohortScores.selfScores.medium.push(weekData.user_avg_score.medium);
-          cohortScores.sysScores.hard.push(weekData.sys_avg_score.high);
-          cohortScores.selfScores.hard.push(weekData.user_avg_score.high);
+          if (typeof weekData.sys_avg_score.low === 'number') {
+            cohortScores.sysScores.easy.push({y: weekData.sys_avg_score.low, x: weekNumber});
+            cohortScores.selfScores.easy.push({y: weekData.user_avg_score.low, x: weekNumber}); 
+          }
+          if (typeof weekData.sys_avg_score.medium === 'number') {
+            cohortScores.sysScores.medium.push({y: weekData.sys_avg_score.medium, x: weekNumber});
+            cohortScores.selfScores.medium.push({y: weekData.user_avg_score.medium, x: weekNumber}); 
+          }
+          if (typeof weekData.sys_avg_score.high === 'number') {
+            cohortScores.sysScores.hard.push({y: weekData.sys_avg_score.high, x: weekNumber});
+            cohortScores.selfScores.hard.push({y: weekData.user_avg_score.high, x: weekNumber}); 
+          }
           maxWeek = weekNumber;
         } else {
           // Assign 0 for weeks with no scores
           cohortScores.sysScores.all.push(0);
           cohortScores.selfScores.all.push(0);
-          cohortScores.sysScores.easy.push(0);
-          cohortScores.selfScores.easy.push(0);
-          cohortScores.sysScores.medium.push(0);
-          cohortScores.selfScores.medium.push(0);
-          cohortScores.sysScores.hard.push(0);
-          cohortScores.selfScores.hard.push(0);
         }
       }
-      
       if (maxWeek < cohortScores.sysScores.all.length - 1) {
         cohortScores.sysScores.all.splice(maxWeek);
         cohortScores.selfScores.all.splice(maxWeek);
-
-        cohortScores.sysScores.easy.splice(maxWeek);
-        cohortScores.selfScores.easy.splice(maxWeek);
-
-        cohortScores.sysScores.medium.splice(maxWeek);
-        cohortScores.selfScores.medium.splice(maxWeek);
-
-        cohortScores.sysScores.hard.splice(maxWeek);
-        cohortScores.selfScores.hard.splice(maxWeek);
       }
     }
 
