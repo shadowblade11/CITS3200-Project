@@ -566,19 +566,48 @@
     }
 
     function extractCohortTestData(data) {
-      cohortScores.sysScores = [];
-      cohortScores.selfScores = [];
-      for (const weekNumber in data) {
-        if (data.hasOwnProperty(weekNumber)) {
-          const weekData = data[weekNumber];
-          cohortScores.sysScores.push(weekData.sys_avg_score.all);
-          cohortScores.selfScores.push(weekData.user_avg_score.all);
-          // cohortScores.sysScores.push(weekData.sys_average_score.diff);
-          // cohortScores.selfScores.push(weekData.user_average_score.diff);
+      cohortScores.sysScores = {all: [], easy: [], medium: [], hard: []};
+      cohortScores.selfScores = {all: [], easy: [], medium: [], hard: []};
+      maxWeek = 0
+      for (let weekNumber = 1; weekNumber <= 12; weekNumber++) {
+        const weekData = data[weekNumber];
+        
+        if (weekData) {
+          cohortScores.sysScores.all.push(weekData.sys_avg_score.all);
+          cohortScores.selfScores.all.push(weekData.user_avg_score.all);
+          cohortScores.sysScores.easy.push(weekData.sys_avg_score.low);
+          cohortScores.selfScores.easy.push(weekData.user_avg_score.low);
+          cohortScores.sysScores.medium.push(weekData.sys_avg_score.medium);
+          cohortScores.selfScores.medium.push(weekData.user_avg_score.medium);
+          cohortScores.sysScores.hard.push(weekData.sys_avg_score.high);
+          cohortScores.selfScores.hard.push(weekData.user_avg_score.high);
+          maxWeek = weekNumber;
+        } else {
+          // Assign 0 for weeks with no scores
+          cohortScores.sysScores.all.push(0);
+          cohortScores.selfScores.all.push(0);
+          cohortScores.sysScores.easy.push(0);
+          cohortScores.selfScores.easy.push(0);
+          cohortScores.sysScores.medium.push(0);
+          cohortScores.selfScores.medium.push(0);
+          cohortScores.sysScores.hard.push(0);
+          cohortScores.selfScores.hard.push(0);
         }
       }
-      // TODO: debug out of order scores.
-      console.log(cohortScores)
+      
+      if (maxWeek < cohortScores.sysScores.all.length - 1) {
+        cohortScores.sysScores.all.splice(maxWeek);
+        cohortScores.selfScores.all.splice(maxWeek);
+
+        cohortScores.sysScores.easy.splice(maxWeek);
+        cohortScores.selfScores.easy.splice(maxWeek);
+
+        cohortScores.sysScores.medium.splice(maxWeek);
+        cohortScores.selfScores.medium.splice(maxWeek);
+
+        cohortScores.sysScores.hard.splice(maxWeek);
+        cohortScores.selfScores.hard.splice(maxWeek);
+      }
     }
 
     function download() {

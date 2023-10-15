@@ -233,16 +233,12 @@ class Test(DB_Queries):
                     num_scores['all'] += 1
 
                     diff = question.difficulty
-                    num_scores[diff] += 1
                     scores[week_number]['user_avg_score'][diff] += score.user_score 
                     scores[week_number]['sys_avg_score'][diff] += score.sys_score
-
-                if num_scores['all'] > 0:
-                    scores[week_number]['user_avg_score']['all'] /= num_scores
-                    scores[week_number]['sys_avg_score']['all'] /= num_scores
+                    num_scores[diff] += 1
 
                 for diff in num_scores.keys():
-                    if num_scores[diff] > 0 :
+                    if num_scores[diff] > 0:
                         scores[week_number]['user_avg_score'][diff] /= num_scores[diff]
                         scores[week_number]['sys_avg_score'][diff] /= num_scores[diff]
 
