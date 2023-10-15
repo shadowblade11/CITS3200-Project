@@ -284,7 +284,8 @@
             }
           }
           else{
-            alert("User does not exist or has not taken any tests");
+            // no need to alert -- will be done by the other function if the xml fails
+            // alert("User does not exist or has not taken any tests");
           }
         }
       }
@@ -349,7 +350,7 @@
             extractCohortTestData(values);
           }
           else{
-            alert("User does not exist or has not taken any tests");
+            alert("Cannot grab average test marks -- either tests do not exist or error communicating with the server. Please try again.");
           }
         }
       }
