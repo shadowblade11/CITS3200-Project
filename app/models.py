@@ -99,6 +99,9 @@ class User(UserMixin, DB_Queries):
                     if num_scores[diff] > 0 :
                         scores[week_number]['user_avg_score'][diff] /= num_scores[diff]
                         scores[week_number]['sys_avg_score'][diff] /= num_scores[diff]
+                    if num_scores[diff] == 0:
+                        scores[week_number]['user_avg_score'].pop(diff)
+                        scores[week_number]['sys_avg_score'].pop(diff)
 
         return scores
         
@@ -241,6 +244,9 @@ class Test(DB_Queries):
                     if num_scores[diff] > 0:
                         scores[week_number]['user_avg_score'][diff] /= num_scores[diff]
                         scores[week_number]['sys_avg_score'][diff] /= num_scores[diff]
+                    if num_scores[diff] == 0:
+                        scores[week_number]['user_avg_score'].pop(diff)
+                        scores[week_number]['sys_avg_score'].pop(diff)
 
         return scores
         
