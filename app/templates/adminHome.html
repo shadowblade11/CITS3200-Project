@@ -284,8 +284,8 @@
             }
           }
           else{
-            // no need to alert -- will be done by the other function if the xml fails
-            // alert("User does not exist or has not taken any tests");
+            alert("User does not exist or has not taken any tests");
+            resetResultsList();
           }
         }
       }
@@ -305,8 +305,8 @@
             extractChartData(values, userID);
           }
           else{
-            alert("User does not exist or has not taken any tests");
-            resetResultsList();
+            // no need to alert -- will be done by the other function if the xml fails
+            // alert("User does not exist or has not taken any tests");
           }
         }
       }
