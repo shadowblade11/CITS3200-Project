@@ -101,6 +101,7 @@ class User(UserMixin, DB_Queries):
             scores = self.scores
             questions = scores.join(Question)
             tests = questions.join(Test).filter(Test.test_name == test_name)
+            # user_scores = tests.all()
             user_scores = self.scores.join(Question).join(Test).filter(Test.test_name == test_name).all()
 
             if user_scores:
