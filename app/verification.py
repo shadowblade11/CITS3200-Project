@@ -10,10 +10,10 @@ def generate_v_code(length = 6):  # generate 6 digits verification codes
     return ''.join(random.choice(chars) for _ in range(length))
 
 def send_v_code(email_addr, v_code):
-    smtp_server = 'smtp.Gmail.com'
+    smtp_server = 'smtp-mail.outlook.com'
     smtp_port = 587
-    sender = "CITS3200.Group40.2023@gmail.com"
-    sender_password = "uupn ikun saft feqr"
+    sender = "cits3200_group40_2023@hotmail.com"
+    sender_password = "italianAdmin"
 
     subject = "Verification Code for Italian Oral Presentation Skill"
     message = f"Your verification code is : {v_code}"
