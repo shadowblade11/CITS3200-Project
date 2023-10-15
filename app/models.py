@@ -68,7 +68,7 @@ class User(UserMixin, DB_Queries):
 
         # Get distinct week numbers
         distinct_weeks = db.session.query(Test.week_number).distinct()
-        distinct_difficulties = db.session.query(Question.difficulty).distinct()
+        # distinct_difficulties = db.session.query(Question.difficulty).distinct()
         for week in distinct_weeks:
             week_number = week[0]
             user_scores = self.scores.join(Question).join(Test).filter(Test.week_number == week_number).all()
