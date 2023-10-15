@@ -108,8 +108,6 @@ class User(UserMixin, DB_Queries):
                     'user_score': 0,
                     'sys_score': 0,
                 }
-                avg_scores[test_name]['user_score'] = 0
-                avg_scores[test_name]['sys_score'] = 0
                 
                 for score in user_scores:
                     avg_scores[test_name]['user_score'] += score.user_score
