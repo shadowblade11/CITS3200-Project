@@ -68,24 +68,37 @@ class User(UserMixin, DB_Queries):
 
         # Get distinct week numbers
         distinct_weeks = db.session.query(Test.week_number).distinct()
-        # distinct_difficulties = db.session.query(Question.difficulty).distinct()
+        # distinct_difficulties = db.session.query(Question.difficulty).distinct() # Just going to hardcode difficulties -- saves computation time, is unlikely to change.
         for week in distinct_weeks:  
             week_number = week[0]
             user_scores = self.scores.join(Question).join(Test).filter(Test.week_number == week_number).all()
             if user_scores:
                 scores[week_number] = {
-                    'user_avg_score': {'all': 0},
-                    'sys_avg_score': {'all': 0},
+                    'user_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
+                    'sys_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
                 }
-
-                # for diff in distinct_difficulties:
-                # diff = diff[0]
+                num_scores = {
+                    "low": 0,
+                    "medium": 0,
+                    "high": 0,
+                }
                 for score in user_scores:
+                    question = db.session.query(Question).filter(Question.id == score.question_id).first()
                     scores[week_number]['user_avg_score']['all'] += score.user_score 
                     scores[week_number]['sys_avg_score']['all'] += score.sys_score
-
+                    
+                    diff = question.difficulty
+                    num_scores[diff] += 1
+                    scores[week_number]['user_avg_score'][diff] += score.user_score 
+                    scores[week_number]['sys_avg_score'][diff] += score.sys_score
+                    
                 scores[week_number]['user_avg_score']['all'] /= len(user_scores)
                 scores[week_number]['sys_avg_score']['all'] /= len(user_scores)
+
+                for diff in num_scores.keys():
+                    if num_scores[diff] > 0 :
+                        scores[week_number]['user_avg_score'][diff] /= num_scores[diff]
+                        scores[week_number]['sys_avg_score'][diff] /= num_scores[diff]
 
         return scores
         
@@ -203,20 +216,32 @@ class Test(DB_Queries):
 
             if scores_in_week:
                 scores[week_number] = {
-                    'user_avg_score': {'all': 0},
-                    'sys_avg_score': {'all': 0},
+                    'user_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
+                    'sys_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
                 }
-                num_scores = 0
+                num_scores = {
+                    "low": 0,
+                    "medium": 0,
+                    "high": 0,
+                    "all": 0,
+                }
 
                 for score in scores_in_week:
-                    scores[week_number]['user_avg_score']['all'] += score.user_score
+                    question = db.session.query(Question).filter(Question.id == score.question_id).first()
+                    scores[week_number]['user_avg_score']['all'] += score.user_score 
                     scores[week_number]['sys_avg_score']['all'] += score.sys_score
+                    num_scores['all'] += 1
 
-                    num_scores += 1
+                    diff = question.difficulty
+                    scores[week_number]['user_avg_score'][diff] += score.user_score 
+                    scores[week_number]['sys_avg_score'][diff] += score.sys_score
+                    num_scores[diff] += 1
 
-                if num_scores > 0:
-                    scores[week_number]['user_avg_score']['all'] /= num_scores
-                    scores[week_number]['sys_avg_score']['all'] /= num_scores
+                for diff in num_scores.keys():
+                    if num_scores[diff] > 0:
+                        scores[week_number]['user_avg_score'][diff] /= num_scores[diff]
+                        scores[week_number]['sys_avg_score'][diff] /= num_scores[diff]
+
         return scores
         
     def create_test(self, week_no, test_name, due_date, no_of_qs):
