@@ -84,8 +84,6 @@ class User(UserMixin, DB_Queries):
                 }
                 for score in user_scores:
                     question = db.session.query(Question).filter(Question.id == score.question_id).first()
-
-                    print(question.difficulty)
                     scores[week_number]['user_avg_score']['all'] += score.user_score 
                     scores[week_number]['sys_avg_score']['all'] += score.sys_score
                     
