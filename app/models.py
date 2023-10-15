@@ -65,7 +65,7 @@ class User(UserMixin, DB_Queries):
 
     def avg_score_per_week(self):
         scores = {}
-        
+
         # Get distinct week numbers
         distinct_weeks = db.session.query(Test.week_number).distinct()
         # distinct_difficulties = db.session.query(Question.difficulty).distinct()
@@ -192,7 +192,7 @@ class Test(DB_Queries):
         return f'<id: {self.id}, test_name: {self.test_name}, dd: {self.due_date}>'
         # return f'<Test {self.test_name} (Week: {self.week_number})(Questions: {self.questions})>'
 
-    def cohort_average(self):
+    def cohort_average():
         scores = {}
 
         # Get distinct week numbers
@@ -200,7 +200,6 @@ class Test(DB_Queries):
         for week in distinct_weeks:
             week_number = week[0]
             scores_in_week = db.session.query(Score).join(Question).join(Test).filter(Test.week_number == week_number)
-            print(scores_in_week)
 
             if scores_in_week:
                 scores[week_number] = {
