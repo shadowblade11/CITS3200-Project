@@ -1,12 +1,13 @@
 import os
 
-from flask import render_template, redirect, url_for, flash, request, session, jsonify
+from flask import render_template, redirect, url_for, flash, request, session, jsonify, send_from_directory
 from flask_login import current_user, logout_user, login_required, login_user
 from werkzeug.urls import urlsplit
 from werkzeug.utils import secure_filename
 
 from app import app, verification
 import app.interact_database as db
+from app.export_to_excel import export_to_excel
 from app.forms import RegistrationForm, LoginForm, VerificationForm, AdminForm
 from app.models import *
 
@@ -51,6 +52,7 @@ def home(username):
     tests_to_do = []
     for i in tests_to_do_id:
         test_obj = Test.get(id=i)
+        print(test_obj.due_date)
         dd = datetime.datetime.strptime(test_obj.due_date,"%Y-%m-%d")
         formatted_dd = dd.strftime("%d/%m/%y")
         tests_to_do.append((test_obj.test_name,formatted_dd))
@@ -263,13 +265,13 @@ def calculate_score():
     difficulty = question_obj.difficulty
     # print(difficulty)
     multiplier = diff_dict[difficulty]
-    
+
     score = int(score*multiplier) #needs to make sure it stays within 0-100, and also that it can be an integer
-    if (score > 100): 
+    if (score > 100):
         score = 100
     elif (score < 0):
-        score = 0 
-    
+        score = 0
+
     s = Score(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
     Score.write_to(s)
     #MAKE SCORE OBJECT WITH user_score and score
@@ -305,6 +307,11 @@ def Account():
     return render_template("AccountPage.html", css=url_for('static', filename='Account.css'))
 
 
+@app.route('/start')
+def start():
+    return render_template("startPage.html", css=url_for('static', filename='startPage.css'))
+
+
 @app.route('/get-user', methods=['POST'])
 def get_user():
     data = request.get_json()
@@ -323,7 +330,7 @@ def get_user_marks():
     data = request.get_json()
     user = data.get('userID')
     try:
-        user_id = User.get(username=user).average_score_per_week()
+        user_id = User.get(username=user).avg_score_per_week()
         print(user_id)
         return jsonify(user_id), 200
     except:
@@ -334,9 +341,7 @@ def get_user_marks():
 def get_test_marks():
     try:
         test = Test.get(test_name="asdf")
-        print(test)
-        averages = test.average_scores_per_test_per_week()
-        print(jsonify(averages))
+        averages = test.cohort_average()
         return jsonify(averages), 200
     except:
         return "", 404
@@ -485,8 +490,21 @@ def upload_files():
         return str(e), 500
 
 
-
-
+@app.route('/export', methods=['POST'])
+def export():
+    user = request.form.get('user')
+    week = request.form.get('test')
+    if user == '':
+        user = []
+        users = User.get_all()
+        for u in users:
+            if not u.is_admin:
+                user.append(u.id)
+    filename = export_to_excel(user=user, week=week)
+    path = os.path.join('.', filename)
+    response = send_from_directory('..', filename, as_attachment=True)
+    os.remove(path)
+    return response
 # @app.route('/test')
 # def testPage():
 #     return render_template("testPage.html", css=url_for('static', filename='testPage.css'))
