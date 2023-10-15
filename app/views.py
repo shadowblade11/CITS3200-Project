@@ -473,9 +473,7 @@ def export():
             if not u.is_admin:
                 user.append(u.id)
     filename = export_to_excel(user=user, week=week)
-    path = os.path.join('.', filename)
     response = send_from_directory('..', filename, as_attachment=True)
-    os.remove(path)
     return response
 # @app.route('/test')
 # def testPage():
