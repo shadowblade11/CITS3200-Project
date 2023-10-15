@@ -508,12 +508,24 @@
       userScores.sysScores = [];
       userScores.selfScores = [];
       userScores.userID = userID;
-      for (const weekNumber in data) {
-        if (data.hasOwnProperty(weekNumber)) {
-          const weekData = data[weekNumber];
+      maxWeek = 0
+      for (let weekNumber = 1; weekNumber <= 12; weekNumber++) {
+        const weekData = data[weekNumber];
+        
+        if (weekData) {
           userScores.sysScores.push(weekData.sys_avg_score.all);
           userScores.selfScores.push(weekData.user_avg_score.all);
+          maxWeek = weekNumber;
+        } else {
+          // Assign 0 for weeks with no scores
+          userScores.sysScores.push(0);
+          userScores.selfScores.push(0);
         }
+      }
+
+      if (maxWeek < userScores.sysScores.length - 1) {
+        userScores.sysScores.splice(maxWeek);
+        userScores.selfScores.splice(maxWeek);
       }
     }
 
