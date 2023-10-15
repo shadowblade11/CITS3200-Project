@@ -74,9 +74,11 @@ def grades():
     user_obj = User.get(username=username)
     lists_of_feedbacks = user_obj.feedback.all()
     formatted_list = []
+    scores = user_obj.avg_score_per_test()
+    print(scores)
     for i in lists_of_feedbacks:
         test_name = Test.get(id = i.test_id).test_name
-        temp = (test_name, i.feedback) #this is where we can put score avgs (like within the tuple)
+        temp = (test_name, i.feedback,int(scores[test_name]['user_score']),int(scores[test_name]['sys_score'])) #this is where we can put score avgs (like within the tuple)
         formatted_list.append(temp)
     return render_template("gradesPage.html", css='./static/gradesPage.css', feedbacks = formatted_list)
 
