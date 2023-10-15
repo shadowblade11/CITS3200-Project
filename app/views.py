@@ -69,14 +69,15 @@ def adminHome():
 
 @app.route('/grades')
 def grades():
-    # print(request.args['username'])
     username = request.args['username']
     user_obj = User.get(username=username)
     lists_of_feedbacks = user_obj.feedback.all()
     formatted_list = []
+    scores = user_obj.avg_score_per_test()
+    print(scores)
     for i in lists_of_feedbacks:
         test_name = Test.get(id = i.test_id).test_name
-        temp = (test_name, i.feedback) #this is where we can put score avgs (like within the tuple)
+        temp = (test_name, i.feedback,int(scores[test_name]['user_score']),int(scores[test_name]['sys_score'])) #this is where we can put score avgs (like within the tuple)
         formatted_list.append(temp)
     return render_template("gradesPage.html", css='./static/gradesPage.css', feedbacks = formatted_list)
 
@@ -181,7 +182,7 @@ def resend_verification():
     v_code = verification.generate_v_code(6)
     print(v_code)
     session['v_code'] = v_code  # Update verification code
-    # verification.send_v_code(session.get('id')+'@student.uwa.edu.au',v_code)
+    verification.send_v_code(session.get('id')+'@student.uwa.edu.au',v_code)
     flash("Verification code has been resent to your email.")
     return redirect(url_for('verify'))
 
@@ -189,16 +190,10 @@ def resend_verification():
 @login_required
 @app.route('/test/<username>', methods=['GET', 'POST'])
 def test(username):
-    # print(request.args.get('data')) #way to get folder
     week = request.args.get('data')
     path = f"./app/static/audio/{week}/"
-    # print(path)
     audio_clips = os.listdir(path)
     audio_clips = [i.split('.')[0] for i in audio_clips]
-    # print(audio_clips)
-    # print(current_user)
-    # TODO also once figured out a way to get current user id,
-    #  use os commands to check if their folder exists, if not, then create it
     return render_template('testPage.html', css=url_for('static', filename='testPage.css'), audio_clips=audio_clips,
                            week=week, user=username)
 
@@ -210,7 +205,6 @@ def save_audio():
     test_name = request.form['test_name']
     name_of_clip = request.form['name']
     attempt = request.form['attempt']
-    # name_of_clip = name_of_clip.replace(" ", "_")
     PATH_TO_FOLDER = f"./app/static/audio/users/{user}/{test_name}"
     PATH_TO_IMAGE_FOLDER = f"./app/static/images/users/{user}/{test_name}"
     print("saving clip")
@@ -263,10 +257,9 @@ def calculate_score():
     question_obj = Question.get(test_id=test_id,question_name=name_of_clip)
     question_id = question_obj.id
     difficulty = question_obj.difficulty
-    # print(difficulty)
     multiplier = diff_dict[difficulty]
 
-    score = int(score*multiplier) #needs to make sure it stays within 0-100, and also that it can be an integer
+    score = int(score*multiplier)
     if (score > 100):
         score = 100
     elif (score < 0):
@@ -274,7 +267,6 @@ def calculate_score():
 
     s = Score(user_id=user_id,question_id=question_id,user_score=user_score,sys_score=score,attempt=attempt)
     Score.write_to(s)
-    #MAKE SCORE OBJECT WITH user_score and score
 
     questions_completed = User.get(id=user_id).scores.all()
     questions_completed = [i.question_id for i in questions_completed]
@@ -316,7 +308,6 @@ def start():
 def get_user():
     data = request.get_json()
     user = data.get('userID')
-    # print(user)
     user_obj = User.get(username=user)
 
     completed_tests = user_obj.completed_tests.all()
@@ -365,7 +356,6 @@ def get_audio():
     id_to_name_mapping = {id: name for name, id in list_of_questions}
     final_list = [(id_to_name_mapping[id],usr,sys,ac) for id,usr,sys,ac in filtered_scores]
 
-    # print(final_list)
     return jsonify({"list_of_scores":final_list}),200
 
 @app.route('/save-feedback',methods=["POST"])
@@ -376,11 +366,7 @@ def save_feedback():
     user = data.get('user')
     print(user)
     print(text)
-    # print(week)
-    # week = int(week[-1])
-    #THIS IS WHERE WE CAN STORE THE FEEDBACK
     try:
-        # REPLACE THIS WITH THE TABLE ASSIGNMENT
         user_id = User.get(username=user).id
         test_id = Test.get(test_name=test_name).id
         f = Feedback.get(user_id=user_id,test_id=test_id)
@@ -390,7 +376,6 @@ def save_feedback():
             return "passed",200
         f.feedback = text
         Feedback.write_to(f)
-        # print(f'The Text is {text}\nThe User who did the test is {user}\nThe Week that the test was in is {week}')
         return "passed",200
     except:
         return "failed",404
@@ -401,22 +386,10 @@ def save_feedback():
 def send_feedback():
     user = request.args.get('user')
     test_name = request.args.get('week')
-    # print(f"User: {user}, Week: {week}")
-    # THIS IS WHERE WE RETRIVE FEEDBACK FROM THE DATABASE
-
-    #FAKE DATA
-    # data = {
-    # "123": {
-    #     'week1': 'This is a random sentence for week 1.',
-    #     'week2': 'Here is a different sentence for week 2.',
-    #     'week3': 'Week 3 has its own unique sentence as well.'
-    # }
-    # }
     try:
         user_id = User.get(username=user).id
         test_id = Test.get(test_name=test_name).id
         txt = Feedback.get(user_id=user_id,test_id=test_id).feedback
-        # string = data[user][week]
         return txt,200
     except:
         return "", 404
