@@ -76,19 +76,19 @@ class User(UserMixin, DB_Queries):
             if user_scores:
                 scores[week_number] = {
                     'user_average_score': {'all': 0},
-                    'sys_average_score': {'all': 0},
+                    'sys_avg_score': {'all': 0},
                 }
 
                 # for diff in distinct_difficulties:
                 # diff = diff[0]
                 for score in user_scores:
-                    score.user_average_score['all'] += score.user_score 
-                    score.sys_average_score['all'] += score.sys_score
+                    scores[week_number]['user_avg_score']['all'] += score.user_score 
+                    scores[week_number]['sys_avg_score']['all'] += score.sys_score
                     
                 # score.user_average_score[diff] /= len(user_avg_scores)
 
-                score.user_average_score['all'] /= len(user_scores)
-                score.sys_average_score['all'] /= len(user_scores)
+                scores[week_number]['user_avg_score']['all'] /= len(user_scores)
+                scores[week_number]['sys_avg_score']['all'] /= len(user_scores)
 
         return scores
     
