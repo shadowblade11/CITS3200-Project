@@ -511,8 +511,9 @@
       for (const weekNumber in data) {
         if (data.hasOwnProperty(weekNumber)) {
           const weekData = data[weekNumber];
-          userScores.sysScores.push(weekData.sys_average_score);
-          userScores.selfScores.push(weekData.user_average_score);
+          console.log(weekData)
+          userScores.sysScores.push(weekData.sys_avg_score.all);
+          userScores.selfScores.push(weekData.user_avg_score.all);
         }
       }
     }
@@ -520,12 +521,13 @@
     function extractCohortTestData(data) {
       cohortScores.sysScores = [];
       cohortScores.selfScores = [];
-      console.log(data)
       for (const weekNumber in data) {
         if (data.hasOwnProperty(weekNumber)) {
           const weekData = data[weekNumber];
-          cohortScores.sysScores.push(weekData.sys_average_score);
-          cohortScores.selfScores.push(weekData.user_average_score);
+          cohortScores.sysScores.push(weekData.sys_avg_score.all);
+          cohortScores.selfScores.push(weekData.user_avg_score.all);
+          // cohortScores.sysScores.push(weekData.sys_average_score.diff);
+          // cohortScores.selfScores.push(weekData.user_average_score.diff);
         }
       }
       // TODO: debug out of order scores.
