@@ -63,6 +63,74 @@ class User(UserMixin, DB_Queries):
     def __init__(self, username):
         self.username = username
 
+    def avg_score_per_week(self):
+        scores = {}
+
+        # Get distinct week numbers
+        distinct_weeks = db.session.query(Test.week_number).distinct()
+        # distinct_difficulties = db.session.query(Question.difficulty).distinct() # Just going to hardcode difficulties -- saves computation time, is unlikely to change.
+        for week in distinct_weeks:  
+            week_number = week[0]
+            user_scores = self.scores.join(Question).join(Test).filter(Test.week_number == week_number).all()
+            if user_scores:
+                scores[week_number] = {
+                    'user_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
+                    'sys_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
+                }
+                num_scores = {
+                    "low": 0,
+                    "medium": 0,
+                    "high": 0,
+                }
+                for score in user_scores:
+                    question = db.session.query(Question).filter(Question.id == score.question_id).first()
+                    scores[week_number]['user_avg_score']['all'] += score.user_score 
+                    scores[week_number]['sys_avg_score']['all'] += score.sys_score
+                    
+                    diff = question.difficulty
+                    num_scores[diff] += 1
+                    scores[week_number]['user_avg_score'][diff] += score.user_score 
+                    scores[week_number]['sys_avg_score'][diff] += score.sys_score
+                    
+                scores[week_number]['user_avg_score']['all'] /= len(user_scores)
+                scores[week_number]['sys_avg_score']['all'] /= len(user_scores)
+
+                for diff in num_scores.keys():
+                    if num_scores[diff] > 0 :
+                        scores[week_number]['user_avg_score'][diff] /= num_scores[diff]
+                        scores[week_number]['sys_avg_score'][diff] /= num_scores[diff]
+                    if num_scores[diff] == 0:
+                        scores[week_number]['user_avg_score'].pop(diff)
+                        scores[week_number]['sys_avg_score'].pop(diff)
+
+        return scores
+        
+    def avg_score_per_test(self):
+        avg_scores = {}
+        # Get distinct week numbers
+        distinct_test = db.session.query(Test.test_name).distinct()
+        for test in distinct_test:
+            test_name = test[0]
+            scores = self.scores
+            questions = scores.join(Question)
+            tests = questions.join(Test).filter(Test.test_name == test_name)
+            # user_scores = tests.all()
+            user_scores = self.scores.join(Question).join(Test).filter(Test.test_name == test_name).all()
+
+            if user_scores:
+                avg_scores[test_name] = {
+                    'user_score': 0,
+                    'sys_score': 0,
+                }
+                
+                for score in user_scores:
+                    avg_scores[test_name]['user_score'] += score.user_score
+                    avg_scores[test_name]['sys_score'] += score.sys_score
+
+                avg_scores[test_name]['user_score'] /= len(user_scores)
+                avg_scores[test_name]['sys_score'] /= len(user_scores)
+
+        return avg_scores
 
 @login.user_loader
 def load_user(id):
@@ -82,7 +150,7 @@ class Complete(DB_Queries):
         self.completed = status
 
     def __repr__(self):
-        return f'<id: {self.id}, test id: {self.test_id}, user id: {self.user_id}>'
+        return f"<Complete (Username: {self.user_id}, Week: {self.test_id}, Completed: {self.completed})>"
 
 
 class Feedback(DB_Queries):
@@ -113,9 +181,10 @@ class Score(DB_Queries):
         self.user_score = user_score
         self.sys_score = sys_score
         self.attempt_chosen = attempt
-    def __repr__(self):
-        return f'<question_id: {self.question_id}>'
 
+    def __repr__(self):
+        return (f'<Score self eval: {self.user_score} , program eval: {self.sys_score} '
+                f'(User ID: {self.user_id}, Question ID: {self.question_id})>')
 
 class Test(DB_Queries):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -134,8 +203,56 @@ class Test(DB_Queries):
         self.due_date = due_date
         self.number_of_questions = no_of_qs
         self.week_number = week_no
+
     def __repr__(self):
         return f'<id: {self.id}, test_name: {self.test_name}, dd: {self.due_date}>'
+        # return f'<Test {self.test_name} (Week: {self.week_number})(Questions: {self.questions})>'
+
+    def cohort_average():
+        scores = {}
+
+        # Get distinct week numbers
+        distinct_weeks = db.session.query(Test.week_number).distinct()
+        for week in distinct_weeks:
+            week_number = week[0]
+            scores_in_week = db.session.query(Score).join(Question).join(Test).filter(Test.week_number == week_number)
+
+            if scores_in_week:
+                scores[week_number] = {
+                    'user_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
+                    'sys_avg_score': {'all': 0, 'low': 0, 'medium': 0, 'high': 0},
+                }
+                num_scores = {
+                    "low": 0,
+                    "medium": 0,
+                    "high": 0,
+                    "all": 0,
+                }
+
+                for score in scores_in_week:
+                    question = db.session.query(Question).filter(Question.id == score.question_id).first()
+                    scores[week_number]['user_avg_score']['all'] += score.user_score 
+                    scores[week_number]['sys_avg_score']['all'] += score.sys_score
+                    num_scores['all'] += 1
+
+                    diff = question.difficulty
+                    scores[week_number]['user_avg_score'][diff] += score.user_score 
+                    scores[week_number]['sys_avg_score'][diff] += score.sys_score
+                    num_scores[diff] += 1
+
+                for diff in num_scores.keys():
+                    if num_scores[diff] > 0:
+                        scores[week_number]['user_avg_score'][diff] /= num_scores[diff]
+                        scores[week_number]['sys_avg_score'][diff] /= num_scores[diff]
+                    if num_scores[diff] == 0:
+                        scores[week_number]['user_avg_score'].pop(diff)
+                        scores[week_number]['sys_avg_score'].pop(diff)
+
+        return scores
+        
+    def create_test(self, week_no, test_name, due_date, no_of_qs):
+        self.__init__(week_no, test_name, due_date, no_of_qs)
+
 
 
 class Question(DB_Queries):
@@ -148,5 +265,6 @@ class Question(DB_Queries):
         self.question_name = question_name
         self.test_id = test_id
         self.difficulty = difficulty
+
     def __repr__(self):
-        return f'<id: {self.id},question name:{self.question_name}>'
+        return f'<Question {self.question_name} ( Week: {self.test_id}, Difficulty: {self.difficulty})>'

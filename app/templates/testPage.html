@@ -5,8 +5,8 @@
     <button class="save-button">Save</button>
   </div> -->
   <div class="test-content">
-    <h1 class="flex">Welcome Student,&nbsp;<span id="user">{{user}}</span>!</h1>
-    <h1 class="flex">This Is Test:&nbsp;<span id="week">{{week}}</span></h1>
+    <h1 class="flex">Welcome Student&nbsp;<span id="user">{{user}}</span>!</h1>
+    <h1 class="flex">This is&nbsp;<span id="week">{{week}}</span></h1>
   </div>
 
   <details class="instructions-container" open>
@@ -206,17 +206,16 @@
       submitButton.onclick = () => {
         let countContainer = listOfDivs[index].querySelector(".count");
         let count = Number(countContainer.innerHTML);
-        if (count === 0){
+        if (count === 0) {
           let selectedRadioButton = listOfDivs[index].querySelector('.select-attempt:checked');
-          if (selectedRadioButton){
+          if (selectedRadioButton) {
             let attempt = selectedRadioButton.dataset.attempt;
+            let score = listOfDivs[index].querySelector(".computed-score-value");
+            score.innerHTML = "Computing...";
 
             let name_of_clip = listOfDivs[index].querySelector('.supplied_clip').id;
 
             let user_score = listOfDivs[index].querySelector('.self-assessment-value').innerHTML;
-            console.log(attempt);
-            console.log(name_of_clip);
-            console.log(user_score);
 
             const formData = new FormData();
 
@@ -231,7 +230,6 @@
             xmlhttp.onreadystatechange = function () {
               if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
-                  let score = listOfDivs[index].querySelector(".computed-score-value");
                   let task_number = listOfDivs[index]. querySelector("h1.task-number").innerHTML;
                   score.innerHTML = xmlhttp.responseText;
                   console.log(xmlhttp.responseText);

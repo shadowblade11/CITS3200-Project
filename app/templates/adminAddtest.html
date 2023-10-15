@@ -2,7 +2,7 @@
 {% block content %}
 <body>
     <div class="admin-home">
-        <h1>Create A Test</h1>
+        <h1>Create a Test</h1>
         <h2>Please review instructions below to create new tests.</h2>
     </div>
 
@@ -11,11 +11,13 @@
             <div class="instructions-content">
             <p>This page allows admin users to create new tests.</p>
             <h3>Step One</h3>
-            <p>Enter a name for the test (e.g., 'Week One').</p>
+            <p>Enter a name for the test. Please note, test names must be unique (e.g., 'Week One'). Refer to the table below for previously created tests.</p>
             <h3>Step Two</h3>
-            <p>Select week number.</p>
+            <p>Select a week number.</p>
             <h3>Step Three</h3>
             <p>Upload files to their respective difficulty rating (Low, Medium, High).</p>
+            <p>Click on the 'Select File' button to select files from your device. To select multiple files of the same difficulty, highlight all required files and click "Open". </p>
+            <p>Files must be in .mp3, .m4a, or .wav format.</p>
             <h3>Step Four</h3>
             <p>Set a due date.</p>
             <h3>Step Five</h3>
@@ -64,10 +66,28 @@
                 <div id="selected-files-high"></div>
             </div>
         </div>
-
-        <button type="submit">Upload Test</button>
+        <button type="submit" id="upload">Upload Test</button>
     </form>
 </div>
+
+<details class="created-tests" open>
+    <summary class="instructions-header"><h1>Created Tests</h1></summary>
+    <div class="test-table">
+        <table>
+            <tr>
+                <th>Test Name</th>
+                <th>Due Date</th>
+
+            </tr>
+            {% for test in tests %}
+            <tr>
+                <td>{{ test[0] }}</td>
+                <td>{{ test[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</details>
 
 <script>
     function displaySelectedFiles(inputId, containerId) {
@@ -102,14 +122,27 @@
 document.getElementById("test-form").addEventListener("submit", function (event) {
     event.preventDefault();
     const formData = new FormData(this);
+    const upload = document.getElementById("upload");
+
     fetch("/upload_files", {
-        method: "POST",
-        body: formData,
+    method: "POST",
+    body: formData,
     })
-    .then((response) => response.json())
+    .then((response) => {
+        if (!response.ok) {
+            // Check for 404 (Not Found)
+            if (response.status === 404) {
+                alert("Something went wrong!! (please check your test name and that you uploaded the files)");
+            }
+            throw new Error('Server error');
+        }
+        return response.json();
+    })
     .then((data) => {
         alert("File(s) uploaded successfully!");
-        console.log(data);
+        upload.style.backgroundColor = "green";
+        upload.style.color = "white";
+        location.reload();
     })
     .catch((error) => {
         console.error(error);

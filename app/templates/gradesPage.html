@@ -4,7 +4,7 @@
 
 
 <div class="intro-container">
-  <h1>Student Grades</h1>
+    <h1>Student Grades</h1>
 </div>
 
 
@@ -12,12 +12,16 @@
     <table>
         <tr>
             <th>Test Name</th>
+            <th>Average Score (User)</th>
+            <th>Average Score (System)</th>
             <th>Feedback</th>
             <!-- make sure you add the headers -->
         </tr>
         {% for feedback_obj in feedbacks%}
         <tr>
             <th>{{feedback_obj[0]}}</th>
+            <th>{{feedback_obj[2]}}</th>
+            <th>{{feedback_obj[3]}}</th>
             <th>{{feedback_obj[1]}}</th>
 <!-- this is where you can add more columns (avg scores, etc) -->
         </tr>
