@@ -511,7 +511,6 @@
       for (const weekNumber in data) {
         if (data.hasOwnProperty(weekNumber)) {
           const weekData = data[weekNumber];
-          console.log(weekData)
           userScores.sysScores.push(weekData.sys_avg_score.all);
           userScores.selfScores.push(weekData.user_avg_score.all);
         }
