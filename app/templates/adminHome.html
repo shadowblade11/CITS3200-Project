@@ -39,10 +39,10 @@
     </div>
 
     <div class="content">
-      <form action="{{ url_for('export') }}"  method="post">
+      <form id="export-to-excel">
           <input type="hidden" name="user" id="student-id-input" value="">
           <input type="hidden" name="test" id="week-input" value="">
-            <button id="export" onclick="download()">Export to Excel</button>
+            <input type="submit" id="export" value="Export to Excel"></input>
       </form>
 
     <div id = "res">
@@ -111,6 +111,7 @@
     const resultsContainer = document.getElementById("res");
     const searchbar = document.getElementById("search-bar");
     const dropdownButton = document.getElementById("dropbtn");
+    const exportForm = document.getElementById("export-to-excel");
 
     let resetResultsList = () => {
       dropdownButton.classList.add("empty");
@@ -273,13 +274,16 @@
             let weeks = JSON.parse(xml.responseText).tests;
             for (let value of weeks){
               let new_element = document.createElement('a');
+
               new_element.innerHTML = value;
               new_element.onclick = function () {
+                document.getElementById("week-input").value = value;
                 gettingAudioClips(userID, value);
               };
               new_element.onclick =  function () {
-              gettingAudioClips(userID, value);
-          };
+                document.getElementById("week-input").value = value;
+                gettingAudioClips(userID, value);
+              };
               WkRecording.appendChild(new_element);
             }
           }
@@ -492,7 +496,7 @@
           }
         }
       }
-      xml.send(JSON.stringify({"txt":feedback,"week":textarea_box.dataset.week,"user":textarea_box.dataset.user}))
+      xml.send(JSON.stringify({"txt":feedback,"week":textarea_box.dataset.week,"user":textarea_box.dataset.user}));
       
     }
 
@@ -590,9 +594,37 @@
       }
     }
 
-    function download() {
-        window.location.href = '/export/';
+    exportForm.onsubmit = function(event) {
+      event.preventDefault();
+      const user = event.target.user.value;
+      const test = event.target.test.value;
+
+      const formData = new FormData();
+      formData.append("user", user);
+      formData.append("test", test);
+
+      const xml = new XMLHttpRequest();
+      xml.open('POST',"/export",true);
+      xml.responseType = "blob";
+      xml.onreadystatechange = function(){
+        if(xml.readyState == 4){
+          if(xml.status==200){
+            saveBlob(xml.response, `${user}-${test}.xlsx`);
+          }else{
+            alert("Download failed");
+          }
+        }
+      }
+      xml.send(formData);
+      
     }
+
+    function saveBlob(blob, fileName) {
+      var a = document.createElement('a');
+      a.href = window.URL.createObjectURL(blob);
+      a.download = fileName;
+      a.dispatchEvent(new MouseEvent('click'));
+  }
 
   </script>
 {% endblock %}
